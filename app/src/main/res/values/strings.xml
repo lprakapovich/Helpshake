@@ -11,18 +11,21 @@
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_login">LoginActivity</string>
 
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-
-    <!--  Dialogs  -->
     <string name="tag">Tag</string>
+    <string name="error"> Error </string>
+    <string name="email_verification">Email verification </string>
+    <string name="email_verification_sent">
+        We\'ve sent a link to your email.
+        After verification, sign in to a newly created account. </string>
+    <string name="email_verification_pending">
+        Your email wasn\'t verified yet.
+        Do it to get access to the account. </string>
     <string name="select_role_title">What\'s your situation?</string>
     <string name="helpseeker_role">I am on a quarantine and need help</string>
     <string name="volunteer_role">I want to volunteer</string>
+    <string name="ok">OK</string>
+    <string name="exit">Exit</string>
+    <string name="email_in_use">Such email is already in use!</string>
+    <string name="error_message">Something went wrong. Try again later.</string>
+
 </resources>

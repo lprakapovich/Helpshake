@@ -10,23 +10,31 @@ import com.application.helpshake.databinding.ActivityRegisterBinding;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.application.helpshake.R;
+import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.Role;
-import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogSelect;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity
         implements DialogSelect.OptionSelectedListener {
 
     private ActivityRegisterBinding mBinding;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mDb;
 
     private String mName,
             mSurname,
@@ -34,11 +42,14 @@ public class RegisterActivity extends AppCompatActivity
             mPassword,
             mRepeatPassword;
 
+    private Role mRole;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        mDb = FirebaseFirestore.getInstance();
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_register);
@@ -47,9 +58,8 @@ public class RegisterActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 readUserInput();
-                if (passwordsMatch() && allFilled()) {
+                if (!emptyInputs() && passwordsMatch()) {
                     selectUserRole();
-                    //register();
                 }
             }
         });
@@ -62,6 +72,26 @@ public class RegisterActivity extends AppCompatActivity
                 ));
             }
         });
+    }
+
+    private void readUserInput() {
+        mName = mBinding.name.getText().toString();
+        mSurname = mBinding.surname.getText().toString();
+        mEmail = mBinding.email.getText().toString();
+        mPassword = mBinding.password.getText().toString();
+        mRepeatPassword = mBinding.passwordRepeated.getText().toString();
+    }
+
+    private boolean passwordsMatch() {
+        return mPassword.equals(mRepeatPassword);
+    }
+
+    private boolean emptyInputs() {
+        return mName.isEmpty()
+                || mSurname.isEmpty()
+                || mEmail.isEmpty()
+                || mPassword.isEmpty()
+                || mRepeatPassword.isEmpty();
     }
 
     private void selectUserRole() {
@@ -77,11 +107,17 @@ public class RegisterActivity extends AppCompatActivity
         dialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
-
-    private void readUserInput() {
-        mEmail = mBinding.email.getText().toString();
-        mPassword = mBinding.password.getText().toString();
-        mRepeatPassword = mBinding.passwordRepeated.getText().toString();
+    @Override
+    public void onOptionSelected(DialogFragment dialog, int option) {
+        switch (option) {
+            case 0:
+                mRole = Role.HelpSeeker;
+                break;
+            case 1:
+                mRole = Role.Volunteer;
+                break;
+        }
+        register();
     }
 
     private void register() {
@@ -90,16 +126,45 @@ public class RegisterActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            sendEmailVerificationLink();
+                            saveCredentialsToFireStore();
                         } else {
                             try {
                                 throw task.getException();
                             } catch (FirebaseAuthUserCollisionException e) {
-                                // such user email already registered
+                                DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                        getString(R.string.error),
+                                        getString(R.string.email_in_use));
                             } catch (Exception e) {
-                                // something else went wrong
+                                DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                        getString(R.string.error),
+                                        getString(R.string.error_message));
                             }
                         }
+                    }
+                });
+    }
+
+    private void saveCredentialsToFireStore() {
+        DocumentReference userDocument = mDb.collection("users").document();
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("name", mName);
+        userData.put("surname", mSurname);
+        userData.put("email", mEmail);
+        userData.put("role", mRole);
+
+        userDocument.set(userData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        sendEmailVerificationLink();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                getString(R.string.error),
+                                getString(R.string.error_message));
                     }
                 });
     }
@@ -107,47 +172,29 @@ public class RegisterActivity extends AppCompatActivity
     private void sendEmailVerificationLink() {
         mAuth.getCurrentUser().sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(),
-                            "Please check your email",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            resetInputs();
+                            DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                    getString(R.string.email_verification),
+                                    getString(R.string.email_verification_sent)
+                            );
+                        }
+                    }
+                });
     }
 
-
-    private boolean passwordsMatch() {
-        return !mPassword.isEmpty()
-                && !mRepeatPassword.isEmpty()
-                && mPassword.equals(mRepeatPassword);
-    }
-
-    private boolean allFilled() {
-        return !mEmail.isEmpty();
+    private void resetInputs() {
+        mBinding.email.setText("");
+        mBinding.name.setText("");
+        mBinding.surname.setText("");
+        mBinding.password.setText("");
+        mBinding.passwordRepeated.setText("");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-    }
-
-    @Override
-    public void onOptionSelected(DialogFragment dialog, int option) {
-        Role role;
-        switch (option) {
-            case 0:
-                setUserRole(Role.HelpSeeker);
-                break;
-            case 1:
-                setUserRole(Role.Volunteer);
-                break;
-        }
-    }
-
-    private void setUserRole(Role role) {
-        User user = new User();
     }
 }

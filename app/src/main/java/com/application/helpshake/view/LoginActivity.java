@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.MainActivity;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityLoginBinding;
+import com.application.helpshake.helper.DialogBuilder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,21 +39,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 readUserInput();
-                mAuth.signInWithEmailAndPassword(mEmail, mPassword)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (isEmailVerified()) {
-                            startActivity(new Intent(
-                                    LoginActivity.this, MainActivity.class)
-                            );
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "Please verify your email first",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                if (!emptyInput()) {
+                    login();
+                }
             }
         });
 
@@ -64,6 +53,37 @@ public class LoginActivity extends AppCompatActivity {
                 ));
             }
         });
+    }
+
+    private void login() {
+        mAuth.signInWithEmailAndPassword(mEmail, mPassword)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            validateEmail();
+                        } else {
+                            DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                    getString(R.string.error),
+                                    getString(R.string.error_message));
+                        }
+                    }
+                });
+    }
+
+    private void validateEmail() {
+        if (isEmailVerified()) {
+            startActivity(new Intent(
+                    LoginActivity.this, MainActivity.class));
+        } else {
+            DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                    getString(R.string.email_verification),
+                    getString(R.string.email_verification_pending));
+        }
+    }
+
+    private boolean emptyInput() {
+        return mEmail.isEmpty() || mPassword.isEmpty();
     }
 
     private void readUserInput() {

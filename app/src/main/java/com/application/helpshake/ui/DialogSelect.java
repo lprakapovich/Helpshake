@@ -2,12 +2,17 @@ package com.application.helpshake.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.Objects;
 
 public class DialogSelect extends DialogFragment {
 
@@ -38,5 +43,17 @@ public class DialogSelect extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OptionSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(requireActivity().toString()
+                    + "must implement OptionSelectedListener");
+        }
     }
 }
