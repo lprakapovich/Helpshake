@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/addingRequestText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="124dp"
@@ -15,14 +15,14 @@
         android:layout_marginTop="72dp"
         android:layout_marginEnd="125dp"
         android:layout_marginRight="125dp"
-        android:text="Adding request"
+        android:text="@string/adding_request"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/specifyHelpText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="38dp"
@@ -30,21 +30,22 @@
         android:layout_marginTop="58dp"
         android:layout_marginEnd="145dp"
         android:layout_marginRight="145dp"
-        android:text="What do you need help with?"
+        android:text="@string/question_about_help_needed"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/addingRequestText" />
 
     <ImageView
-        android:id="@+id/imageView21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/shopImage"
+        android:layout_width="27dp"
+        android:layout_height="25dp"
         android:layout_marginStart="88dp"
         android:layout_marginLeft="88dp"
         android:layout_marginTop="14dp"
+        android:contentDescription="@string/shop_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/specifyHelpText"
         app:srcCompat="@drawable/shop" />
 
     <ImageView
@@ -54,23 +55,25 @@
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView21"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        android:contentDescription="@string/dog_image"
+        app:layout_constraintStart_toEndOf="@+id/shopImage"
+        app:layout_constraintTop_toBottomOf="@+id/specifyHelpText"
         app:srcCompat="@drawable/dog" />
 
     <ImageView
-        android:id="@+id/imageView23"
+        android:id="@+id/medicinesImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:layout_marginEnd="188dp"
         android:layout_marginRight="188dp"
+        android:contentDescription="@string/medicines_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/specifyHelpText"
         app:srcCompat="@drawable/medicines" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/provideCommentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="38dp"
@@ -78,14 +81,14 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="36dp"
         android:layout_marginRight="36dp"
-        android:text="Provide comment for volunteers (optional)"
+        android:text="@string/provide_comment"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView22" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/insertCommentEditText"
         android:layout_width="267dp"
         android:layout_height="144dp"
         android:layout_marginStart="72dp"
@@ -93,16 +96,17 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="72dp"
         android:layout_marginRight="72dp"
+        android:autofillHints=""
         android:ems="10"
         android:gravity="center"
+        android:hint="@string/comment"
         android:inputType="textPersonName"
-        android:text="COMMENT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/provideCommentText" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/requestHelpBtn"
         android:layout_width="147dp"
         android:layout_height="74dp"
         android:layout_marginStart="132dp"
@@ -110,8 +114,8 @@
         android:layout_marginTop="42dp"
         android:layout_marginEnd="132dp"
         android:layout_marginRight="132dp"
-        android:text="request help"
+        android:text="@string/request_help"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/insertCommentEditText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

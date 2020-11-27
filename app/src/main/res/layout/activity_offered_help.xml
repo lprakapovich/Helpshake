@@ -7,29 +7,30 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/rejectBtn"
         android:layout_width="117dp"
         android:layout_height="58dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="70dp"
         android:layout_marginRight="70dp"
-        android:text="Reject"
+        android:text="@string/reject"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/distanceText" />
 
     <ImageView
-        android:id="@+id/imageView26"
+        android:id="@+id/volunteerPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="39dp"
         android:layout_marginLeft="39dp"
         android:layout_marginTop="4dp"
+        android:contentDescription="@string/volunteer_photo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
-        tools:srcCompat="@tools:sample/avatars"/>
+        app:layout_constraintTop_toBottomOf="@+id/offeredHelpText"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/offeredHelpText"
         android:layout_width="205dp"
         android:layout_height="59dp"
         android:layout_marginStart="136dp"
@@ -37,58 +38,61 @@
         android:layout_marginTop="58dp"
         android:layout_marginEnd="70dp"
         android:layout_marginRight="70dp"
-        android:text="Offered help:"
+        android:text="@string/offered_help"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView25"
+        android:id="@+id/shopImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="22dp"
         android:layout_marginRight="22dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView28"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
+        android:contentDescription="@string/dog_image"
+        app:layout_constraintEnd_toStartOf="@+id/medicinesImage"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/dog" />
 
     <ImageView
-        android:id="@+id/imageView27"
+        android:id="@+id/shopImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView26"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
+        android:contentDescription="@string/shop_image"
+        app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/shop" />
 
     <ImageView
-        android:id="@+id/imageView28"
+        android:id="@+id/medicinesImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="70dp"
         android:layout_marginRight="70dp"
+        android:contentDescription="@string/medicines_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/medicines" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/nameAndSurnameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
         android:layout_marginEnd="85dp"
         android:layout_marginRight="85dp"
-        android:text="Name and Surname"
+        android:text="@string/name_and_surname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        app:layout_constraintTop_toBottomOf="@+id/offeredHelpText" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/distanceText"
         android:layout_width="82dp"
         android:layout_height="42dp"
         android:layout_marginStart="56dp"
@@ -96,13 +100,13 @@
         android:layout_marginTop="17dp"
         android:layout_marginEnd="106dp"
         android:layout_marginRight="106dp"
-        android:text="distance"
+        android:text="@string/distance"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView26"
-        app:layout_constraintTop_toBottomOf="@+id/imageView25" />
+        app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/shopImage" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/informationText"
         android:layout_width="347dp"
         android:layout_height="66dp"
         android:layout_marginStart="48dp"
@@ -110,20 +114,20 @@
         android:layout_marginTop="21dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="Click on th e photo to view the profile"
+        android:text="@string/click_profile_information"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button8" />
+        app:layout_constraintTop_toBottomOf="@+id/rejectBtn" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/acceptBtn"
         android:layout_width="116dp"
         android:layout_height="53dp"
         android:layout_marginStart="87dp"
         android:layout_marginLeft="87dp"
         android:layout_marginTop="37dp"
-        android:text="Accept"
+        android:text="@string/accept"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView26" />
+        app:layout_constraintTop_toBottomOf="@+id/volunteerPhoto" />
 </androidx.constraintlayout.widget.ConstraintLayout>

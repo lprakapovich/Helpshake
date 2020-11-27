@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/myRequestsText"
         android:layout_width="215dp"
         android:layout_height="84dp"
         android:layout_marginStart="98dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/contactBtn"
         android:layout_width="142dp"
         android:layout_height="59dp"
         android:layout_marginStart="44dp"
@@ -31,10 +31,10 @@
         android:layout_marginTop="34dp"
         android:text="@string/contact"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameSurnameVolunteer" />
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/markAsFinishedBtn"
         android:layout_width="157dp"
         android:layout_height="59dp"
         android:layout_marginTop="35dp"
@@ -42,18 +42,18 @@
         android:layout_marginRight="39dp"
         android:text="@string/mark_as_finished"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintTop_toBottomOf="@+id/volunteerPhoto" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/volunteerPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:layout_marginEnd="39dp"
         android:layout_marginRight="39dp"
-        android:contentDescription="@string/volunteerimage"
+        android:contentDescription="@string/volunteer_photo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/myRequestsText"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -63,50 +63,50 @@
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="161dp"
-        android:text="@string/_1"
+        android:text="@string/number_1"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView7"
+        app:layout_constraintEnd_toStartOf="@+id/shopImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/shopImage"
         android:layout_width="44dp"
         android:layout_height="33dp"
         android:layout_marginTop="23dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:contentDescription="@string/shopimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView8"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:contentDescription="@string/shop_image"
+        app:layout_constraintEnd_toStartOf="@+id/shopImage"
+        app:layout_constraintTop_toBottomOf="@+id/myRequestsText"
         app:srcCompat="@drawable/shop" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/shopImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
-        android:contentDescription="@string/dogimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:contentDescription="@string/dog_image"
+        app:layout_constraintEnd_toStartOf="@+id/medicinesImage"
+        app:layout_constraintTop_toBottomOf="@+id/myRequestsText"
         app:srcCompat="@drawable/dog" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/medicinesImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:contentDescription="@string/medicinesimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:contentDescription="@string/medicines_image"
+        app:layout_constraintEnd_toStartOf="@+id/volunteerPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/myRequestsText"
         app:srcCompat="@drawable/medicines" />
 
     <TextView
-        android:id="@+id/voulnteer"
+        android:id="@+id/voulnteerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="63dp"
@@ -117,7 +117,7 @@
         app:layout_constraintTop_toBottomOf="@+id/requestNumber" />
 
     <TextView
-        android:id="@+id/nameSurnameVolunteer"
+        android:id="@+id/nameAndSurnameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="63dp"
@@ -125,5 +125,5 @@
         android:layout_marginTop="21dp"
         android:text="@string/name_and_surname"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voulnteer" />
+        app:layout_constraintTop_toBottomOf="@+id/voulnteerText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

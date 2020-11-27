@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/helpSeekerPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="34dp"
@@ -15,14 +15,14 @@
         android:layout_marginTop="72dp"
         android:layout_marginEnd="36dp"
         android:layout_marginRight="36dp"
-        android:contentDescription="@string/helpseekerphoto"
-        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        android:contentDescription="@string/help_seeker_photo"
+        app:layout_constraintEnd_toStartOf="@+id/shopImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/nameSurname2"
+        android:id="@+id/nameAndSurnameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="43dp"
@@ -30,61 +30,61 @@
         android:layout_marginTop="74dp"
         android:layout_marginEnd="109dp"
         android:layout_marginRight="109dp"
-        android:text="@string/name_surname"
+        android:text="@string/name_and_surname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/helpSeekerPhoto"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/shopImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:contentDescription="@string/shopimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/nameSurname2"
+        android:contentDescription="@string/shop_image"
+        app:layout_constraintEnd_toStartOf="@+id/shopImage"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/shop" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/shopImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
-        android:contentDescription="@string/dogimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/nameSurname2"
+        android:contentDescription="@string/dog_image"
+        app:layout_constraintEnd_toStartOf="@+id/medicinesImage"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/dog" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/medicinesImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="14dp"
         android:layout_marginRight="14dp"
-        android:contentDescription="@string/medicinesimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/nameSurname2"
+        android:contentDescription="@string/medicines_image"
+        app:layout_constraintEnd_toStartOf="@+id/distanceImage"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/medicines" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/distanceImage"
         android:layout_width="59dp"
         android:layout_height="72dp"
         android:layout_marginTop="93dp"
         android:layout_marginEnd="7dp"
         android:layout_marginRight="7dp"
-        android:contentDescription="@string/mappointimage"
+        android:contentDescription="@string/map_point_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/distance" />
 
     <TextView
-        android:id="@+id/distance"
+        android:id="@+id/distanceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
@@ -94,8 +94,8 @@
         android:layout_marginRight="123dp"
         android:text="@string/distance"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintStart_toEndOf="@+id/helpSeekerPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/shopImage" />
 
     <Button
         android:id="@+id/button5"
@@ -109,5 +109,5 @@
         android:text="@string/more_information"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/distance" />
+        app:layout_constraintTop_toBottomOf="@+id/distanceText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

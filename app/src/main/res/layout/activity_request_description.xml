@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/nameSurname"
+        android:id="@+id/nameAndSurnameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="158dp"
@@ -23,44 +23,44 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView11"
+        android:id="@+id/helpSeekerPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
         android:layout_marginLeft="55dp"
         android:layout_marginTop="25dp"
-        android:contentDescription="@string/helpseekerimage"
+        android:contentDescription="@string/help_seeker_photo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameSurname"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
-        android:id="@+id/imageView12"
+        android:id="@+id/distanceImage"
         android:layout_width="68dp"
         android:layout_height="60dp"
         android:layout_marginStart="64dp"
         android:layout_marginLeft="64dp"
         android:layout_marginTop="24dp"
-        android:contentDescription="@string/mappointimage"
-        app:layout_constraintStart_toEndOf="@+id/imageView11"
-        app:layout_constraintTop_toBottomOf="@+id/nameSurname"
+        android:contentDescription="@string/map_point_image"
+        app:layout_constraintStart_toEndOf="@+id/helpSeekerPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/distance" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/distanceText"
         android:layout_width="100dp"
         android:layout_height="48dp"
         android:layout_marginStart="48dp"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="11dp"
         android:gravity="center"
-        android:text="@string/distance2"
+        android:text="@string/distance"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView11"
-        app:layout_constraintTop_toBottomOf="@+id/imageView12" />
+        app:layout_constraintStart_toEndOf="@+id/helpSeekerPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/distanceImage" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/needsText"
         android:layout_width="54dp"
         android:layout_height="25dp"
         android:layout_marginStart="67dp"
@@ -70,12 +70,12 @@
         android:layout_marginRight="19dp"
         android:text="@string/needs"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView13"
+        app:layout_constraintEnd_toStartOf="@+id/shopImage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView11" />
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerPhoto" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/helpSeekerCommentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="67dp"
@@ -84,46 +84,46 @@
         android:text="@string/comments_from_help_seeker"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView13" />
+        app:layout_constraintTop_toBottomOf="@+id/shopImage" />
 
     <ImageView
-        android:id="@+id/imageView13"
+        android:id="@+id/shopImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="57dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:contentDescription="@string/dogimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView14"
-        app:layout_constraintTop_toBottomOf="@+id/imageView11"
+        android:contentDescription="@string/shop_image"
+        app:layout_constraintEnd_toStartOf="@+id/dogImage"
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerPhoto"
         app:srcCompat="@drawable/shop" />
 
     <ImageView
-        android:id="@+id/imageView14"
+        android:id="@+id/dogImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="211dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:contentDescription="@string/dogimage"
-        app:layout_constraintEnd_toStartOf="@+id/imageView16"
-        app:layout_constraintTop_toBottomOf="@+id/nameSurname"
+        android:contentDescription="@string/dog_image"
+        app:layout_constraintEnd_toStartOf="@+id/medicinesImage"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
         app:srcCompat="@drawable/dog" />
 
     <ImageView
-        android:id="@+id/imageView16"
+        android:id="@+id/medicinesImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="65dp"
         android:layout_marginEnd="127dp"
         android:layout_marginRight="127dp"
-        android:contentDescription="@string/dogimage"
+        android:contentDescription="@string/medicines_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/distanceText"
         app:srcCompat="@drawable/medicines" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/commentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="71dp"
@@ -132,10 +132,10 @@
         android:text="@string/comment"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerCommentText" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/offerHelpBtn"
         android:layout_width="140dp"
         android:layout_height="67dp"
         android:layout_marginStart="140dp"
@@ -147,6 +147,6 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/commentText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

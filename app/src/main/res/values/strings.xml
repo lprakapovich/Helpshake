@@ -27,30 +27,36 @@
     <string name="exit">Exit</string>
     <string name="email_in_use">Such email is already in use!</string>
     <string name="error_message">Something went wrong. Try again later.</string>
-    <string name="name_surname">Name Surname</string>
+
+    //image content description
+    <string name="help_seeker_photo">helpSeekerPhoto</string>
+    <string name="volunteer_photo">volunteerPhoto</string>
+    <string name="shop_image">shopImage</string>
+    <string name="dog_image">DogImage</string>
+    <string name="medicines_image">medicinesImage</string>
+    <string name="map_point_image">mapPointImage</string>
+
+    //strings for views
     <string name="distance">Distance</string>
-    <string name="helpseekerphoto">helpSeekerPhoto</string>
-    <string name="shopimage">shopImage</string>
-    <string name="dogimage">DogImage</string>
-    <string name="medicinesimage">medicinesImage</string>
-    <string name="mappointimage">mapPointImage</string>
-    <string name="help_requests_3">Help requests: 3</string>
-    <string name="log_out">Log out</string>
-    <string name="edit_profile">Edit profile</string>
-    <string name="delete_account">Delete account</string>
+    <string name="name_and_surname">Name and Surname</string>
+    <string name="accepted_requests">Accepted requests:</string>
+    <string name="adding_request">Adding request</string>
+    <string name="question_about_help_needed">What do you need help with?</string>
+    <string name="provide_comment">Provide comment for volunteers (optional)</string>
+    <string name="comment">COMMENT</string>
+    <string name="request_help">request help</string>
     <string name="my_requests">My requests</string>
-    <string name="_1">#1</string>
+    <string name="number_1">#1</string>
     <string name="volunteer">Volunteer:</string>
     <string name="contact">contact</string>
     <string name="mark_as_finished">mark as finished</string>
-    <string name="volunteerimage">volunteerImage</string>
-    <string name="name_and_surname">Name and Surname</string>
+    <string name="more_information">More information</string>
+    <string name="offered_help">Offered help:</string>
+    <string name="click_profile_information">Click on th e photo to view the profile</string>
+    <string name="reject">Reject</string>
+    <string name="accept">Accept</string>
     <string name="needs">Needs:</string>
     <string name="comments_from_help_seeker">Comments from help seeker:</string>
-    <string name="comment">COMMENT</string>
     <string name="offer_help">offer help</string>
-    <string name="distance2">distance</string>
-    <string name="helpseekerimage">helpSeekerimage</string>
-    <string name="more_information">More information</string>
 
 </resources>
