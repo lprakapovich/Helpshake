@@ -41,9 +41,16 @@
     <string name="my_requests">My requests</string>
     <string name="_1">#1</string>
     <string name="volunteer">Volunteer:</string>
-    <string name="name_and_surname">Name and Surname</string>
     <string name="contact">contact</string>
     <string name="mark_as_finished">mark as finished</string>
     <string name="volunteerimage">volunteerImage</string>
+    <string name="name_and_surname">Name and Surname</string>
+    <string name="needs">Needs:</string>
+    <string name="comments_from_help_seeker">Comments from help seeker:</string>
+    <string name="comment">COMMENT</string>
+    <string name="offer_help">offer help</string>
+    <string name="distance2">distance</string>
+    <string name="helpseekerimage">helpSeekerimage</string>
+    <string name="more_information">More information</string>
 
 </resources>
