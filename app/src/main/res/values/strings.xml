@@ -27,5 +27,23 @@
     <string name="exit">Exit</string>
     <string name="email_in_use">Such email is already in use!</string>
     <string name="error_message">Something went wrong. Try again later.</string>
+    <string name="name_surname">Name Surname</string>
+    <string name="distance">Distance</string>
+    <string name="helpseekerphoto">helpSeekerPhoto</string>
+    <string name="shopimage">shopImage</string>
+    <string name="dogimage">DogImage</string>
+    <string name="medicinesimage">medicinesImage</string>
+    <string name="mappointimage">mapPointImage</string>
+    <string name="help_requests_3">Help requests: 3</string>
+    <string name="log_out">Log out</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="delete_account">Delete account</string>
+    <string name="my_requests">My requests</string>
+    <string name="_1">#1</string>
+    <string name="volunteer">Volunteer:</string>
+    <string name="name_and_surname">Name and Surname</string>
+    <string name="contact">contact</string>
+    <string name="mark_as_finished">mark as finished</string>
+    <string name="volunteerimage">volunteerImage</string>
 
 </resources>
