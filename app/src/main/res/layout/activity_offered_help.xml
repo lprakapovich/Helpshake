@@ -45,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/shopImage"
+        android:id="@+id/dogImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -103,7 +103,7 @@
         android:text="@string/distance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
-        app:layout_constraintTop_toBottomOf="@+id/shopImage" />
+        app:layout_constraintTop_toBottomOf="@+id/dogImage" />
 
     <TextView
         android:id="@+id/informationText"

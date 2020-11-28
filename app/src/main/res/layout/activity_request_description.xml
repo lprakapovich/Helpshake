@@ -70,7 +70,7 @@
         android:layout_marginRight="19dp"
         android:text="@string/needs"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/shopImage"
+        app:layout_constraintEnd_toStartOf="@+id/dogImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/helpSeekerPhoto" />
 
@@ -84,7 +84,7 @@
         android:text="@string/comments_from_help_seeker"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shopImage" />
+        app:layout_constraintTop_toBottomOf="@+id/dogImage" />
 
     <ImageView
         android:id="@+id/shopImage"

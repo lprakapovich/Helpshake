@@ -65,7 +65,7 @@
         android:layout_marginTop="161dp"
         android:text="@string/number_1"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/shopImage"
+        app:layout_constraintEnd_toStartOf="@+id/dogImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,12 +77,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:contentDescription="@string/shop_image"
-        app:layout_constraintEnd_toStartOf="@+id/shopImage"
+        app:layout_constraintEnd_toStartOf="@+id/dogImage"
         app:layout_constraintTop_toBottomOf="@+id/myRequestsText"
         app:srcCompat="@drawable/shop" />
 
     <ImageView
-        android:id="@+id/shopImage"
+        android:id="@+id/dogImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="23dp"
