@@ -14,6 +14,7 @@ import android.view.View;
 import com.application.helpshake.R;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.Role;
+import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogSelect;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -146,13 +147,15 @@ public class RegisterActivity extends AppCompatActivity
 
     private void saveCredentialsToFireStore() {
         DocumentReference userDocument = mDb.collection("users").document();
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("name", mName);
-        userData.put("surname", mSurname);
-        userData.put("email", mEmail);
-        userData.put("role", mRole);
+        User user = new User(mName, mSurname, mEmail, mRole, "");
 
-        userDocument.set(userData)
+//        Map<String, Object> userData = new HashMap<>();
+//        userData.put("name", mName);
+//        userData.put("surname", mSurname);
+//        userData.put("email", mEmail);
+//        userData.put("role", mRole);
+
+        userDocument.set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

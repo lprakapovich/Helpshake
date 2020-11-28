@@ -3,28 +3,44 @@ package com.application.helpshake.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.application.helpshake.MainActivity;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityLoginBinding;
 import com.application.helpshake.helper.DialogBuilder;
+import com.application.helpshake.model.Role;
+import com.application.helpshake.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding mBinding;
 
     private FirebaseAuth mAuth;
+    private String mUid;
+    private FirebaseFirestore mDb;
+    private CollectionReference mUsersCollection;
+
 
     private String mEmail, mPassword;
+    private User mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
                 this, R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        mDb = FirebaseFirestore.getInstance();
+        mUsersCollection = mDb.collection("users");
 
         mBinding.login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            mUid = mAuth.getCurrentUser().getUid();
+                            mEmail = mAuth.getCurrentUser().getEmail();
                             validateEmail();
                         } else {
                             DialogBuilder.showMessageDialog(getSupportFragmentManager(),
@@ -72,14 +92,54 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void validateEmail() {
+
         if (isEmailVerified()) {
-            startActivity(new Intent(
-                    LoginActivity.this, MainActivity.class));
+
+            updateUserDocumentUid();
+
         } else {
             DialogBuilder.showMessageDialog(getSupportFragmentManager(),
                     getString(R.string.email_verification),
                     getString(R.string.email_verification_pending));
         }
+    }
+
+    private void updateUserDocumentUid() {
+
+        Query query = mUsersCollection
+                .whereEqualTo("email", mEmail);
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+
+                    mCurrentUser = snapshot.toObject(User.class);
+
+                    if (mCurrentUser.getUid().isEmpty()) {
+                        assert mCurrentUser != null;
+                        mCurrentUser.setUid(mUid);
+                        updateDocumentData(snapshot.getId());
+                    }
+
+                    openHomePage();
+                }
+            }
+        });
+    }
+
+    private void updateDocumentData(String documentId) {
+        mUsersCollection.document(documentId).set(mCurrentUser);
+    }
+
+    private void openHomePage() {
+        Class<? extends AppCompatActivity> target;
+        if (mCurrentUser.getRole().equals(Role.HelpSeeker)) {
+            target = HelpSeekerProfilePage.class;
+        } else {
+            target = VolunteerProfilePage.class;
+        }
+        startActivity(new Intent(LoginActivity.this, target));
     }
 
     private boolean emptyInput() {
