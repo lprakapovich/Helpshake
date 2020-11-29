@@ -1,17 +1,16 @@
 package com.application.helpshake.view;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
-import com.application.helpshake.databinding.ActivityRegisterBinding;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-
 import com.application.helpshake.R;
+import com.application.helpshake.databinding.ActivityRegisterBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.Role;
 import com.application.helpshake.model.User;
@@ -23,12 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity
         implements DialogSelect.OptionSelectedListener {

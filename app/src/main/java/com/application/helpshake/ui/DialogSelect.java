@@ -12,8 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.Objects;
-
 public class DialogSelect extends DialogFragment {
 
     public interface OptionSelectedListener {

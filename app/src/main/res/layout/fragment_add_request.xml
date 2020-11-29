@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/insertCommentEditText"
+            app:layout_constraintTop_toTopOf="@+id/insertCommentEditText">
+
+            <TextView
+                android:id="@+id/specifyHelpText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:text="@string/question_about_help_needed"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/grocery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="53dp"
+                android:layout_marginLeft="53dp"
+                android:layout_marginTop="25dp"
+                android:text="Grocery"
+                app:layout_constraintStart_toStartOf="@+id/specifyHelpText"
+                app:layout_constraintTop_toBottomOf="@+id/specifyHelpText" />
+
+            <CheckBox
+                android:id="@+id/dogwalking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="17dp"
+                android:text="Dog Walking"
+                app:layout_constraintStart_toStartOf="@+id/grocery"
+                app:layout_constraintTop_toBottomOf="@+id/grocery" />
+
+            <CheckBox
+                android:id="@+id/drugstore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19dp"
+                android:text="Drugstore"
+                app:layout_constraintStart_toStartOf="@+id/dogwalking"
+                app:layout_constraintTop_toBottomOf="@+id/dogwalking" />
+
+            <CheckBox
+                android:id="@+id/other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="21dp"
+                android:text="Other"
+                app:layout_constraintStart_toStartOf="@+id/drugstore"
+                app:layout_constraintTop_toBottomOf="@+id/drugstore" />
+
+            <TextView
+                android:id="@+id/provideCommentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="22dp"
+                android:layout_marginLeft="37dp"
+                android:layout_marginRight="37dp"
+                android:gravity="center"
+                android:text="@string/provide_comment"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/comment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/other" />
+
+            <EditText
+                android:id="@+id/comment"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="39dp"
+                android:layout_marginRight="37dp"
+                android:layout_marginLeft="37dp"
+                android:layout_weight="1"
+                android:hint="Comment"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLength="2000"
+                android:maxLines="4"
+                android:scrollHorizontally="false"
+                app:layout_constraintBottom_toTopOf="@+id/cancelBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/addRequestBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="36dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/transparent"
+                android:text="Add request"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/cancelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginLeft="36dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/transparent"
+                android:text="Cancel"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/addRequestBtn"
+                app:layout_constraintHorizontal_bias="0.006"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

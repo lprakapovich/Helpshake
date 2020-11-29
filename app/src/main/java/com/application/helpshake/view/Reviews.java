@@ -1,8 +1,8 @@
 package com.application.helpshake.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.application.helpshake.R;
 
