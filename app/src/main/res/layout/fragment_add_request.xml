@@ -18,7 +18,7 @@
                 android:id="@+id/specifyHelpText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="30dp"
                 android:text="@string/question_about_help_needed"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +31,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="53dp"
                 android:layout_marginLeft="53dp"
-                android:layout_marginTop="25dp"
-                android:text="Grocery"
+                android:layout_marginTop="15dp"
+                android:text="@string/category_grocery"
                 app:layout_constraintStart_toStartOf="@+id/specifyHelpText"
                 app:layout_constraintTop_toBottomOf="@+id/specifyHelpText" />
 
@@ -40,8 +40,8 @@
                 android:id="@+id/dogwalking"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
-                android:text="Dog Walking"
+                android:layout_marginTop="15dp"
+                android:text="@string/category_dog_walking"
                 app:layout_constraintStart_toStartOf="@+id/grocery"
                 app:layout_constraintTop_toBottomOf="@+id/grocery" />
 
@@ -49,8 +49,8 @@
                 android:id="@+id/drugstore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:text="Drugstore"
+                android:layout_marginTop="15dp"
+                android:text="@string/category_drugstore"
                 app:layout_constraintStart_toStartOf="@+id/dogwalking"
                 app:layout_constraintTop_toBottomOf="@+id/dogwalking" />
 
@@ -58,8 +58,8 @@
                 android:id="@+id/other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
-                android:text="Other"
+                android:layout_marginTop="15dp"
+                android:text="@string/category_other"
                 app:layout_constraintStart_toStartOf="@+id/drugstore"
                 app:layout_constraintTop_toBottomOf="@+id/drugstore" />
 
@@ -87,7 +87,7 @@
                 android:layout_marginRight="37dp"
                 android:layout_marginLeft="37dp"
                 android:layout_weight="1"
-                android:hint="Comment"
+                android:hint="@string/help_request_comment"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="2000"
                 android:maxLines="4"
@@ -104,7 +104,7 @@
                 android:layout_marginRight="36dp"
                 android:layout_marginBottom="20dp"
                 android:background="@android:color/transparent"
-                android:text="Add request"
+                android:text="@string/add_request"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -117,7 +117,7 @@
                 android:layout_marginLeft="36dp"
                 android:layout_marginBottom="20dp"
                 android:background="@android:color/transparent"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addRequestBtn"

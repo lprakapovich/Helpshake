@@ -54,7 +54,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     private void openRequestDialog() {
         mDialog = new DialogHelpRequest();
-        mDialog.show(getSupportFragmentManager(), "help request");
+        mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
     @Override
@@ -76,14 +76,16 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 comment
         );
 
-        mDb.collection("helpSeekerRequests").document().set(request)
+        String collection = getString(R.string.collectionHelpSeekerRequests);
+
+        mDb.collection(collection).document().set(request)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 DialogBuilder.showMessageDialog(
                         getSupportFragmentManager(),
-                        "Request is published",
-                        "Thank you! Our volunteers will reach out to you."
+                        getString(R.string.request_published),
+                        getString(R.string.request_published_msg)
                 );
             }
         });

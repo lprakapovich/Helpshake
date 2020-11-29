@@ -92,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity
 
     private void selectUserRole() {
         String[] options = new String[] {
-                getString(R.string.helpseeker_role),
+                getString(R.string.help_seeker_role),
                 getString(R.string.volunteer_role)
         };
 

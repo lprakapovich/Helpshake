@@ -49,7 +49,7 @@ public class DialogHelpRequest extends DialogFragment {
 
         setOnCheckBoxSelected();
         builder.setView(mBinding.getRoot())
-                .setTitle("Adding a help request")
+                .setTitle(getString(R.string.adding_request))
                 .setCancelable(false);
 
         mBinding.addRequestBtn.setOnClickListener(new View.OnClickListener() {
@@ -60,8 +60,8 @@ public class DialogHelpRequest extends DialogFragment {
                 } else {
                     DialogBuilder.showMessageDialog(
                             getParentFragmentManager(),
-                            "Not allowed",
-                            "Request must contain at least one category");
+                            getString(R.string.not_allowed),
+                            getString(R.string.empty_category_error));
                 }
             }
         });
