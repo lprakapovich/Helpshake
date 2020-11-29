@@ -66,6 +66,9 @@
 
 
     <!--  Help Request  -->
+    <string name="status">Status</string>
+    <string name="details">Details</string>
+    <string name="categories">Categories</string>
     <string name="category_other">Other</string>
     <string name="category_grocery">Grocery</string>
     <string name="category_drugstore">Drugstore</string>
@@ -79,4 +82,6 @@
     <string name="request_published">Request is published</string>
     <string name="request_published_msg">Thank you! Our volunteers will reach out to you.</string>
     <string name="empty_category_error">Request must contain at least one category</string>
+    <string name="collection_doc_uid">helpSeekerUid</string>
+
 </resources>

@@ -144,12 +144,6 @@ public class RegisterActivity extends AppCompatActivity
         DocumentReference userDocument = mDb.collection("users").document();
         User user = new User(mName, mSurname, mEmail, mRole, "");
 
-//        Map<String, Object> userData = new HashMap<>();
-//        userData.put("name", mName);
-//        userData.put("surname", mSurname);
-//        userData.put("email", mEmail);
-//        userData.put("role", mRole);
-
         userDocument.set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

@@ -2,6 +2,7 @@ package com.application.helpshake.view;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +15,17 @@ import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.ui.DialogHelpRequest;
+import com.application.helpshake.utils.RequestListAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
@@ -27,9 +34,13 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     FirebaseFirestore mDb;
+    CollectionReference mRequestsCollection;
+
+    DialogHelpRequest mDialog;
+    RequestListAdapter mAdapter;
+    ArrayList<HelpSeekerRequest> mHelpRequests;
 
     ActivityHelpSeekerHomeBinding mBinding;
-    DialogHelpRequest mDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +61,44 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDb = FirebaseFirestore.getInstance();
+        mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
+
+        mHelpRequests = new ArrayList<>();
+
+        fetchHelpSeekerRequests();
+    }
+
+
+    private void fetchHelpSeekerRequests() {
+
+
+        Query query = mRequestsCollection.whereEqualTo(
+                getString(R.string.collection_doc_uid),
+                mUser.getUid());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    mHelpRequests.add(
+                            snapshot.toObject(HelpSeekerRequest.class));
+                }
+
+                initializeListAdapter();
+            }
+        });
+    }
+
+    private void initializeListAdapter() {
+
+        mAdapter = new RequestListAdapter(mHelpRequests, this);
+        mBinding.list.setAdapter(mAdapter);
+
+        mBinding.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HelpSeekerRequest request = mHelpRequests.get(position);
+            }
+        });
     }
 
     private void openRequestDialog() {

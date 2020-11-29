@@ -90,9 +90,7 @@ public class LoginActivity extends AppCompatActivity {
     private void validateEmail() {
 
         if (isEmailVerified()) {
-
             updateUserDocumentUid();
-
         } else {
             DialogBuilder.showMessageDialog(getSupportFragmentManager(),
                     getString(R.string.email_verification),

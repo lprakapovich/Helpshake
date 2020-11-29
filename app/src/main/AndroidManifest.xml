@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".view.Reviews" />
+        <activity android:name=".view.ReviewsActivity" />
         <activity android:name=".view.HelpSeekerProfilePage" />
         <activity android:name=".view.VolunteerProfilePage" />
         <activity
@@ -20,15 +20,17 @@
 
         <activity android:name=".view.RegisterActivity">
 
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-
-
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
 
         </activity>
-        <activity android:name=".view.HelpSeekerHomeActivity"/>
+        <activity android:name=".view.HelpSeekerHomeActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+         </activity>
     </application>
 
 </manifest>
