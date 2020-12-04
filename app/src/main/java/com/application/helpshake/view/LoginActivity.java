@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
         if (mCurrentUser.getRole().equals(Role.HelpSeeker)) {
             target = HelpSeekerHomeActivity.class;
         } else {
-            target = VolunteerProfilePage.class;
+            target = VolunteerHomeActivity.class;
         }
         startActivity(new Intent(LoginActivity.this, target));
     }
