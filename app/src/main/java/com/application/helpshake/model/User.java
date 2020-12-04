@@ -1,5 +1,7 @@
 package com.application.helpshake.model;
 
+import android.media.Image;
+
 import lombok.Data;
 
 @Data
@@ -20,8 +22,4 @@ public class User {
     private String email;
     private Role role;
     private String uid;
-
-    public String getName() {
-        return name;
-    }
 }

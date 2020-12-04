@@ -1,5 +1,7 @@
 package com.application.helpshake.model;
 
+import android.media.Image;
+
 import java.util.List;
 
 import lombok.Data;
@@ -18,6 +20,8 @@ public class HelpSeekerRequest {
     Status status;
 
     String comment;
+
+    int photoId;
 
     //Location location;
 

@@ -12,6 +12,7 @@ import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.ui.DialogHelpRequest;
 import com.application.helpshake.utils.RequestListAdapter;
+import com.application.helpshake.utils.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,10 +30,12 @@ public class VolunteerHomeActivity extends AppCompatActivity {
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
 
-    RequestListAdapter mAdapter;
+    RequestListAdapterVolunteer mAdapter;
     ArrayList<HelpSeekerRequest> mHelpRequests;
 
     ActivityVolunteerHomeBinding mBinding;
+
+    int[] images = {R.drawable.camera, R.drawable.ic_baseline_location_on_24};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class VolunteerHomeActivity extends AppCompatActivity {
 
     private void initializeListAdapter() {
 
-        mAdapter = new RequestListAdapter(mHelpRequests, this);
+        mAdapter = new RequestListAdapterVolunteer(mHelpRequests, this, images);
         mBinding.listRequests.setAdapter(mAdapter);
 
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {

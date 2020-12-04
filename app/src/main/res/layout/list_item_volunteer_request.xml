@@ -3,70 +3,66 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="200dp">
+
 
     <ImageView
         android:id="@+id/help_seeker_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/list_item_category"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         tools:src="@tools:sample/avatars" />
-
 
     <TextView
         android:id="@+id/list_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
         android:text="@string/name_and_surname"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/list_item_category"
-        app:layout_constraintEnd_toStartOf="@+id/location"
-        app:layout_constraintHorizontal_bias="0.201"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.47" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/list_item_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginLeft="43dp"
+        android:layout_marginTop="25dp"
         android:text="@string/categories"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/list_item_distance"
-        app:layout_constraintEnd_toEndOf="@+id/list_item_distance"
-        app:layout_constraintHorizontal_bias="0.071"
-        app:layout_constraintStart_toStartOf="@+id/list_item_distance"
-        app:layout_constraintTop_toTopOf="@+id/location"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
+        app:layout_constraintTop_toBottomOf="@+id/list_item_name" />
 
     <TextView
         android:id="@+id/list_item_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="158dp"
-        android:layout_marginLeft="158dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/distance"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
+        app:layout_constraintTop_toBottomOf="@+id/list_item_category" />
 
     <ImageView
         android:id="@+id/location"
@@ -77,10 +73,24 @@
         android:layout_centerVertical="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.694"
+        app:layout_constraintHorizontal_bias="0.635"
         app:layout_constraintStart_toEndOf="@+id/list_item_category"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.509"
+        app:layout_constraintVertical_bias="0.504"
         tools:src="@drawable/ic_baseline_location_on_24" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="184dp"
+        android:layout_marginLeft="184dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginRight="68dp"
+        android:layout_marginBottom="7dp"
+        android:text="@string/more_information"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
