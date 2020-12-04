@@ -23,6 +23,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class VolunteerHomeActivity extends AppCompatActivity {
 
@@ -54,7 +55,11 @@ public class VolunteerHomeActivity extends AppCompatActivity {
     }
 
     private void fetchHelpSeekerRequests() {
-        Query query = mRequestsCollection;
+        // 1) fetching requests which contains declared help category
+        // (even if there are also categories unwanted by the volunteer)
+        Query query = mRequestsCollection.whereArrayContainsAny("helpCategories",
+               Arrays.asList("DogWalking", "Grocery"));
+
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
