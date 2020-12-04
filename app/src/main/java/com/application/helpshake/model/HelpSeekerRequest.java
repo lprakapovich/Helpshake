@@ -9,6 +9,10 @@ public class HelpSeekerRequest {
 
     String helpSeekerUid;
 
+    String helpSeekerName;
+
+    String helpSeekerSurname;
+
     List<HelpCategory> helpCategories;
 
     Status status;
@@ -20,11 +24,15 @@ public class HelpSeekerRequest {
     public HelpSeekerRequest() {}
 
     public HelpSeekerRequest(String helpSeekerUid,
+                             String helpSeekerName,
+                             String helpSeekerSurname,
                              List<HelpCategory> helpCategories,
                              Status status,
                              String comment) {
 
         this.helpSeekerUid = helpSeekerUid;
+        this.helpSeekerName = helpSeekerName;
+        this.helpSeekerSurname = helpSeekerSurname;
         this.helpCategories = helpCategories;
         this.status = status;
         this.comment = comment;

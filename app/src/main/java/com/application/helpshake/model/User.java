@@ -20,4 +20,8 @@ public class User {
     private String email;
     private Role role;
     private String uid;
+
+    public String getName() {
+        return name;
+    }
 }

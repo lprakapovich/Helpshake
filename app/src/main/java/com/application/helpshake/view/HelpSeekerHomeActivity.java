@@ -14,6 +14,7 @@ import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
+import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogHelpRequest;
 import com.application.helpshake.utils.RequestListAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,10 +36,13 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     FirebaseUser mUser;
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
+    CollectionReference mUsersCollection;
 
     DialogHelpRequest mDialog;
     RequestListAdapter mAdapter;
+
     ArrayList<HelpSeekerRequest> mHelpRequests;
+    User user;
 
     ActivityHelpSeekerHomeBinding mBinding;
 
@@ -62,15 +66,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mUser = mAuth.getCurrentUser();
         mDb = FirebaseFirestore.getInstance();
         mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
+        mUsersCollection = mDb.collection(getString(R.string.collectionUsers));
 
         mHelpRequests = new ArrayList<>();
-
+        user = queryUser();
         fetchHelpSeekerRequests();
     }
 
 
     private void fetchHelpSeekerRequests() {
-
 
         Query query = mRequestsCollection.whereEqualTo(
                 getString(R.string.collection_doc_uid),
@@ -120,6 +124,8 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     private void createNewRequest(String comment, List<HelpCategory> categories) {
         HelpSeekerRequest request = new HelpSeekerRequest(
                 mUser.getUid(),
+                user.getName(),
+                user.getSurname(),
                 categories,
                 Status.Open,
                 comment
@@ -138,5 +144,20 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 );
             }
         });
+    }
+
+    public User queryUser() {
+        Query query = mUsersCollection.whereEqualTo("uid",
+                mUser.getUid());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                   user = snapshot.toObject(User.class);
+                }
+
+            }
+        });
+        return user;
     }
 }
