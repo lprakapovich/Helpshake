@@ -69,7 +69,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mUsersCollection = mDb.collection(getString(R.string.collectionUsers));
 
         mHelpRequests = new ArrayList<>();
-        user = queryUser();
+        queryUser();
         fetchHelpSeekerRequests();
     }
 
@@ -146,7 +146,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         });
     }
 
-    public User queryUser() {
+    public void queryUser() {
         Query query = mUsersCollection.whereEqualTo("uid",
                 mUser.getUid());
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -155,9 +155,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
                    user = snapshot.toObject(User.class);
                 }
-
             }
         });
-        return user;
     }
 }
