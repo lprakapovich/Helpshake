@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class RequestListAdapterVolunteer extends ArrayAdapter<HelpSeekerRequest> {
 
     int[] photos;
-    DialogRequestDetails mDialog;
 
     private static class ViewHolder {
         ImageView photo;

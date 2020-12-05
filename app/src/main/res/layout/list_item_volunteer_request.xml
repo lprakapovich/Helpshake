@@ -13,6 +13,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:contentDescription="@string/help_seeker_photo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
@@ -75,7 +76,8 @@
         app:layout_constraintStart_toEndOf="@+id/list_item_category"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.504"
-        tools:src="@drawable/ic_baseline_location_on_24" />
+        tools:src="@drawable/ic_baseline_location_on_24"
+        android:contentDescription="@string/map_point_image" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

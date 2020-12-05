@@ -132,17 +132,19 @@
 
     <Button
         android:id="@+id/offerHelpBtn"
-        android:layout_width="140dp"
-        android:layout_height="67dp"
+        android:layout_width="131dp"
+        android:layout_height="63dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/offer_help"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.913"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentText" />
 
@@ -158,7 +160,8 @@
         app:layout_constraintEnd_toStartOf="@+id/distanceText"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
-        app:srcCompat="@drawable/ic_baseline_location_on_24" />
+        app:srcCompat="@drawable/ic_baseline_location_on_24"
+        android:contentDescription="@string/map_point_image" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -167,9 +170,25 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:contentDescription="@string/help_seeker_photo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/camera" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="131dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginLeft="65dp"
+        android:layout_marginEnd="78dp"
+        android:layout_marginRight="78dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/cancel"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/offerHelpBtn"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

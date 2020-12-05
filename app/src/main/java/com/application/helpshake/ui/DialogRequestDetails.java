@@ -16,14 +16,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.FragmentRequestDescriptionBinding;
-import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static com.application.helpshake.model.HelpCategory.DogWalking;
 import static com.application.helpshake.model.HelpCategory.Drugstore;
@@ -73,6 +68,13 @@ public class DialogRequestDetails extends DialogFragment {
             @Override
             public void onClick(View v) {
                 changeRequestStatus();
+            }
+        });
+
+        mBinding.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.OnRequestCancelled();
             }
         });
 
