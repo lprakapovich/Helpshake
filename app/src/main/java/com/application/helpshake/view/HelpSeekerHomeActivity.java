@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
         implements DialogHelpRequest.RequestSubmittedListener {
@@ -123,6 +124,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     private void createNewRequest(String comment, List<HelpCategory> categories) {
         HelpSeekerRequest request = new HelpSeekerRequest(
+                UUID.randomUUID().toString(),
                 mUser.getUid(),
                 user.getName(),
                 user.getSurname(),
@@ -133,7 +135,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         String collection = getString(R.string.collectionHelpSeekerRequests);
 
-        mDb.collection(collection).document().set(request)
+        mDb.collection(collection).document(request.getRequestId()).set(request)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

@@ -11,8 +11,10 @@ import android.widget.Toast;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
+import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
+import com.application.helpshake.model.Status;
 import com.application.helpshake.ui.DialogHelpRequest;
 import com.application.helpshake.ui.DialogRequestDetails;
 import com.application.helpshake.utils.RequestListAdapter;
@@ -33,6 +35,7 @@ import java.util.List;
 public class VolunteerHomeActivity extends AppCompatActivity
         implements DialogRequestDetails.RequestSubmittedListener {
 
+    HelpSeekerRequest request;
     FirebaseAuth mAuth;
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
@@ -89,8 +92,8 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HelpSeekerRequest request = mHelpRequests.get(position);
-                openRequestDialog(request);
+                request = mHelpRequests.get(position);
+                openRequestDialog(mHelpRequests.get(position));
             }
         });
     }
@@ -98,18 +101,33 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
 
     private void openRequestDialog(HelpSeekerRequest helpRequest) {
-        mDialog = new DialogRequestDetails();
+        mDialog = new DialogRequestDetails(helpRequest);
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
     @Override
-    public void onRequestSubmitted(String comment, List<HelpCategory> categories) {
+    public void onRequestStatusChanged(Status status) {
         mDialog.dismiss();
+
+        String collection = getString(R.string.collectionHelpSeekerRequests);
+        request.setStatus(Status.WaitingForApproval);
+        mDb.collection(collection).document(request.getRequestId()).update("status", Status.WaitingForApproval)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        DialogBuilder.showMessageDialog(
+                                getSupportFragmentManager(),
+                                getString(R.string.request_published),
+                                getString(R.string.request_published_msg)
+                        );
+                    }
+                });
     }
 
     @Override
     public void OnRequestCancelled() {
         mDialog.dismiss();
     }
+
 
 }
