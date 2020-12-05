@@ -60,7 +60,7 @@
         android:text="@string/distance"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/infoBtn"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_category" />
 
@@ -80,7 +80,7 @@
         tools:src="@drawable/ic_baseline_location_on_24" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/infoBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="184dp"
