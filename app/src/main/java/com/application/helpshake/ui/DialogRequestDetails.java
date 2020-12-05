@@ -56,7 +56,7 @@ public class DialogRequestDetails extends DialogFragment {
                 R.layout.fragment_request_description, null, false);
 
         builder.setView(mBinding.getRoot())
-                .setTitle("Request details")
+                .setTitle(R.string.request_details)
                 .setCancelable(false);
 
         mBinding.commentText.setText(helpRequest.getComment());

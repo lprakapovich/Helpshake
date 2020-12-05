@@ -117,8 +117,8 @@ public class VolunteerHomeActivity extends AppCompatActivity
                     public void onSuccess(Void aVoid) {
                         DialogBuilder.showMessageDialog(
                                 getSupportFragmentManager(),
-                                getString(R.string.request_published),
-                                getString(R.string.request_published_msg)
+                                getString(R.string.help_offered),
+                                getString(R.string.help_offered_msg)
                         );
                     }
                 });

@@ -84,5 +84,10 @@
     <string name="empty_category_error">Request must contain at least one category</string>
     <string name="collection_doc_uid">helpSeekerUid</string>
 
+    <string name="request_details">Request details</string>
+    <string name="help_offered">The information was sent to the help seeker</string>
+    <string name="help_offered_msg">"Thank you for declaring help!"</string>
+
+
 
 </resources>
