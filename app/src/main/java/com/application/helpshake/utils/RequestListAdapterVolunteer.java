@@ -5,22 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.application.helpshake.R;
 import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.ui.DialogHelpRequest;
 import com.application.helpshake.ui.DialogRequestDetails;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RequestListAdapterVolunteer extends ArrayAdapter<HelpSeekerRequest> {
 
@@ -33,7 +29,6 @@ public class RequestListAdapterVolunteer extends ArrayAdapter<HelpSeekerRequest>
         TextView category;
         TextView distance;
         ImageView mapPoint;
-        Button infoButton;
     }
 
     public RequestListAdapterVolunteer(ArrayList<HelpSeekerRequest> data, Context context, int[] photos) {
@@ -56,7 +51,6 @@ public class RequestListAdapterVolunteer extends ArrayAdapter<HelpSeekerRequest>
             viewHolder.category = (TextView) convertView.findViewById(R.id.list_item_category);
             viewHolder.distance = (TextView) convertView.findViewById(R.id.list_item_distance);
             viewHolder.mapPoint = (ImageView) convertView.findViewById(R.id.location);
-            viewHolder.infoButton = (Button) convertView.findViewById(R.id.infoBtn);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (RequestListAdapterVolunteer.ViewHolder) convertView.getTag();
@@ -85,12 +79,7 @@ public class RequestListAdapterVolunteer extends ArrayAdapter<HelpSeekerRequest>
         viewHolder.category.setText(builder.toString());
         viewHolder.photo.setImageResource(photos[0]);
         viewHolder.mapPoint.setImageResource(photos[1]);
-        viewHolder.infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
         return convertView;
     }
 

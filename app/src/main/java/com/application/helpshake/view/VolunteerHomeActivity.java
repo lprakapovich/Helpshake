@@ -3,14 +3,18 @@ package com.application.helpshake.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
+import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.ui.DialogHelpRequest;
+import com.application.helpshake.ui.DialogRequestDetails;
 import com.application.helpshake.utils.RequestListAdapter;
 import com.application.helpshake.utils.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,8 +28,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class VolunteerHomeActivity extends AppCompatActivity {
+public class VolunteerHomeActivity extends AppCompatActivity
+        implements DialogRequestDetails.RequestSubmittedListener {
 
     FirebaseAuth mAuth;
     FirebaseFirestore mDb;
@@ -35,6 +41,7 @@ public class VolunteerHomeActivity extends AppCompatActivity {
     ArrayList<HelpSeekerRequest> mHelpRequests;
 
     ActivityVolunteerHomeBinding mBinding;
+    DialogRequestDetails mDialog;
 
     int[] images = {R.drawable.camera, R.drawable.ic_baseline_location_on_24};
 
@@ -77,12 +84,32 @@ public class VolunteerHomeActivity extends AppCompatActivity {
 
         mAdapter = new RequestListAdapterVolunteer(mHelpRequests, this, images);
         mBinding.listRequests.setAdapter(mAdapter);
+        mBinding.listRequests.setItemsCanFocus(false);
 
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HelpSeekerRequest request = mHelpRequests.get(position);
+                openRequestDialog(request);
             }
         });
     }
+
+
+
+    private void openRequestDialog(HelpSeekerRequest helpRequest) {
+        mDialog = new DialogRequestDetails();
+        mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
+    }
+
+    @Override
+    public void onRequestSubmitted(String comment, List<HelpCategory> categories) {
+        mDialog.dismiss();
+    }
+
+    @Override
+    public void OnRequestCancelled() {
+        mDialog.dismiss();
+    }
+
 }
