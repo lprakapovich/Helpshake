@@ -3,19 +3,20 @@ package com.application.helpshake.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
 import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.ui.DialogHelpRequest;
-import com.application.helpshake.utils.RequestListAdapter;
 import com.application.helpshake.utils.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,8 +34,12 @@ public class VolunteerHomeActivity extends AppCompatActivity {
 
     RequestListAdapterVolunteer mAdapter;
     ArrayList<HelpSeekerRequest> mHelpRequests;
-
     ActivityVolunteerHomeBinding mBinding;
+
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+
+    ArrayList<String> activeCategories;
 
     int[] images = {R.drawable.camera, R.drawable.ic_baseline_location_on_24};
 
@@ -51,14 +56,59 @@ public class VolunteerHomeActivity extends AppCompatActivity {
 
         mHelpRequests = new ArrayList<>();
 
-        fetchHelpSeekerRequests();
+        try {
+            setActiveCategories();
+            fetchHelpSeekerRequests(activeCategories);
+        } catch (NullPointerException e) {
+            //if there are no categories set in Shared Preferences, all categories are selected (when user uses the app for the 1st time)
+            setSharedPreferences();
+            setActiveCategories();
+            fetchHelpSeekerRequests(activeCategories);
+        }
+
+        mBinding.profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(
+                        VolunteerHomeActivity.this, VolunteerProfilePage.class
+                ));
+            }
+        });
+
+        mBinding.settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(
+                        VolunteerHomeActivity.this, SettingsPopUp.class
+                ));
+            }
+        });
+
+        mBinding.notifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //add code to go to notifications
+            }
+        });
     }
 
-    private void fetchHelpSeekerRequests() {
+    @Override
+    protected void onResume() { //called when activity is resumed
+        super.onResume();
+        try {
+            mAdapter.clear();
+            setActiveCategories();
+            fetchHelpSeekerRequests(activeCategories);
+        } catch (NullPointerException e) {
+            System.out.println("Don't know how to handle it :( But it works :)");
+        }
+    }
+
+    private void fetchHelpSeekerRequests(ArrayList<String> categories) {
         // 1) fetching requests which contains declared help category
         // (even if there are also categories unwanted by the volunteer)
         Query query = mRequestsCollection.whereArrayContainsAny("helpCategories",
-               Arrays.asList("DogWalking", "Grocery"));
+                categories);
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -67,7 +117,6 @@ public class VolunteerHomeActivity extends AppCompatActivity {
                     mHelpRequests.add(
                             snapshot.toObject(HelpSeekerRequest.class));
                 }
-
                 initializeListAdapter();
             }
         });
@@ -77,12 +126,31 @@ public class VolunteerHomeActivity extends AppCompatActivity {
 
         mAdapter = new RequestListAdapterVolunteer(mHelpRequests, this, images);
         mBinding.listRequests.setAdapter(mAdapter);
-
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HelpSeekerRequest request = mHelpRequests.get(position);
             }
         });
+    }
+
+    private void setSharedPreferences() {
+        //initial setup, all categories selected
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = sharedPref.edit();
+        editor.putString("cDog", "DogWalking");
+        editor.putString("cDrug", "Drugstore");
+        editor.putString("cOther", "Other");
+        editor.putString("cGrocery", "Grocery");
+        editor.apply();
+    }
+
+    private void setActiveCategories() {
+        activeCategories = new ArrayList<String>(Arrays.asList(sharedPref.getString("cDog", "Do"),
+                sharedPref.getString("cDrug", "Dr"), sharedPref.getString("cGrocery", "Gr"),
+                sharedPref.getString("cOther", "Ot")));
+        for (String s : activeCategories) {
+            System.out.println(s);
+        }
     }
 }

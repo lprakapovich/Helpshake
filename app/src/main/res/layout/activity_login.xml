@@ -62,19 +62,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.811" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="95dp"
-            android:layout_height="68dp"
-            android:layout_marginStart="167dp"
-            android:layout_marginLeft="167dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="156dp"
-            android:layout_marginRight="156dp"
-            android:text="Sign up"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.705"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/redirect_to_register" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

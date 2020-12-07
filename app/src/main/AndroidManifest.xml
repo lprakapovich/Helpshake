@@ -25,6 +25,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.HelpSeekerHomeActivity"/>
+        <activity android:name=".view.SettingsPopUp"
+            android:theme="@style/AppTheme.PopUpTheme"
+        ></activity>
     </application>
 
 </manifest>

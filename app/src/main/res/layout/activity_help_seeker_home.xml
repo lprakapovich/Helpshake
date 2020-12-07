@@ -24,6 +24,12 @@
             android:width="170dp"
             android:layout_alignParentBottom="true" />
 
+        <Button
+            android:id="@+id/profileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile" />
+
     </RelativeLayout>
 
 </layout>

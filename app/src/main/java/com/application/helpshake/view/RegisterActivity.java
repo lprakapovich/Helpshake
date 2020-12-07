@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -123,6 +124,7 @@ public class RegisterActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             saveCredentialsToFireStore();
+                            setUserDisplayName();
                         } else {
                             try {
                                 throw task.getException();
@@ -183,6 +185,14 @@ public class RegisterActivity extends AppCompatActivity
         mBinding.surname.setText("");
         mBinding.password.setText("");
         mBinding.passwordRepeated.setText("");
+    }
+
+    private void setUserDisplayName(){
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(mName+" "+mSurname)
+                .build();
+
+        mAuth.getCurrentUser().updateProfile(profileUpdates);
     }
 
     @Override
