@@ -13,7 +13,12 @@ import android.widget.AdapterView;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
+import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpSeekerRequest;
+import com.application.helpshake.model.Status;
+import com.application.helpshake.ui.DialogRequestDetails;
+import com.application.helpshake.model.Status;
+import com.application.helpshake.ui.DialogRequestDetails;
 import com.application.helpshake.utils.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +31,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class VolunteerHomeActivity extends AppCompatActivity {
+public class VolunteerHomeActivity extends AppCompatActivity
+        implements DialogRequestDetails.RequestSubmittedListener {
 
+    HelpSeekerRequest request;
     FirebaseAuth mAuth;
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
@@ -35,6 +42,7 @@ public class VolunteerHomeActivity extends AppCompatActivity {
     RequestListAdapterVolunteer mAdapter;
     ArrayList<HelpSeekerRequest> mHelpRequests;
     ActivityVolunteerHomeBinding mBinding;
+    DialogRequestDetails mDialog;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
@@ -126,10 +134,13 @@ public class VolunteerHomeActivity extends AppCompatActivity {
 
         mAdapter = new RequestListAdapterVolunteer(mHelpRequests, this, images);
         mBinding.listRequests.setAdapter(mAdapter);
+        mBinding.listRequests.setItemsCanFocus(false);
+
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HelpSeekerRequest request = mHelpRequests.get(position);
+                request = mHelpRequests.get(position);
+                openRequestDialog(mHelpRequests.get(position));
             }
         });
     }
@@ -153,4 +164,37 @@ public class VolunteerHomeActivity extends AppCompatActivity {
             System.out.println(s);
         }
     }
+
+
+
+    private void openRequestDialog(HelpSeekerRequest helpRequest) {
+        mDialog = new DialogRequestDetails(helpRequest);
+        mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
+    }
+
+    @Override
+    public void onRequestStatusChanged(Status status) {
+        mDialog.dismiss();
+
+        String collection = getString(R.string.collectionHelpSeekerRequests);
+        request.setStatus(Status.WaitingForApproval);
+        mDb.collection(collection).document(request.getRequestId()).update("status", Status.WaitingForApproval)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        DialogBuilder.showMessageDialog(
+                                getSupportFragmentManager(),
+                                getString(R.string.help_offered),
+                                getString(R.string.help_offered_msg)
+                        );
+                    }
+                });
+    }
+
+    @Override
+    public void OnRequestCancelled() {
+        mDialog.dismiss();
+    }
+
+
 }
