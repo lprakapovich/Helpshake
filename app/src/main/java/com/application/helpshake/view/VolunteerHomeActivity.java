@@ -17,8 +17,6 @@ import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.ui.DialogRequestDetails;
-import com.application.helpshake.model.Status;
-import com.application.helpshake.ui.DialogRequestDetails;
 import com.application.helpshake.utils.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -164,7 +162,6 @@ public class VolunteerHomeActivity extends AppCompatActivity
             System.out.println(s);
         }
     }
-
 
 
     private void openRequestDialog(HelpSeekerRequest helpRequest) {
