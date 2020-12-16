@@ -17,8 +17,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -26,6 +30,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDb;
     FirebaseUser mUser;
+    private CollectionReference mUsersCollection;
+    private User mCurrentUser;
 
     private String phoneNum;
     private String street;
@@ -40,6 +46,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDb = FirebaseFirestore.getInstance();
         mUser = mAuth.getCurrentUser();
+        mUsersCollection = mDb.collection("users");
 
         mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,18 +64,28 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void saveInformationToDatabase() {
-        mDb.collection("users").document(mUser.getUid()).update("phoneNum", phoneNum,
-                "street", street, "homeNo", homeNum)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        DialogBuilder.showMessageDialog(
-                                getSupportFragmentManager(),
-                                "Information updated",
-                                "Thanks for providing information"
-                        );
+        Query query = mUsersCollection
+                .whereEqualTo("email", mAuth.getCurrentUser().getEmail());
 
-                    }
-                });
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+
+                    mCurrentUser = snapshot.toObject(User.class);
+
+                    mCurrentUser.setPhoneNum(phoneNum);
+                    mCurrentUser.setStreet(street);
+                    mCurrentUser.setHomeNo(homeNum);
+                    mUsersCollection.document(snapshot.getId()).set(mCurrentUser);
+                }
+                DialogBuilder.showMessageDialog(
+                        getSupportFragmentManager(),
+                        "Information updated",
+                        "Thanks for providing information"
+                );
+
+            }
+        });
     }
 }
