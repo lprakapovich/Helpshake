@@ -48,6 +48,8 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
         mUsersCollection = mDb.collection("users");
 
+        queryUser();
+
         mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +75,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
 
                     mCurrentUser = snapshot.toObject(User.class);
-
                     mCurrentUser.setPhoneNum(phoneNum);
                     mCurrentUser.setStreet(street);
                     mCurrentUser.setHomeNo(homeNum);
@@ -87,5 +88,22 @@ public class EditProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void queryUser() {
+        Query query = mUsersCollection
+                .whereEqualTo("email", mUser.getEmail());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    mCurrentUser = snapshot.toObject(User.class);
+                    mBinding.phoneInput.setText(mCurrentUser.getPhoneNum());
+                    mBinding.streetInput.setText(mCurrentUser.getStreet());
+                    mBinding.homeNoInput.setText(mCurrentUser.getHomeNo());
+                }
+            }
+        }
+        );
     }
 }
