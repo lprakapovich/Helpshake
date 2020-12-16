@@ -105,6 +105,7 @@ public class EditVolunteerProfileActivity extends AppCompatActivity {
 
                     mCurrentUser = snapshot.toObject(User.class);
                     mCurrentUser.setPhoneNum(phoneNum);
+                    mUsersCollection.document(snapshot.getId()).set(mCurrentUser);
                 }
                 DialogBuilder.showMessageDialog(
                         getSupportFragmentManager(),
