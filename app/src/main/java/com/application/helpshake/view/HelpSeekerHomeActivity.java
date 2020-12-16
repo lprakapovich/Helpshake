@@ -33,7 +33,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
-        implements DialogHelpRequest.RequestSubmittedListener {
+        implements DialogHelpRequest.RequestSubmittedListener, RequestListAdapter.contactButtonListener,
+            RequestListAdapter.finishButtonListener{
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -121,6 +122,8 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         mAdapter = new RequestListAdapter(mHelpRequests, this);
         mBinding.list.setAdapter(mAdapter);
+        mAdapter.setContactButtonListener(this);
+        mAdapter.setFinishButtonListener(this);
 
         mBinding.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -187,5 +190,16 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    @Override
+    public void onFinishButtonClickListener(int position, HelpSeekerRequest value) {
+        mHelpRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onContactButtonClickListener(int position, HelpSeekerRequest value) {
+
     }
 }
