@@ -15,6 +15,9 @@ public class User {
         this.email = email;
         this.role = role;
         this.uid = uid;
+        this.phoneNum = "";
+        this.homeNo = "";
+        this.street = "";
     }
 
     private String name;
@@ -22,4 +25,7 @@ public class User {
     private String email;
     private Role role;
     private String uid;
+    private String phoneNum;
+    private String homeNo;
+    private String street;
 }

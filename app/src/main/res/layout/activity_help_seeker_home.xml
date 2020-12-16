@@ -10,8 +10,7 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
-            />
+            android:layout_marginBottom="100dp" />
 
         <Button
             android:id="@+id/newRequestButton"
@@ -28,7 +27,19 @@
             android:id="@+id/profileButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile" />
+            android:layout_alignParentBottom="true"
+            android:text="@string/profile"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:id="@+id/offeredHelpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="300dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/offered_help"
+            android:layout_marginStart="300dp" />
 
     </RelativeLayout>
 

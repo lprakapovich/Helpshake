@@ -15,27 +15,33 @@ import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpSeekerRequest;
+import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.ui.DialogRequestDetails;
 import com.application.helpshake.utils.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class VolunteerHomeActivity extends AppCompatActivity
         implements DialogRequestDetails.RequestSubmittedListener {
 
     HelpSeekerRequest request;
     FirebaseAuth mAuth;
+    FirebaseUser mUser;
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
+    CollectionReference mRequestsLookUpCollection;
 
     RequestListAdapterVolunteer mAdapter;
     ArrayList<HelpSeekerRequest> mHelpRequests;
@@ -57,8 +63,10 @@ public class VolunteerHomeActivity extends AppCompatActivity
                 this, R.layout.activity_volunteer_home);
 
         mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
         mDb = FirebaseFirestore.getInstance();
         mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
+        mRequestsLookUpCollection = mDb.collection("requests_enrollments");
 
         mHelpRequests = new ArrayList<>();
 
@@ -114,7 +122,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
         // 1) fetching requests which contains declared help category
         // (even if there are also categories unwanted by the volunteer)
         Query query = mRequestsCollection.whereArrayContainsAny("helpCategories",
-                categories);
+                categories).whereEqualTo("status", Status.Open);
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -186,6 +194,12 @@ public class VolunteerHomeActivity extends AppCompatActivity
                         );
                     }
                 });
+
+
+        // look up table, requests with list of volunteers who declared help
+        mDb.collection("requests_enrollments").document(request.getRequestId())
+                .update("volunteerId",  mUser.getUid());
+
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.application.helpshake.databinding.ActivityHelpSeekerHomeBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
+import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogHelpRequest;
@@ -60,6 +61,17 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         openRequestDialog();
+                    }
+                }
+        );
+
+        mBinding.offeredHelpButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(
+                                HelpSeekerHomeActivity.this, HelpOfferActivity.class
+                        ));
                     }
                 }
         );
@@ -158,6 +170,10 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 );
             }
         });
+
+        RequestEnrollment requestEnrollment = new RequestEnrollment(request.getRequestId());
+
+        mDb.collection("requests_enrollments").document(requestEnrollment.getRequestId()).set(requestEnrollment);
     }
 
     public void queryUser() {

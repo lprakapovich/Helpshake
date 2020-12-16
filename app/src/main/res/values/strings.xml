@@ -87,7 +87,20 @@
     <string name="request_details">Request details</string>
     <string name="help_offered">The information was sent to the help seeker</string>
     <string name="help_offered_msg">"Thank you for declaring help!"</string>
-
+    <string name="profile">Profile</string>
+    <string name="help_requests_3">Help requests: 3</string>
+    <string name="log_out">Log out</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="delete_account">Delete account</string>
+    <string name="password">Password</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="e_mail">E-mail</string>
+    <string name="surname">Surname</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="name">Name</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="sign_in">Sign in</string>
 
 
 </resources>
