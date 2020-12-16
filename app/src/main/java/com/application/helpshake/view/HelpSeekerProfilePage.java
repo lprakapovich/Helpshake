@@ -11,11 +11,16 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityHelpSeekerProfilePageBinding;
+import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class HelpSeekerProfilePage extends AppCompatActivity {
 
@@ -45,6 +50,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
 
         mDb = FirebaseFirestore.getInstance();
         mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
+        mUsersCollection = mDb.collection("users");
 
         helpSeekerProfileBinding.editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +64,31 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
         helpSeekerProfileBinding.deleteAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDb.collection("users").document(mUser.getUid()).delete();
+                Query query = mUsersCollection
+                        .whereEqualTo("email", mAuth.getCurrentUser().getEmail());
+
+                query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot snapshots) {
+                        for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                            mUsersCollection.document(snapshot.getId()).delete();
+                        }
+
+                        openInformationDialog();
+                        startActivity(new Intent(HelpSeekerProfilePage.this, RegisterActivity.class));
+
+                    }
+                });
             }
+
         });
+    }
+
+    public void openInformationDialog() {
+        DialogBuilder.showMessageDialog(
+                getSupportFragmentManager(),
+                "Your account was deleted",
+                "Thanks for using our app."
+        );
     }
 }
