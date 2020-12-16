@@ -74,15 +74,13 @@ public class RequestListAdapterVolunteer extends ArrayAdapter<HelpSeekerRequest>
             }
         }
 
-        viewHolder.nameAndSurname.setText(String.format("%s %s", request.getHelpSeekerName(), request.getHelpSeekerSurname()));
+        viewHolder.nameAndSurname.setText(
+                String.format("%s %s", request.getHelpSeekerName(),
+                request.getHelpSeekerSurname()));
         viewHolder.category.setText(builder.toString());
         viewHolder.photo.setImageResource(photos[0]);
         viewHolder.mapPoint.setImageResource(photos[1]);
-
         return convertView;
     }
-
-
-
 }
 

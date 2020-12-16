@@ -3,20 +3,21 @@ package com.application.helpshake.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
+import com.application.helpshake.model.User;
+import com.application.helpshake.model.VolunteerRequest;
 import com.application.helpshake.ui.DialogRequestDetails;
 import com.application.helpshake.utils.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,24 +25,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.UUID;
 
 public class VolunteerHomeActivity extends AppCompatActivity
         implements DialogRequestDetails.RequestSubmittedListener {
 
     HelpSeekerRequest request;
     FirebaseAuth mAuth;
-    FirebaseUser mUser;
+    FirebaseUser mFirebaseUser;
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
-    CollectionReference mRequestsLookUpCollection;
 
     RequestListAdapterVolunteer mAdapter;
     ArrayList<HelpSeekerRequest> mHelpRequests;
@@ -53,6 +51,8 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
     ArrayList<String> activeCategories;
 
+    User mUser;
+
     int[] images = {R.drawable.camera, R.drawable.ic_baseline_location_on_24};
 
     @Override
@@ -62,29 +62,20 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_volunteer_home);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
         mDb = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mAuth.getCurrentUser();
         mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
-        mRequestsLookUpCollection = mDb.collection("requests_enrollments");
-
         mHelpRequests = new ArrayList<>();
 
-        try {
-            setActiveCategories();
-            fetchHelpSeekerRequests(activeCategories);
-        } catch (NullPointerException e) {
-            //if there are no categories set in Shared Preferences, all categories are selected (when user uses the app for the 1st time)
-            setSharedPreferences();
-            setActiveCategories();
-            fetchHelpSeekerRequests(activeCategories);
-        }
+        fetchCurrentUser();
 
         mBinding.profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(
-                        VolunteerHomeActivity.this, VolunteerProfilePage.class
+                        VolunteerHomeActivity.this,
+                        VolunteerProfilePage.class
                 ));
             }
         });
@@ -93,7 +84,8 @@ public class VolunteerHomeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(
-                        VolunteerHomeActivity.this, SettingsPopUp.class
+                        VolunteerHomeActivity.this,
+                        SettingsPopUp.class
                 ));
             }
         });
@@ -104,6 +96,29 @@ public class VolunteerHomeActivity extends AppCompatActivity
                 //add code to go to notifications
             }
         });
+    }
+
+    private void fetchCurrentUser() {
+        Query query = mDb.collection(getString(R.string.collectionUsers)).whereEqualTo("uid", mFirebaseUser.getUid()).limit(1);
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                             @Override
+                                             public void onSuccess(QuerySnapshot snapshots) {
+                                                 mUser = snapshots.getDocuments().get(0).toObject(User.class);
+                                                 initHomeView();
+                                             }
+                                         }
+        );
+    }
+
+    private void initHomeView() {
+        try {
+            setActiveCategories();
+            fetchHelpSeekerRequests(activeCategories);
+        } catch (NullPointerException e) {
+            setSharedPreferences();
+            setActiveCategories();
+            fetchHelpSeekerRequests(activeCategories);
+        }
     }
 
     @Override
@@ -121,6 +136,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
     private void fetchHelpSeekerRequests(ArrayList<String> categories) {
         // 1) fetching requests which contains declared help category
         // (even if there are also categories unwanted by the volunteer)
+
         Query query = mRequestsCollection.whereArrayContainsAny("helpCategories",
                 categories).whereEqualTo("status", Status.Open);
 
@@ -171,35 +187,30 @@ public class VolunteerHomeActivity extends AppCompatActivity
         }
     }
 
-
     private void openRequestDialog(HelpSeekerRequest helpRequest) {
         mDialog = new DialogRequestDetails(helpRequest);
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
     @Override
-    public void onRequestStatusChanged(Status status) {
+    public void OnHelpOffered() {
         mDialog.dismiss();
-
-        String collection = getString(R.string.collectionHelpSeekerRequests);
         request.setStatus(Status.WaitingForApproval);
-        mDb.collection(collection).document(request.getRequestId()).update("status", Status.WaitingForApproval)
+
+        mDb.collection(getString(R.string.collectionVolunteerRequest))
+                .document()
+                .set(new VolunteerRequest(mUser, request))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        DialogBuilder.showMessageDialog(
-                                getSupportFragmentManager(),
-                                getString(R.string.help_offered),
-                                getString(R.string.help_offered_msg)
-                        );
+                        showDialog(getString(R.string.help_offered),
+                                getString(R.string.help_offered_msg));
                     }
                 });
 
-
-        // look up table, requests with list of volunteers who declared help
-        mDb.collection("requests_enrollments").document(request.getRequestId())
-                .update("volunteerId",  mUser.getUid());
-
+        mDb.collection(getString(R.string.collectionHelpSeekerRequests))
+                .document(request.getRequestId())
+                .update("status", Status.WaitingForApproval);
     }
 
     @Override
@@ -207,5 +218,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mDialog.dismiss();
     }
 
-
+    private void showDialog(String title, String message) {
+        DialogBuilder.showMessageDialog(getSupportFragmentManager(), title, message);
+    }
 }

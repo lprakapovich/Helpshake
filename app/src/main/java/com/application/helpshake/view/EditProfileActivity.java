@@ -73,7 +73,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
 
                     mCurrentUser = snapshot.toObject(User.class);
-
                     mCurrentUser.setPhoneNum(phoneNum);
                     mCurrentUser.setStreet(street);
                     mCurrentUser.setHomeNo(homeNum);
@@ -84,7 +83,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         "Information updated",
                         "Thanks for providing information"
                 );
-
             }
         });
     }

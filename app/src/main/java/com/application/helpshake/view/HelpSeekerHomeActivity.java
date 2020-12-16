@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,8 @@ import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogHelpRequest;
-import com.application.helpshake.utils.RequestListAdapter;
+import com.application.helpshake.utils.OfferListAdapterHelpSeeker;
+import com.application.helpshake.utils.RequestListAdapterHelpSeeker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,8 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class HelpSeekerHomeActivity extends AppCompatActivity
-        implements DialogHelpRequest.RequestSubmittedListener {
+public class HelpSeekerHomeActivity extends AppCompatActivity implements
+        DialogHelpRequest.RequestSubmittedListener {
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -42,7 +44,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     CollectionReference mUsersCollection;
 
     DialogHelpRequest mDialog;
-    RequestListAdapter mAdapter;
+    RequestListAdapterHelpSeeker mAdapter;
 
     ArrayList<HelpSeekerRequest> mHelpRequests;
     User user;
@@ -70,7 +72,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(
-                                HelpSeekerHomeActivity.this, HelpOfferActivity.class
+                                HelpSeekerHomeActivity.this, OfferListHelpSeekerActivity.class
                         ));
                     }
                 }
@@ -118,14 +120,13 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void initializeListAdapter() {
-
-        mAdapter = new RequestListAdapter(mHelpRequests, this);
+        mAdapter = new RequestListAdapterHelpSeeker(mHelpRequests, this);
         mBinding.list.setAdapter(mAdapter);
-
         mBinding.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HelpSeekerRequest request = mHelpRequests.get(position);
+
             }
         });
     }

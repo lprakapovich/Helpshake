@@ -17,14 +17,14 @@ import com.application.helpshake.model.HelpSeekerRequest;
 
 import java.util.ArrayList;
 
-public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
+public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest> {
 
     private static class ViewHolder {
         TextView category;
         TextView status;
     }
 
-    public RequestListAdapter(ArrayList<HelpSeekerRequest> data, Context context) {
+    public RequestListAdapterHelpSeeker(ArrayList<HelpSeekerRequest> data, Context context) {
         super(context, R.layout.list_item_helpseeker_request, data);
     }
 

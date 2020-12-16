@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.EditProfileActivity"/>
-        <activity android:name=".view.HelpOfferActivity" />
+        <activity android:name=".view.OfferListHelpSeekerActivity" />
         <activity android:name=".view.VolunteerHomeActivity" />
         <activity android:name=".view.ReviewsActivity" />
         <activity android:name=".view.HelpSeekerProfilePage" />
