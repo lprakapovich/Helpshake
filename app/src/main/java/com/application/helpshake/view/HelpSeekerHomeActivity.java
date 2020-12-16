@@ -138,7 +138,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onRequestSubmitted(String comment, List<HelpCategory> categories) {
         mDialog.dismiss();
+        mAdapter.clear();
         createNewRequest(comment, categories);
+        fetchHelpSeekerRequests();
     }
 
     @Override
