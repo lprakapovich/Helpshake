@@ -25,11 +25,11 @@ public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
     contactButtonListener contactListener;
 
     public interface finishButtonListener {
-        public void onFinishButtonClickListener(int position, HelpSeekerRequest value);
+        void onFinishButtonClickListener(int position, HelpSeekerRequest value);
     }
 
     public interface contactButtonListener {
-        public void onContactButtonClickListener(int position, HelpSeekerRequest value);
+        void onContactButtonClickListener(int position, HelpSeekerRequest value);
     }
 
     public void setFinishButtonListener(finishButtonListener listener) {

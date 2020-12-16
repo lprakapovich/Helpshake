@@ -1,6 +1,7 @@
 package com.application.helpshake.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -196,10 +197,25 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     public void onFinishButtonClickListener(int position, HelpSeekerRequest value) {
         mHelpRequests.remove(position);
         mAdapter.notifyDataSetChanged();
+
+        mDb.collection("helpSeekerRequests").document(value.getRequestId()).update("status", Status.Completed);
     }
 
     @Override
     public void onContactButtonClickListener(int position, HelpSeekerRequest value) {
-
+        startPhoneActivity(Intent.ACTION_DIAL, "tel:5551234");
     }
+
+    public void startPhoneActivity(String action, String uri) {
+        Uri location = Uri.parse(uri);
+        Intent intent = new Intent (action, location);
+        checkImplicitIntent(intent);
+    }
+
+    public void checkImplicitIntent(Intent intent) {
+       if(intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 }
