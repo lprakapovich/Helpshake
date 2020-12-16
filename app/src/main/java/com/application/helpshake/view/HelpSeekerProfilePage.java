@@ -3,9 +3,11 @@ package com.application.helpshake.view;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -13,7 +15,11 @@ import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityHelpSeekerProfilePageBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -73,7 +79,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
                         for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
                             mUsersCollection.document(snapshot.getId()).delete();
                         }
-
+                        mUser.delete();
                         openInformationDialog();
                         startActivity(new Intent(HelpSeekerProfilePage.this, RegisterActivity.class));
 
@@ -83,6 +89,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
 
         });
     }
+
 
     public void openInformationDialog() {
         DialogBuilder.showMessageDialog(
