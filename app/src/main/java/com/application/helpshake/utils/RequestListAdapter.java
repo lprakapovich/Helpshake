@@ -70,8 +70,8 @@ public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
                 viewHolder.contactBtn.setVisibility(View.VISIBLE);
                 viewHolder.finishBtn.setVisibility(View.VISIBLE);
             } else {
-                viewHolder.contactBtn.setVisibility(View.INVISIBLE);
-                viewHolder.finishBtn.setVisibility(View.INVISIBLE);
+                viewHolder.contactBtn.setVisibility(View.GONE);
+                viewHolder.finishBtn.setVisibility(View.GONE);
             }
             viewHolder.contactBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,6 +87,8 @@ public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
                 public void onClick(View v) {
                     if (finishListener != null) {
                         finishListener.onFinishButtonClickListener(position, request);
+                        viewHolder.contactBtn.setVisibility(View.GONE);
+                        viewHolder.finishBtn.setVisibility(View.GONE);
                     }
                 }
             });
