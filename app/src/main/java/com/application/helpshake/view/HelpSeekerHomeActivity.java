@@ -76,7 +76,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 }
         );
 
-        mBinding.profileButton.setOnClickListener(
+        mBinding.profileViewButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

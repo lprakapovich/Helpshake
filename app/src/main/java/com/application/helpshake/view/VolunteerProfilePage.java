@@ -1,6 +1,8 @@
 package com.application.helpshake.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -33,5 +35,12 @@ public class VolunteerProfilePage extends AppCompatActivity {
 
         String name = mUser.getDisplayName();
         volunteerProfileBinding.setNameAndSurname(name);
+
+        volunteerProfileBinding.homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
