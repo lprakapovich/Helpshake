@@ -119,7 +119,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         "Information updated",
                         "Thanks for providing information"
                 );
-
             }
         });
     }

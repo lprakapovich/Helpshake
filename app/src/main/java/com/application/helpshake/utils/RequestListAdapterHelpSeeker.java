@@ -19,7 +19,7 @@ import com.application.helpshake.model.Status;
 
 import java.util.ArrayList;
 
-public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
+public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest> {
 
     finishButtonListener finishListener;
     contactButtonListener contactListener;
@@ -47,7 +47,7 @@ public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
         Button finishBtn;
     }
 
-    public RequestListAdapter(ArrayList<HelpSeekerRequest> data, Context context) {
+    public RequestListAdapterHelpSeeker(ArrayList<HelpSeekerRequest> data, Context context) {
         super(context, R.layout.list_item_helpseeker_request, data);
     }
 
@@ -66,13 +66,6 @@ public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
             viewHolder.contactBtn = (Button) convertView.findViewById(R.id.contactButton);
             viewHolder.finishBtn = (Button) convertView.findViewById(R.id.finishButton);
 
-            if (request.getStatus() == Status.InProgress) {
-                viewHolder.contactBtn.setVisibility(View.VISIBLE);
-                viewHolder.finishBtn.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.contactBtn.setVisibility(View.GONE);
-                viewHolder.finishBtn.setVisibility(View.GONE);
-            }
             viewHolder.contactBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -87,8 +80,6 @@ public class RequestListAdapter extends ArrayAdapter<HelpSeekerRequest> {
                 public void onClick(View v) {
                     if (finishListener != null) {
                         finishListener.onFinishButtonClickListener(position, request);
-                        viewHolder.contactBtn.setVisibility(View.GONE);
-                        viewHolder.finishBtn.setVisibility(View.GONE);
                     }
                 }
             });
