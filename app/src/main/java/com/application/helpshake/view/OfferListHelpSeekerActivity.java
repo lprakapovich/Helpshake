@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
+import com.application.helpshake.helper.DialogBuilder;
+import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.model.VolunteerRequest;
@@ -29,6 +31,8 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     private ActivityHelpOffersToAcceptBinding mBinding;
     private FirebaseUser mUser;
     private CollectionReference mVolunteerRequestsCollection;
+    FirebaseFirestore mDb;
+    HelpSeekerRequest helpRequest;
 
     private ArrayList<VolunteerRequest> mVolunteerRequests;
 
@@ -40,7 +44,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 this, R.layout.activity_help_offers_to_accept);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+        mDb = FirebaseFirestore.getInstance();
 
         mUser = mAuth.getCurrentUser();
         mVolunteerRequests = new ArrayList<>();
@@ -73,10 +77,56 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     @Override
     public void onOfferAccepted(VolunteerRequest request) {
         Toast.makeText(this, request.getVolunteer().getName(), Toast.LENGTH_LONG).show();
+
+        mVolunteerRequests.remove(request);
+
+        Query query = mDb.collection("helpSeekerRequests")
+                .whereEqualTo("requestId", request.getRequest().getRequestId());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+
+                    helpRequest = snapshot.toObject(HelpSeekerRequest.class);
+                    helpRequest.setStatus(Status.InProgress);
+
+                    mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
+                }
+                DialogBuilder.showMessageDialog(
+                        getSupportFragmentManager(),
+                        "Request accepted",
+                        "Thank you!"
+                );
+            }
+        });
+
+
     }
 
     @Override
     public void onOfferRejected(VolunteerRequest request) {
         Toast.makeText(this, request.getVolunteer().getName(), Toast.LENGTH_LONG).show();
+
+        Query query = mDb.collection("helpSeekerRequests")
+                .whereEqualTo("requestId", request.getRequest().getRequestId());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+
+                    helpRequest = snapshot.toObject(HelpSeekerRequest.class);
+                    helpRequest.setStatus(Status.Open);
+
+                    mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
+                }
+                DialogBuilder.showMessageDialog(
+                        getSupportFragmentManager(),
+                        "Request rejected",
+                        "Thank you!"
+                );
+            }
+        });
     }
 }
