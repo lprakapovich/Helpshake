@@ -11,7 +11,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/newRequestButton"
-            android:layout_marginBottom="27dp" />
+            android:layout_marginBottom="27dp"
+            android:dividerHeight="10dp"
+            android:divider="@android:color/transparent"
+            android:layout_margin="15dp"/>
 
         <Button
             android:id="@+id/newRequestButton"

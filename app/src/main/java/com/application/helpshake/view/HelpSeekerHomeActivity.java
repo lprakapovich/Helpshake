@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,39 +54,14 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
     ActivityHelpSeekerHomeBinding mBinding;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.filtering, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.open_request:
-                fetchHelpSeekerRequests(Status.Open);
-                break;
-            case R.id.waiting_for_approval_request:
-                fetchHelpSeekerRequests(Status.WaitingForApproval);
-                break;
-            case R.id.in_progress_request:
-                fetchHelpSeekerRequests(Status.InProgress);
-                break;
-            case R.id.completed_request:
-               fetchHelpSeekerRequests(Status.Completed);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setTitle(getString(R.string.open_requests));
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
 
-        getSupportActionBar().setTitle("Requests");
 
         mBinding.newRequestButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -95,15 +69,13 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
                     public void onClick(View v) {
                         openRequestDialog();
                     }
-                }
-        );
+                });
 
         mBinding.offeredHelpButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(
-                                HelpSeekerHomeActivity.this, OfferListHelpSeekerActivity.class
+                        startActivity(new Intent(HelpSeekerHomeActivity.this, OfferListHelpSeekerActivity.class
                         ));
                     }
                 }
@@ -133,10 +105,11 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
 
 
     private void fetchHelpSeekerRequests(Status status) {
+        mHelpRequests.clear();
 
         Query query = mRequestsCollection
                 .whereEqualTo(getString(R.string.collection_doc_uid), mUser.getUid())
-                .whereEqualTo(getString(R.string.status), status);
+                .whereEqualTo(getString(R.string.collectionNodeStatus), status.toString());
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -145,7 +118,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
                     mHelpRequests.add(
                             snapshot.toObject(HelpSeekerRequest.class));
                 }
-
                 initializeListAdapter();
             }
         });
@@ -204,14 +176,12 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
             }
         });
 
-        RequestEnrollment requestEnrollment = new RequestEnrollment(request.getRequestId());
-
-        mDb.collection("requests_enrollments").document(requestEnrollment.getRequestId()).set(requestEnrollment);
+//        RequestEnrollment requestEnrollment = new RequestEnrollment(request.getRequestId());
+//        mDb.collection("requests_enrollments").document(requestEnrollment.getRequestId()).set(requestEnrollment);
     }
 
     public void queryUser() {
-        Query query = mUsersCollection.whereEqualTo("uid",
-                mUser.getUid());
+        Query query = mUsersCollection.whereEqualTo("uid", mUser.getUid());
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
@@ -221,4 +191,35 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.filtering, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.open_request:
+                getSupportActionBar().setTitle(getString(R.string.open_requests));
+                fetchHelpSeekerRequests(Status.Open);
+                break;
+            case R.id.waiting_for_approval_request:
+                getSupportActionBar().setTitle(getString(R.string.pending_requests));
+                fetchHelpSeekerRequests(Status.WaitingForApproval);
+                break;
+            case R.id.in_progress_request:
+                getSupportActionBar().setTitle(getString(R.string.in_progress_requests));
+                fetchHelpSeekerRequests(Status.InProgress);
+                break;
+            case R.id.completed_request:
+                getSupportActionBar().setTitle(getString(R.string.completed_requests));
+                fetchHelpSeekerRequests(Status.Completed);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

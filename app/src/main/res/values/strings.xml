@@ -5,6 +5,8 @@
     <string name="collectionHelpSeekerRequests">helpSeekerRequests</string>
     <string name="collectionVolunteerRequest">volunteerRequest</string>
 
+    <string name="collectionNodeStatus">status</string>
+
     <string name="app_name">HelpShake</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -77,6 +79,11 @@
     <string name="adding_request">Adding request</string>
     <string name="help_request_add">Adding a help request</string>
     <string name="help_request_comment">Comment for volunteer</string>
+
+    <string name="open_requests">Open Requests</string>
+    <string name="pending_requests">Pending Requests</string>
+    <string name="in_progress_requests">Requests in progress</string>
+    <string name="completed_requests">Completed requests</string>
 
     <string name="request_published">Request is published</string>
     <string name="request_published_msg">Thank you! Our volunteers will reach out to you.</string>
