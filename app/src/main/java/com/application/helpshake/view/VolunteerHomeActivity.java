@@ -19,6 +19,7 @@ import com.application.helpshake.model.User;
 import com.application.helpshake.model.VolunteerRequest;
 import com.application.helpshake.ui.DialogRequestDetails;
 import com.application.helpshake.adapters.volunteer.RequestListAdapterVolunteer;
+import com.application.helpshake.view.helpseeker.AcceptedHelpOffersActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

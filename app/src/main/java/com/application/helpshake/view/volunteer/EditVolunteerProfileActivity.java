@@ -1,4 +1,4 @@
-package com.application.helpshake.view;
+package com.application.helpshake.view.volunteer;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -14,6 +14,7 @@ import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditVolunteerProfileBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.User;
+import com.application.helpshake.view.SettingsPopUp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

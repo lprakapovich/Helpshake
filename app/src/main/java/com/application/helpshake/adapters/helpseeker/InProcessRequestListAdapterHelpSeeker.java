@@ -48,7 +48,6 @@ public class InProcessRequestListAdapterHelpSeeker extends ArrayAdapter<Voluntee
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_in_progress_request, parent, false);
             viewHolder.title = convertView.findViewById(R.id.title);
-            //viewHolder.status_button = convertView.findViewById(R.id.status_button);
 
             viewHolder.finishBtn = convertView.findViewById(R.id.finishButton);
             viewHolder.contactBtn = convertView.findViewById(R.id.contactButton);
@@ -59,9 +58,9 @@ public class InProcessRequestListAdapterHelpSeeker extends ArrayAdapter<Voluntee
             viewHolder.contactBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //if (listener != null) {
+                        if (listener != null) {
                             listener.OnContact(position, request);
-                       // }
+                        }
                     }
                 });
 
@@ -77,8 +76,6 @@ public class InProcessRequestListAdapterHelpSeeker extends ArrayAdapter<Voluntee
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
-        //viewHolder.status_button.setBackgroundResource(R.drawable.status_in_progress);
 
         viewHolder.title.setText(request.getRequest().getTitle());
         viewHolder.volunteerName.setText(request.getVolunteer().getName());

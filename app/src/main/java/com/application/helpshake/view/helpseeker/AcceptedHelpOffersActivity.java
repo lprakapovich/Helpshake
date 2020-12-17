@@ -1,4 +1,4 @@
-package com.application.helpshake.view;
+package com.application.helpshake.view.helpseeker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -38,7 +38,6 @@ public class AcceptedHelpOffersActivity extends AppCompatActivity {
 
     ArrayList<HelpSeekerRequest> mHelpRequests;
     ActivityHelpOffersToAcceptBinding mBinding;
-    DialogRequestDetails mDialog;
     User user;
     User volunteer;
 

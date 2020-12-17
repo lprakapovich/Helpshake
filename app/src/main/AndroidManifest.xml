@@ -12,14 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.AcceptedHelpOffersActivity"></activity>
-        <activity android:name=".view.EditVolunteerProfileActivity" />
+        <activity android:name=".view.helpseeker.AcceptedHelpOffersActivity"></activity>
+        <activity android:name=".view.volunteer.EditVolunteerProfileActivity" />
 
         <activity android:name=".view.EditProfileActivity" />
-        <activity android:name=".view.OfferListHelpSeekerActivity" />
+        <activity android:name=".view.helpseeker.OfferListHelpSeekerActivity" />
         <activity android:name=".view.VolunteerHomeActivity" />
         <activity android:name=".view.ReviewsActivity" />
-        <activity android:name=".view.HelpSeekerProfilePage" />
+        <activity android:name=".view.helpseeker.HelpSeekerProfilePage" />
         <activity android:name=".view.VolunteerProfilePage" />
         <activity
             android:name=".view.LoginActivity"
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.RegisterActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".view.HelpSeekerHomeActivity" />
+        <activity android:name=".view.helpseeker.HelpSeekerHomeActivity" />
 
         <activity
             android:name=".view.SettingsPopUp"

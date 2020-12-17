@@ -13,6 +13,7 @@ import com.application.helpshake.databinding.ActivityLoginBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.Role;
 import com.application.helpshake.model.User;
+import com.application.helpshake.view.helpseeker.HelpSeekerHomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

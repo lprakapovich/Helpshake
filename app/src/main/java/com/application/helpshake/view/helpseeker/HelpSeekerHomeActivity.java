@@ -1,4 +1,4 @@
-package com.application.helpshake.view;
+package com.application.helpshake.view.helpseeker;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
+import com.application.helpshake.adapters.helpseeker.CompletedRequestListViewAdapter;
 import com.application.helpshake.databinding.ActivityHelpSeekerHomeBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpCategory;
@@ -41,8 +42,8 @@ import java.util.UUID;
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
         implements DialogHelpRequest.RequestSubmittedListener,
-        InProcessRequestListAdapterHelpSeeker.InProcessRequestListAdapterListener
-{
+        InProcessRequestListAdapterHelpSeeker.InProcessRequestListAdapterListener {
+
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     FirebaseFirestore mDb;
@@ -53,13 +54,12 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     DialogHelpRequest mDialog;
     RequestListAdapterHelpSeeker mAdapter;
     InProcessRequestListAdapterHelpSeeker mInProcessAdapter;
+    CompletedRequestListViewAdapter mCompletedAdapter;
 
     ArrayList<HelpSeekerRequest> mHelpRequests;
     ArrayList<VolunteerRequest> mVolunteerRequests;
 
-    VolunteerRequest volunteerRequest;
     User user;
-    User volunteer;
 
     ActivityHelpSeekerHomeBinding mBinding;
 
@@ -122,7 +122,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
 
     private void fetchRequests() {
-        if (mSelectedStatus.equals(Status.InProgress)) {
+        if (mSelectedStatus.equals(Status.InProgress) || mSelectedStatus.equals(Status.Completed)) {
             fetchFromVolunteerRequestCollection();
         } else {
             fetchFromHelpSeekerRequestsCollection();
@@ -130,7 +130,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void fetchFromHelpSeekerRequestsCollection() {
-        Toast.makeText(this, "fetchFromHelpSeekerRequestsCollection", Toast.LENGTH_LONG).show();
         mHelpRequests.clear();
         Query query = mRequestsCollection
                 .whereEqualTo(getString(R.string.collection_doc_uid), mUser.getUid())
@@ -149,7 +148,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void fetchFromVolunteerRequestCollection() {
-        Toast.makeText(this, "fetchFromVolunteerRequestCollection", Toast.LENGTH_LONG).show();
         mVolunteerRequests.clear();
         Query query = mVolunteerRequestsCollection
                 .whereEqualTo("request.helpSeekerUid", mUser.getUid())
@@ -165,6 +163,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
             }
         });
     }
+
 
 //    private void fetchVolunteerRequests() {
 //
@@ -186,13 +185,21 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
 
     private void initializeListAdapter() {
-        if (mSelectedStatus.equals(Status.InProgress)) {
-            mInProcessAdapter = new InProcessRequestListAdapterHelpSeeker(mVolunteerRequests, this);
-            mBinding.list.setAdapter(mInProcessAdapter);
+        switch(mSelectedStatus) {
+            case InProgress:
+                mInProcessAdapter = new InProcessRequestListAdapterHelpSeeker(mVolunteerRequests, this);
+                mBinding.list.setAdapter(mInProcessAdapter);
+                break;
 
-        } else {
-            mAdapter = new RequestListAdapterHelpSeeker(mHelpRequests, this);
-            mBinding.list.setAdapter(mAdapter);
+            case Completed:
+                mCompletedAdapter = new CompletedRequestListViewAdapter(mVolunteerRequests, this);
+                mBinding.list.setAdapter(mCompletedAdapter);
+                break;
+
+            default:
+                mAdapter = new RequestListAdapterHelpSeeker(mHelpRequests, this);
+                mBinding.list.setAdapter(mAdapter);
+                break;
         }
     }
 

@@ -16,8 +16,6 @@ import androidx.annotation.Nullable;
 import com.application.helpshake.R;
 import com.application.helpshake.model.VolunteerRequest;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class OfferListAdapterHelpSeeker extends ArrayAdapter<VolunteerRequest> {
