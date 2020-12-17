@@ -167,6 +167,9 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 }
             }
         });
+
+        mAdapter.clear();
+        fetchVolunteerRequests();
     }
 
 }
