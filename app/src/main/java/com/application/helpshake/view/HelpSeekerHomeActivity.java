@@ -2,10 +2,14 @@ package com.application.helpshake.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -19,7 +23,6 @@ import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogHelpRequest;
-import com.application.helpshake.utils.OfferListAdapterHelpSeeker;
 import com.application.helpshake.utils.RequestListAdapterHelpSeeker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,11 +55,39 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
     ActivityHelpSeekerHomeBinding mBinding;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.filtering, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.open_request:
+                fetchHelpSeekerRequests(Status.Open);
+                break;
+            case R.id.waiting_for_approval_request:
+                fetchHelpSeekerRequests(Status.WaitingForApproval);
+                break;
+            case R.id.in_progress_request:
+                fetchHelpSeekerRequests(Status.InProgress);
+                break;
+            case R.id.completed_request:
+               fetchHelpSeekerRequests(Status.Completed);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
+
+        getSupportActionBar().setTitle("Requests");
 
         mBinding.newRequestButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -97,15 +128,16 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
 
         mHelpRequests = new ArrayList<>();
         queryUser();
-        fetchHelpSeekerRequests();
+        fetchHelpSeekerRequests(Status.Open);
     }
 
 
-    private void fetchHelpSeekerRequests() {
+    private void fetchHelpSeekerRequests(Status status) {
 
-        Query query = mRequestsCollection.whereEqualTo(
-                getString(R.string.collection_doc_uid),
-                mUser.getUid());
+        Query query = mRequestsCollection
+                .whereEqualTo(getString(R.string.collection_doc_uid), mUser.getUid())
+                .whereEqualTo(getString(R.string.status), status);
+
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {

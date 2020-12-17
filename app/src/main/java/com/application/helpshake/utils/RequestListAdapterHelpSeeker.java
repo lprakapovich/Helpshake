@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +21,7 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
 
     private static class ViewHolder {
         TextView category;
-        TextView status;
+        Button status_button;
     }
 
     public RequestListAdapterHelpSeeker(ArrayList<HelpSeekerRequest> data, Context context) {
@@ -39,15 +39,34 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_request, parent, false);
             viewHolder.category = (TextView) convertView.findViewById(R.id.category);
-            viewHolder.status = (TextView) convertView.findViewById(R.id.status);
+            viewHolder.status_button = (Button) convertView.findViewById(R.id.status_button);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         StringBuilder builder = new StringBuilder();
-        for (HelpCategory category : request.getHelpCategories()) {
 
+        int resource;
+
+        switch(request.getStatus())
+        {
+            case Open:
+                resource = R.drawable.status_open;
+                break;
+            case WaitingForApproval:
+                resource = R.drawable.status_pending;
+                break;
+            case InProgress:
+                resource = R.drawable.status_in_progress;
+                break;
+            default:
+                resource = R.drawable.status_completed;
+        }
+
+        viewHolder.status_button.setBackgroundResource(resource);
+
+        for (HelpCategory category : request.getHelpCategories()) {
             switch (category)
             {
                 case DogWalking:
@@ -64,7 +83,6 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
             }
         }
 
-        viewHolder.status.setText(request.getStatus().toString());
         viewHolder.category.setText(builder.toString());
         //viewHolder.imageView.setTag(position);
         return convertView;

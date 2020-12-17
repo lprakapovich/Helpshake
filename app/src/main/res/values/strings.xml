@@ -5,7 +5,6 @@
     <string name="collectionHelpSeekerRequests">helpSeekerRequests</string>
     <string name="collectionVolunteerRequest">volunteerRequest</string>
 
-
     <string name="app_name">HelpShake</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -64,7 +63,6 @@
     <string name="needs">Needs:</string>
     <string name="comments_from_help_seeker">Comments from help seeker:</string>
     <string name="offer_help">offer help</string>
-
 
     <!--  Help Request  -->
     <string name="status">Status</string>
