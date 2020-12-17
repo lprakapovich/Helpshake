@@ -75,7 +75,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOfferAccepted(VolunteerRequest request) {
+    public void onOfferAccepted(final VolunteerRequest request) {
         Toast.makeText(this, request.getVolunteer().getName(), Toast.LENGTH_LONG).show();
 
         mVolunteerRequests.remove(request);
@@ -92,6 +92,8 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                     helpRequest.setStatus(Status.InProgress);
 
                     mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
+
+                    deleteOtherRequestsWhenAccepted(request);
                 }
                 DialogBuilder.showMessageDialog(
                         getSupportFragmentManager(),
@@ -102,6 +104,22 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         });
 
 
+    }
+
+    public void deleteOtherRequestsWhenAccepted(VolunteerRequest request) {
+        Query query = mDb.collection("volunteerRequest")
+                .whereEqualTo("request.helpSeekerUid", mUser.getUid())
+                .whereEqualTo("request.requestUid", request.getRequest().getRequestId())
+                .whereNotEqualTo("request.volunteer.uid", request.getVolunteer().getUid());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                        snapshot.getReference().delete();
+                }
+            }
+        });
     }
 
     @Override
