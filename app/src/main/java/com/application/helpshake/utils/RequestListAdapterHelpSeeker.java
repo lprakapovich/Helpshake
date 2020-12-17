@@ -66,6 +66,13 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
             viewHolder.contactBtn = (Button) convertView.findViewById(R.id.contactButton);
             viewHolder.finishBtn = (Button) convertView.findViewById(R.id.finishButton);
 
+            if (request.getStatus() == Status.InProgress) {
+                viewHolder.contactBtn.setEnabled(true);
+                viewHolder.finishBtn.setEnabled(true);
+            } else {
+                viewHolder.contactBtn.setEnabled(false);
+                viewHolder.finishBtn.setEnabled(false);
+            }
             viewHolder.contactBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

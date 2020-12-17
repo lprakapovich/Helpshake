@@ -96,6 +96,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                     mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
 
                     deleteOtherRequestsWhenAccepted(request);
+
                 }
                 DialogBuilder.showMessageDialog(
                         getSupportFragmentManager(),

@@ -231,6 +231,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         mDb.collection("helpSeekerRequests").document(value.getRequestId()).update("status", Status.Completed);
         mDb.collection("helpSeekerRequests").document(value.getRequestId()).delete();
+
+        mAdapter.clear();
+        fetchHelpSeekerRequests();
     }
 
     @Override
