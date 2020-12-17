@@ -1,7 +1,5 @@
 package com.application.helpshake.model;
 
-import android.media.Image;
-
 import lombok.Data;
 
 @Data

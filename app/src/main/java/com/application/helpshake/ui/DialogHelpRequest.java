@@ -29,7 +29,7 @@ import java.util.Set;
 public class DialogHelpRequest extends DialogFragment {
 
     public interface RequestSubmittedListener {
-        void onRequestSubmitted(String comment, List<HelpCategory> categories);
+        void onRequestSubmitted(String title, String comment, List<HelpCategory> categories);
         void OnRequestCancelled();
     }
 
@@ -55,13 +55,13 @@ public class DialogHelpRequest extends DialogFragment {
         mBinding.addRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isCategoryChosen()) {
+                if (isCategoryChosen() && isTitleProvided()) {
                     submitRequest();
                 } else {
                     DialogBuilder.showMessageDialog(
                             getParentFragmentManager(),
                             getString(R.string.not_allowed),
-                            getString(R.string.empty_category_error));
+                            getString(R.string.add_request_error));
                 }
             }
         });
@@ -80,8 +80,11 @@ public class DialogHelpRequest extends DialogFragment {
         return !mCategories.isEmpty();
     }
 
+    private boolean isTitleProvided() { return !mBinding.title.getText().toString().isEmpty();}
+
     private void submitRequest() {
         mListener.onRequestSubmitted(
+                mBinding.title.getText().toString(),
                 mBinding.comment.getText().toString(),
                 new ArrayList<>(mCategories)
         );

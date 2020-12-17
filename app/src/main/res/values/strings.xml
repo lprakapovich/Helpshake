@@ -51,7 +51,7 @@
     <string name="name_and_surname">Name and Surname</string>
     <string name="accepted_requests">Accepted requests:</string>
     <string name="question_about_help_needed">What do you need help with?</string>
-    <string name="provide_comment">Provide comment for volunteers (optional)</string>
+    <string name="provide_comment">Optional comment</string>
     <string name="comment">COMMENT</string>
     <string name="request_help">request help</string>
     <string name="my_requests">My requests</string>
@@ -78,7 +78,7 @@
     <string name="add_request">Add request</string>
     <string name="adding_request">Adding request</string>
     <string name="help_request_add">Adding a help request</string>
-    <string name="help_request_comment">Comment for volunteer</string>
+    <string name="help_request_comment">Comment for a volunteer</string>
 
     <string name="open_requests">Open Requests</string>
     <string name="pending_requests">Pending Requests</string>
@@ -87,7 +87,7 @@
 
     <string name="request_published">Request is published</string>
     <string name="request_published_msg">Thank you! Our volunteers will reach out to you.</string>
-    <string name="empty_category_error">Request must contain at least one category</string>
+    <string name="add_request_error">Request must contain at least one category</string>
     <string name="collection_doc_uid">helpSeekerUid</string>
 
     <string name="request_details">Request details</string>

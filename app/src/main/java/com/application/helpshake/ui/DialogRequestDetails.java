@@ -17,8 +17,6 @@ import androidx.fragment.app.DialogFragment;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.FragmentRequestDescriptionBinding;
 import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.model.Status;
-
 
 import static com.application.helpshake.model.HelpCategory.DogWalking;
 import static com.application.helpshake.model.HelpCategory.Drugstore;

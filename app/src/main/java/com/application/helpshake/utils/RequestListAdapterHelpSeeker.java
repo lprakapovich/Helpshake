@@ -14,6 +14,9 @@ import androidx.annotation.Nullable;
 import com.application.helpshake.R;
 import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
+import com.google.common.base.Optional;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -21,6 +24,7 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
 
     private static class ViewHolder {
         TextView category;
+        TextView title;
         Button status_button;
     }
 
@@ -40,6 +44,7 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
             convertView = inflater.inflate(R.layout.list_item_helpseeker_request, parent, false);
             viewHolder.category = (TextView) convertView.findViewById(R.id.category);
             viewHolder.status_button = (Button) convertView.findViewById(R.id.status_button);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.title);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -84,7 +89,7 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
         }
 
         viewHolder.category.setText(builder.toString());
-        //viewHolder.imageView.setTag(position);
+        viewHolder.title.setText(request.getTitle());
         return convertView;
     }
 }

@@ -1,33 +1,25 @@
 package com.application.helpshake.model;
 
-import android.media.Image;
-
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class HelpSeekerRequest {
 
     String requestId;
-
-    String helpSeekerUid;
-
-    String helpSeekerName;
-
-    String helpSeekerSurname;
-
-    List<HelpCategory> helpCategories;
-
     Status status;
-
+    String title;
     String comment;
-
+    String helpSeekerUid;
+    String helpSeekerName;
+    String helpSeekerSurname;
+    List<HelpCategory> helpCategories;
     int photoId;
-
-    //Location location;
-
-    public HelpSeekerRequest() {}
 
     public HelpSeekerRequest(String requestId,
                              String helpSeekerUid,
@@ -35,6 +27,7 @@ public class HelpSeekerRequest {
                              String helpSeekerSurname,
                              List<HelpCategory> helpCategories,
                              Status status,
+                             String title,
                              String comment) {
 
         this.requestId = requestId;
@@ -43,6 +36,7 @@ public class HelpSeekerRequest {
         this.helpSeekerSurname = helpSeekerSurname;
         this.helpCategories = helpCategories;
         this.status = status;
+        this.title = title;
         this.comment = comment;
     }
 

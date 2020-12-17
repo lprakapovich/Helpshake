@@ -18,7 +18,6 @@ import com.application.helpshake.databinding.ActivityHelpSeekerHomeBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogHelpRequest;
@@ -67,7 +66,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        openRequestDialog();
+                        openNewRequestDialog();
                     }
                 });
 
@@ -135,15 +134,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
         });
     }
 
-    private void openRequestDialog() {
+    private void openNewRequestDialog() {
         mDialog = new DialogHelpRequest();
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
     @Override
-    public void onRequestSubmitted(String comment, List<HelpCategory> categories) {
+    public void onRequestSubmitted(String title, String comment, List<HelpCategory> categories) {
         mDialog.dismiss();
-        createNewRequest(comment, categories);
+        createNewRequest(title, comment, categories);
     }
 
     @Override
@@ -151,7 +150,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
         mDialog.dismiss();
     }
 
-    private void createNewRequest(String comment, List<HelpCategory> categories) {
+    private void createNewRequest(String title, String comment, List<HelpCategory> categories) {
         HelpSeekerRequest request = new HelpSeekerRequest(
                 UUID.randomUUID().toString(),
                 mUser.getUid(),
@@ -159,6 +158,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
                 user.getSurname(),
                 categories,
                 Status.Open,
+                title,
                 comment
         );
 
