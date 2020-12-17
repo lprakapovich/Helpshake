@@ -17,13 +17,36 @@ import com.application.helpshake.model.HelpSeekerRequest;
 import com.google.common.base.Optional;
 
 import org.w3c.dom.Text;
+import com.application.helpshake.model.Status;
 
 import java.util.ArrayList;
 
 public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest> {
 
+    finishButtonListener finishListener;
+    contactButtonListener contactListener;
+
+    public interface finishButtonListener {
+        void onFinishButtonClickListener(int position, HelpSeekerRequest value);
+    }
+
+    public interface contactButtonListener {
+        void onContactButtonClickListener(int position, HelpSeekerRequest value);
+    }
+
+    public void setFinishButtonListener(finishButtonListener listener) {
+        this.finishListener = listener;
+    }
+
+    public void setContactButtonListener(contactButtonListener listener) {
+        this.contactListener = listener;
+    }
+
     private static class ViewHolder {
         TextView category;
+        TextView status;
+        Button contactBtn;
+        Button finishBtn;
         TextView title;
         Button status_button;
     }
@@ -34,9 +57,9 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        HelpSeekerRequest request = getItem(position);
-        ViewHolder viewHolder;
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        final HelpSeekerRequest request = getItem(position);
+        final ViewHolder viewHolder;
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -45,10 +68,41 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
             viewHolder.category = (TextView) convertView.findViewById(R.id.category);
             viewHolder.status_button = (Button) convertView.findViewById(R.id.status_button);
             viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+            viewHolder.category = (TextView) convertView.findViewById(R.id.category);
+            viewHolder.status_button = (Button) convertView.findViewById(R.id.status_button);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+            viewHolder.finishBtn = (Button) convertView.findViewById(R.id.finishButton);
+
+            if (request.getStatus() == Status.InProgress) {
+                viewHolder.contactBtn.setEnabled(true);
+                viewHolder.finishBtn.setEnabled(true);
+            } else {
+                viewHolder.contactBtn.setEnabled(false);
+                viewHolder.finishBtn.setEnabled(false);
+            }
+            viewHolder.contactBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (contactListener != null) {
+                        contactListener.onContactButtonClickListener(position, request);
+                    }
+                }
+            });
+
+            viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (finishListener != null) {
+                        finishListener.onFinishButtonClickListener(position, request);
+                    }
+                }
+            });
+
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
 
         StringBuilder builder = new StringBuilder();
 

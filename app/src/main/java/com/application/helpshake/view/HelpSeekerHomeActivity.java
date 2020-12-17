@@ -1,6 +1,7 @@
 package com.application.helpshake.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,7 @@ import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
+import com.application.helpshake.model.VolunteerRequest;
 import com.application.helpshake.ui.DialogHelpRequest;
 import com.application.helpshake.utils.RequestListAdapterHelpSeeker;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,20 +37,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class HelpSeekerHomeActivity extends AppCompatActivity implements
-        DialogHelpRequest.RequestSubmittedListener {
+
+public class HelpSeekerHomeActivity extends AppCompatActivity
+        implements DialogHelpRequest.RequestSubmittedListener, RequestListAdapterHelpSeeker.contactButtonListener,
+            RequestListAdapterHelpSeeker.finishButtonListener
+{
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
     CollectionReference mUsersCollection;
+    CollectionReference mVolunteerRequestsCollection;
 
     DialogHelpRequest mDialog;
     RequestListAdapterHelpSeeker mAdapter;
 
     ArrayList<HelpSeekerRequest> mHelpRequests;
+    ArrayList<VolunteerRequest> mVolunteerRequests;
+    VolunteerRequest volunteerRequest;
     User user;
+    User volunteer;
 
     ActivityHelpSeekerHomeBinding mBinding;
 
@@ -61,14 +70,14 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
 
-
         mBinding.newRequestButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         openNewRequestDialog();
                     }
-                });
+                }
+        );
 
         mBinding.offeredHelpButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -80,7 +89,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
                 }
         );
 
-        mBinding.profileButton.setOnClickListener(
+        mBinding.profileViewButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -96,10 +105,13 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
         mDb = FirebaseFirestore.getInstance();
         mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
         mUsersCollection = mDb.collection(getString(R.string.collectionUsers));
+        mVolunteerRequestsCollection = mDb.collection("volunteerRequest");
 
         mHelpRequests = new ArrayList<>();
+        mVolunteerRequests = new ArrayList<>();
         queryUser();
         fetchHelpSeekerRequests(Status.Open);
+        fetchVolunteerRequests();
     }
 
 
@@ -117,7 +129,25 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
                     mHelpRequests.add(
                             snapshot.toObject(HelpSeekerRequest.class));
                 }
+
                 initializeListAdapter();
+            }
+        });
+    }
+
+    private void fetchVolunteerRequests() {
+
+        Query query = mVolunteerRequestsCollection.whereEqualTo(
+                "request.helpSeekerUid", mUser.getUid())
+                .whereEqualTo("request.status", Status.InProgress);
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    mVolunteerRequestsCollection.add(
+                            snapshot.toObject(VolunteerRequest.class));
+                }
             }
         });
     }
@@ -125,6 +155,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
     private void initializeListAdapter() {
         mAdapter = new RequestListAdapterHelpSeeker(mHelpRequests, this);
         mBinding.list.setAdapter(mAdapter);
+        mAdapter.setContactButtonListener(this);
+        mAdapter.setFinishButtonListener(this);
+
         mBinding.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -143,6 +176,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
     public void onRequestSubmitted(String title, String comment, List<HelpCategory> categories) {
         mDialog.dismiss();
         createNewRequest(title, comment, categories);
+        mAdapter.clear();
+        createNewRequest(title, comment, categories);
+        fetchHelpSeekerRequests();
     }
 
     @Override
@@ -220,6 +256,50 @@ public class HelpSeekerHomeActivity extends AppCompatActivity implements
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onFinishButtonClickListener(int position, HelpSeekerRequest value) {
+        mHelpRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+
+        mDb.collection("helpSeekerRequests").document(value.getRequestId()).update("status", Status.Completed);
+        mDb.collection("helpSeekerRequests").document(value.getRequestId()).delete();
+
+        mAdapter.clear();
+        fetchHelpSeekerRequests();
+    }
+
+    @Override
+    public void onContactButtonClickListener(int position, HelpSeekerRequest value) {
+        queryToGetVolunteerPhone(value);
+    }
+
+    public void startPhoneActivity(String action, String uri) {
+        Uri location = Uri.parse(uri);
+        Intent intent = new Intent (action, location);
+        checkImplicitIntent(intent);
+    }
+
+    public void checkImplicitIntent(Intent intent) {
+       if(intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    public void queryToGetVolunteerPhone(HelpSeekerRequest request) {
+        Query query = mVolunteerRequestsCollection.whereEqualTo("request.requestId",
+                request.getRequestId());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    volunteerRequest = snapshot.toObject(VolunteerRequest.class);
+                    startPhoneActivity(Intent.ACTION_DIAL, "tel:" + volunteerRequest.getVolunteer().getPhoneNum());
+                }
+            }
+        });
     }
 
 }
