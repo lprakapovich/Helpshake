@@ -33,6 +33,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     private CollectionReference mVolunteerRequestsCollection;
     FirebaseFirestore mDb;
     HelpSeekerRequest helpRequest;
+    OfferListAdapterHelpSeeker mAdapter;
 
     private ArrayList<VolunteerRequest> mVolunteerRequests;
 
@@ -69,16 +70,17 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     private void initializeListAdapter() {
-        OfferListAdapterHelpSeeker mAdapter = new OfferListAdapterHelpSeeker(
+        mAdapter = new OfferListAdapterHelpSeeker(
                 mVolunteerRequests, this, OfferListHelpSeekerActivity.this);
         mBinding.list.setAdapter(mAdapter);
     }
 
     @Override
-    public void onOfferAccepted(final VolunteerRequest request) {
+    public void onOfferAccepted(int position, final VolunteerRequest request) {
         Toast.makeText(this, request.getVolunteer().getName(), Toast.LENGTH_LONG).show();
 
-        mVolunteerRequests.remove(request);
+        mVolunteerRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
 
         Query query = mDb.collection("helpSeekerRequests")
                 .whereEqualTo("requestId", request.getRequest().getRequestId());
@@ -102,8 +104,6 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 );
             }
         });
-
-
     }
 
     public void deleteOtherRequestsWhenAccepted(VolunteerRequest request) {
@@ -123,8 +123,11 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOfferRejected(VolunteerRequest request) {
+    public void onOfferRejected(int position, final VolunteerRequest request) {
         Toast.makeText(this, request.getVolunteer().getName(), Toast.LENGTH_LONG).show();
+
+        mVolunteerRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
 
         Query query = mDb.collection("helpSeekerRequests")
                 .whereEqualTo("requestId", request.getRequest().getRequestId());
@@ -138,6 +141,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                     helpRequest.setStatus(Status.Open);
 
                     mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
+                    deleteVolunteerFromRequest(request);
                 }
                 DialogBuilder.showMessageDialog(
                         getSupportFragmentManager(),
@@ -147,4 +151,21 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
             }
         });
     }
+
+    public void deleteVolunteerFromRequest(VolunteerRequest request) {
+        Query query = mDb.collection("volunteerRequest")
+                .whereEqualTo("request.helpSeekerUid", mUser.getUid())
+                .whereEqualTo("request.requestUid", request.getRequest().getRequestId())
+                .whereEqualTo("request.volunteer.uid", request.getVolunteer().getUid());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    snapshot.getReference().delete();
+                }
+            }
+        });
+    }
+
 }

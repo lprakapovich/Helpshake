@@ -34,8 +34,8 @@ import java.util.ArrayList;
 public class OfferListAdapterHelpSeeker extends ArrayAdapter<VolunteerRequest> {
 
     public interface OfferListAdapterListener {
-        void onOfferAccepted(VolunteerRequest request);
-        void onOfferRejected(VolunteerRequest request);
+        void onOfferAccepted(int position, VolunteerRequest request);
+        void onOfferRejected(int position, VolunteerRequest request);
     }
 
     OfferListAdapterListener mListener;
@@ -78,14 +78,14 @@ public class OfferListAdapterHelpSeeker extends ArrayAdapter<VolunteerRequest> {
             viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onOfferAccepted(request);
+                    mListener.onOfferAccepted(position, request);
                 }
             });
 
             viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onOfferRejected(request);
+                    mListener.onOfferRejected(position, request);
                 }
             });
 
