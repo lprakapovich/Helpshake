@@ -109,6 +109,7 @@
     <string name="name">Name</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="sign_in">Sign in</string>
+    <string name="username">Username</string>
 
 
 </resources>
