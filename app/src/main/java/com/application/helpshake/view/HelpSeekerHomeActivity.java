@@ -1,9 +1,11 @@
 package com.application.helpshake.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +20,8 @@ import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.ui.DialogHelpRequest;
-import com.application.helpshake.utils.RequestListAdapter;
+import com.application.helpshake.utils.OfferListAdapterHelpSeeker;
+import com.application.helpshake.utils.RequestListAdapterHelpSeeker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,8 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 public class HelpSeekerHomeActivity extends AppCompatActivity
-        implements DialogHelpRequest.RequestSubmittedListener {
+        implements DialogHelpRequest.RequestSubmittedListener, RequestListAdapterHelpSeeker.contactButtonListener,
+            RequestListAdapterHelpSeeker.finishButtonListener
+{
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -42,7 +48,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     CollectionReference mUsersCollection;
 
     DialogHelpRequest mDialog;
-    RequestListAdapter mAdapter;
+    RequestListAdapterHelpSeeker mAdapter;
 
     ArrayList<HelpSeekerRequest> mHelpRequests;
     User user;
@@ -70,7 +76,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(
-                                HelpSeekerHomeActivity.this, HelpOfferActivity.class
+                                HelpSeekerHomeActivity.this, OfferListHelpSeekerActivity.class
                         ));
                     }
                 }
@@ -118,14 +124,16 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void initializeListAdapter() {
-
-        mAdapter = new RequestListAdapter(mHelpRequests, this);
+        mAdapter = new RequestListAdapterHelpSeeker(mHelpRequests, this);
         mBinding.list.setAdapter(mAdapter);
+        mAdapter.setContactButtonListener(this);
+        mAdapter.setFinishButtonListener(this);
 
         mBinding.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HelpSeekerRequest request = mHelpRequests.get(position);
+
             }
         });
     }
@@ -190,4 +198,30 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
             }
         });
     }
+
+    @Override
+    public void onFinishButtonClickListener(int position, HelpSeekerRequest value) {
+        mHelpRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+
+        mDb.collection("helpSeekerRequests").document(value.getRequestId()).update("status", Status.Completed);
+    }
+
+    @Override
+    public void onContactButtonClickListener(int position, HelpSeekerRequest value) {
+        startPhoneActivity(Intent.ACTION_DIAL, "tel:5551234");
+    }
+
+    public void startPhoneActivity(String action, String uri) {
+        Uri location = Uri.parse(uri);
+        Intent intent = new Intent (action, location);
+        checkImplicitIntent(intent);
+    }
+
+    public void checkImplicitIntent(Intent intent) {
+       if(intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 }

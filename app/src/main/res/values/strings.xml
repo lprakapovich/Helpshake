@@ -3,6 +3,7 @@
     <!--  Firebase  -->
     <string name="collectionUsers">users</string>
     <string name="collectionHelpSeekerRequests">helpSeekerRequests</string>
+    <string name="collectionVolunteerRequest">volunteerRequest</string>
 
 
     <string name="app_name">HelpShake</string>

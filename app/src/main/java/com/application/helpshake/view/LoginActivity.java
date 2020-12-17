@@ -89,13 +89,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void validateEmail() {
 
-        if (isEmailVerified()) {
+        //if (isEmailVerified()) {
             updateUserDocumentUid();
-        } else {
-            DialogBuilder.showMessageDialog(getSupportFragmentManager(),
-                    getString(R.string.email_verification),
-                    getString(R.string.email_verification_pending));
-        }
+//        } else {
+//            DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+//                    getString(R.string.email_verification),
+//                    getString(R.string.email_verification_pending));
+//        }
     }
 
     private void updateUserDocumentUid() {

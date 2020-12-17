@@ -27,8 +27,7 @@ import static com.application.helpshake.model.HelpCategory.Grocery;
 public class DialogRequestDetails extends DialogFragment {
 
     public interface RequestSubmittedListener {
-        void onRequestStatusChanged(Status status);
-
+        void OnHelpOffered();
         void OnRequestCancelled();
     }
 
@@ -67,7 +66,7 @@ public class DialogRequestDetails extends DialogFragment {
         mBinding.offerHelpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeRequestStatus();
+                mListener.OnHelpOffered();
             }
         });
 
@@ -81,11 +80,6 @@ public class DialogRequestDetails extends DialogFragment {
         return builder.create();
     }
 
-    public void changeRequestStatus() {
-        mListener.onRequestStatusChanged(
-                Status.WaitingForApproval
-        );
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override

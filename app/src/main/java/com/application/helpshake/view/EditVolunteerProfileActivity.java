@@ -1,41 +1,31 @@
 package com.application.helpshake.view;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import com.application.helpshake.R;
-import com.application.helpshake.databinding.ActivityEditProfileBinding;
-import com.application.helpshake.databinding.ActivityRegisterBinding;
+import com.application.helpshake.databinding.ActivityEditVolunteerProfileBinding;
 import com.application.helpshake.helper.DialogBuilder;
-import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+public class EditVolunteerProfileActivity extends AppCompatActivity {
 
-public class EditProfileActivity extends AppCompatActivity {
-
-    ActivityEditProfileBinding mBinding;
+    ActivityEditVolunteerProfileBinding mBinding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDb;
     FirebaseUser mUser;
@@ -43,8 +33,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private User mCurrentUser;
 
     private String phoneNum;
-    private String street;
-    private String homeNum;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -52,7 +40,7 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
-                this, R.layout.activity_edit_profile);
+                this, R.layout.activity_edit_volunteer_profile);
 
         mAuth = FirebaseAuth.getInstance();
         mDb = FirebaseFirestore.getInstance();
@@ -61,7 +49,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         queryDataAboutUser();
 
-        mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 readUserInput();
@@ -69,7 +57,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        mBinding.changeButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -79,8 +67,17 @@ public class EditProfileActivity extends AppCompatActivity {
                     // display error state to the user
                 }
             }
+        });
+
+        mBinding.changePreferances.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(
+                        EditVolunteerProfileActivity.this, SettingsPopUp.class
+                ));
             }
-        );
+        });
     }
 
     @Override
@@ -89,14 +86,12 @@ public class EditProfileActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mBinding.changeButton.setImageBitmap(imageBitmap);
+            mBinding.changeImage.setImageBitmap(imageBitmap);
         }
     }
 
     private void readUserInput() {
-        phoneNum = mBinding.phoneInput.getText().toString();
-        street = mBinding.streetInput.getText().toString();
-        homeNum = mBinding.homeNoInput.getText().toString();
+        phoneNum = mBinding.volunteerPhoneInput.getText().toString();
     }
 
     private void saveInformationToDatabase() {
@@ -110,8 +105,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     mCurrentUser = snapshot.toObject(User.class);
                     mCurrentUser.setPhoneNum(phoneNum);
-                    mCurrentUser.setStreet(street);
-                    mCurrentUser.setHomeNo(homeNum);
                     mUsersCollection.document(snapshot.getId()).set(mCurrentUser);
                 }
                 DialogBuilder.showMessageDialog(
@@ -119,6 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         "Information updated",
                         "Thanks for providing information"
                 );
+
             }
         });
     }
@@ -131,9 +125,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
                     mCurrentUser = snapshot.toObject(User.class);
-                    mBinding.phoneInput.setText(mCurrentUser.getPhoneNum());
-                    mBinding.streetInput.setText(mCurrentUser.getStreet());
-                    mBinding.homeNoInput.setText(mCurrentUser.getHomeNo());
+                    mBinding.volunteerPhoneInput.setText(mCurrentUser.getPhoneNum());
                 }
             }
         }
