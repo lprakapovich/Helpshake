@@ -1,4 +1,4 @@
-package com.application.helpshake.utils;
+package com.application.helpshake.adapters.helpseeker;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,22 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.application.helpshake.R;
-import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.model.RequestEnrollment;
-import com.application.helpshake.model.Status;
-import com.application.helpshake.model.User;
 import com.application.helpshake.model.VolunteerRequest;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -41,13 +30,13 @@ public class OfferListAdapterHelpSeeker extends ArrayAdapter<VolunteerRequest> {
     OfferListAdapterListener mListener;
 
     private static class ViewHolder {
-        ImageView volunteerPhoto;
         TextView nameAndSurname;
         TextView distance;
         ImageView mapPoint;
         Button acceptButton;
         Button rejectButton;
         TextView infoText;
+        TextView title;
     }
 
     public OfferListAdapterHelpSeeker(ArrayList<VolunteerRequest> data, Context context, Activity listener) {
@@ -67,13 +56,13 @@ public class OfferListAdapterHelpSeeker extends ArrayAdapter<VolunteerRequest> {
             viewHolder = new OfferListAdapterHelpSeeker.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_help_offers, parent, false);
-            viewHolder.volunteerPhoto = (ImageView) convertView.findViewById(R.id.volunteerPhoto);
             viewHolder.nameAndSurname = (TextView) convertView.findViewById(R.id.nameAndSurnameText);
             viewHolder.distance = (TextView) convertView.findViewById(R.id.distanceText);
             viewHolder.infoText = (TextView) convertView.findViewById(R.id.informationText);
             viewHolder.mapPoint = (ImageView) convertView.findViewById(R.id.mapPoint);
             viewHolder.acceptButton = (Button) convertView.findViewById(R.id.acceptBtn);
             viewHolder.rejectButton = (Button) convertView.findViewById(R.id.rejectBtn);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.requestTitle);
 
             viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,6 +84,7 @@ public class OfferListAdapterHelpSeeker extends ArrayAdapter<VolunteerRequest> {
         }
 
          viewHolder.nameAndSurname.setText(request.getVolunteer().getName());
+         viewHolder.title.setText(request.getRequest().getTitle());
 
         return convertView;
     }

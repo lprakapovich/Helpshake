@@ -89,6 +89,8 @@
     <string name="request_published_msg">Thank you! Our volunteers will reach out to you.</string>
     <string name="add_request_error">Request must contain at least one category</string>
     <string name="collection_doc_uid">helpSeekerUid</string>
+    <string name="request_finished"> Task is finished</string>
+    <string name="request_finished_msg"> Seems like the deal succeeded. Don\'t forget to leave a feedback to a volunteer :) </string>
 
     <string name="request_details">Request details</string>
     <string name="help_offered">The information was sent to the help seeker</string>

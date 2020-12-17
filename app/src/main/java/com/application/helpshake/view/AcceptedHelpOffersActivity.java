@@ -5,20 +5,16 @@ import androidx.databinding.DataBindingUtil;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.application.helpshake.R;
+import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.databinding.ActivityListAcceptedOffersBinding;
-import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.model.VolunteerRequest;
 import com.application.helpshake.ui.DialogRequestDetails;
-import com.application.helpshake.utils.AcceptedRequestListAdapter;
-import com.application.helpshake.utils.RequestListAdapterHelpSeeker;
-import com.application.helpshake.utils.RequestListAdapterVolunteer;
+import com.application.helpshake.adapters.volunteer.AcceptedRequestListAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +37,7 @@ public class AcceptedHelpOffersActivity extends AppCompatActivity {
     CollectionReference mVolunteerRequestsCollection;
 
     ArrayList<HelpSeekerRequest> mHelpRequests;
-    ActivityListAcceptedOffersBinding mBinding;
+    ActivityHelpOffersToAcceptBinding mBinding;
     DialogRequestDetails mDialog;
     User user;
     User volunteer;

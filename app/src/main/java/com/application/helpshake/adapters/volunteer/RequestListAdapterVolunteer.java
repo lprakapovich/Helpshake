@@ -1,4 +1,4 @@
-package com.application.helpshake.utils;
+package com.application.helpshake.adapters.volunteer;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.application.helpshake.R;
 import com.application.helpshake.model.HelpCategory;
 import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.ui.DialogRequestDetails;
 
 import java.util.ArrayList;
 

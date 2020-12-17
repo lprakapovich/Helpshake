@@ -11,9 +11,8 @@ import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.helper.DialogBuilder;
 import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.Status;
-import com.application.helpshake.model.User;
 import com.application.helpshake.model.VolunteerRequest;
-import com.application.helpshake.utils.OfferListAdapterHelpSeeker;
+import com.application.helpshake.adapters.helpseeker.OfferListAdapterHelpSeeker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -77,34 +76,66 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
     @Override
     public void onOfferAccepted(int position, final VolunteerRequest request) {
-        Toast.makeText(this, request.getVolunteer().getName(), Toast.LENGTH_LONG).show();
 
         mVolunteerRequests.remove(position);
         mAdapter.notifyDataSetChanged();
 
-        Query query = mDb.collection("helpSeekerRequests")
-                .whereEqualTo("requestId", request.getRequest().getRequestId());
+        Query query = mVolunteerRequestsCollection
+               .whereEqualTo("request.requestId", request.getRequest().getRequestId())
+                .whereEqualTo("volunteer.uid", request.getVolunteer().getUid())
+                .limit(1);
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-
-                    helpRequest = snapshot.toObject(HelpSeekerRequest.class);
-                    helpRequest.setStatus(Status.InProgress);
-
-                    mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
-
-                    deleteOtherRequestsWhenAccepted(request);
-
-                }
-                DialogBuilder.showMessageDialog(
-                        getSupportFragmentManager(),
-                        "Request accepted",
-                        "Thank you!"
-                );
+            public void onSuccess(QuerySnapshot snapshot) {
+                String id = snapshot.getDocuments().get(0).getId();
+                VolunteerRequest request = snapshot.getDocuments().get(0).toObject(VolunteerRequest.class);
+                request.getRequest().setStatus(Status.InProgress);
+                updateRequest(id, request);
             }
         });
+
+
+//
+//        mVolunteerRequests.remove(position);
+//        mAdapter.notifyDataSetChanged();
+//
+//        Query query = mDb.collection("helpSeekerRequests")
+//                .whereEqualTo("requestId", request.getRequest().getRequestId());
+//
+//        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot snapshots) {
+//                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+//
+//                    helpRequest = snapshot.toObject(HelpSeekerRequest.class);
+//                    helpRequest.setStatus(Status.InProgress);
+//
+//                    mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
+//
+//                    deleteOtherRequestsWhenAccepted(request);
+//
+//                }
+//                DialogBuilder.showMessageDialog(
+//                        getSupportFragmentManager(),
+//                        "Request accepted",
+//                        "Thank you!"
+//                );
+//            }
+//        });
+    }
+
+    private void updateRequest(String documentId, VolunteerRequest request) {
+        mVolunteerRequestsCollection.document(documentId).update("request.status", request.getRequest().getStatus())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        DialogBuilder.showMessageDialog(
+                        getSupportFragmentManager(),
+                        "Request accepted",
+                        "Thank you!");
+                    }
+                });
     }
 
     public void deleteOtherRequestsWhenAccepted(VolunteerRequest request) {
@@ -125,7 +156,6 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
     @Override
     public void onOfferRejected(int position, final VolunteerRequest request) {
-        Toast.makeText(this, request.getVolunteer().getName(), Toast.LENGTH_LONG).show();
 
         mVolunteerRequests.remove(position);
         mAdapter.notifyDataSetChanged();

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
@@ -19,7 +18,7 @@ import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
 import com.application.helpshake.model.VolunteerRequest;
 import com.application.helpshake.ui.DialogRequestDetails;
-import com.application.helpshake.utils.RequestListAdapterVolunteer;
+import com.application.helpshake.adapters.volunteer.RequestListAdapterVolunteer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -213,8 +212,17 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
         mDb.collection(getString(R.string.collectionHelpSeekerRequests))
                 .document(request.getRequestId())
-                .update("status", Status.WaitingForApproval);
+                .update("status", Status.WaitingForApproval)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mHelpRequests.clear();
+                        mAdapter.notifyDataSetChanged();
+                        fetchHelpSeekerRequests(activeCategories);
+                    }
+                });
     }
+
 
     @Override
     public void OnRequestCancelled() {
