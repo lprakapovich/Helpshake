@@ -8,71 +8,63 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.application.helpshake.R;
 import com.application.helpshake.model.HelpCategory;
-import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.model.Status;
+import com.application.helpshake.model.VolunteerRequest;
 
 import java.util.ArrayList;
 
-public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest> {
+public class AcceptedRequestListAdapter extends ArrayAdapter<VolunteerRequest> {
 
-    finishButtonListener finishListener;
-    contactButtonListener contactListener;
+    AcceptedRequestListAdapter.finishButtonListener finishListener;
+    AcceptedRequestListAdapter.contactButtonListener contactListener;
+
+    public AcceptedRequestListAdapter(ArrayList<VolunteerRequest> data, Context context) {
+        super(context, R.layout.list_item_volunteer_accepted_offers, data);
+    }
 
     public interface finishButtonListener {
-        void onFinishButtonClickListener(int position, HelpSeekerRequest value);
+        void onFinishButtonClickListener(int position, VolunteerRequest value);
     }
 
     public interface contactButtonListener {
-        void onContactButtonClickListener(int position, HelpSeekerRequest value);
+        void onContactButtonClickListener(int position,  VolunteerRequest value);
     }
 
-    public void setFinishButtonListener(finishButtonListener listener) {
+    public void setFinishButtonListener(AcceptedRequestListAdapter.finishButtonListener listener) {
         this.finishListener = listener;
     }
 
-    public void setContactButtonListener(contactButtonListener listener) {
+    public void setContactButtonListener(AcceptedRequestListAdapter.contactButtonListener listener) {
         this.contactListener = listener;
     }
 
     private static class ViewHolder {
         TextView category;
-        TextView status;
+        TextView nameAndSurnameHelpSeeker;
         Button contactBtn;
         Button finishBtn;
     }
 
-    public RequestListAdapterHelpSeeker(ArrayList<HelpSeekerRequest> data, Context context) {
-        super(context, R.layout.list_item_helpseeker_request, data);
-    }
 
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        final HelpSeekerRequest request = getItem(position);
-        final ViewHolder viewHolder;
+        final VolunteerRequest request = getItem(position);
+        final AcceptedRequestListAdapter.ViewHolder viewHolder;
 
         if (convertView == null) {
-            viewHolder = new ViewHolder();
+            viewHolder = new AcceptedRequestListAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_request, parent, false);
             viewHolder.category = (TextView) convertView.findViewById(R.id.categories);
-            viewHolder.status = (TextView) convertView.findViewById(R.id.status);
+            viewHolder.nameAndSurnameHelpSeeker = (TextView) convertView.findViewById(R.id.nameAndSurnameText);
             viewHolder.contactBtn = (Button) convertView.findViewById(R.id.contactButton);
             viewHolder.finishBtn = (Button) convertView.findViewById(R.id.finishButton);
 
-            if (request.getStatus() == Status.InProgress) {
-                viewHolder.contactBtn.setEnabled(true);
-                viewHolder.finishBtn.setEnabled(true);
-            } else {
-                viewHolder.contactBtn.setEnabled(false);
-                viewHolder.finishBtn.setEnabled(false);
-            }
             viewHolder.contactBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -93,31 +85,11 @@ public class RequestListAdapterHelpSeeker extends ArrayAdapter<HelpSeekerRequest
 
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (AcceptedRequestListAdapter.ViewHolder) convertView.getTag();
         }
 
 
-        StringBuilder builder = new StringBuilder();
-        for (HelpCategory category : request.getHelpCategories()) {
 
-            switch (category)
-            {
-                case DogWalking:
-                    builder.append("#dogwalking\n");
-                    break;
-                case Grocery:
-                    builder.append("#grocery\n");
-                    break;
-                case Drugstore:
-                    builder.append("#drugstore\n");
-                    break;
-                default:
-                    builder.append("#other\n");
-            }
-        }
-
-        viewHolder.status.setText(request.getStatus().toString());
-        viewHolder.category.setText(builder.toString());
         //viewHolder.imageView.setTag(position);
         return convertView;
     }

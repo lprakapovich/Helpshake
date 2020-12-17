@@ -19,6 +19,7 @@ import com.application.helpshake.model.HelpSeekerRequest;
 import com.application.helpshake.model.RequestEnrollment;
 import com.application.helpshake.model.Status;
 import com.application.helpshake.model.User;
+import com.application.helpshake.model.VolunteerRequest;
 import com.application.helpshake.ui.DialogHelpRequest;
 import com.application.helpshake.utils.OfferListAdapterHelpSeeker;
 import com.application.helpshake.utils.RequestListAdapterHelpSeeker;
@@ -46,12 +47,16 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
     CollectionReference mUsersCollection;
+    CollectionReference mVolunteerRequestsCollection;
 
     DialogHelpRequest mDialog;
     RequestListAdapterHelpSeeker mAdapter;
 
     ArrayList<HelpSeekerRequest> mHelpRequests;
+    ArrayList<VolunteerRequest> mVolunteerRequests;
+    VolunteerRequest volunteerRequest;
     User user;
+    User volunteer;
 
     ActivityHelpSeekerHomeBinding mBinding;
 
@@ -98,10 +103,13 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mDb = FirebaseFirestore.getInstance();
         mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
         mUsersCollection = mDb.collection(getString(R.string.collectionUsers));
+        mVolunteerRequestsCollection = mDb.collection("volunteerRequest");
 
         mHelpRequests = new ArrayList<>();
+        mVolunteerRequests = new ArrayList<>();
         queryUser();
         fetchHelpSeekerRequests();
+        fetchVolunteerRequests();
     }
 
 
@@ -119,6 +127,23 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 }
 
                 initializeListAdapter();
+            }
+        });
+    }
+
+    private void fetchVolunteerRequests() {
+
+        Query query = mVolunteerRequestsCollection.whereEqualTo(
+                "request.helpSeekerUid", mUser.getUid())
+                .whereEqualTo("request.status", Status.InProgress);
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    mVolunteerRequestsCollection.add(
+                            snapshot.toObject(VolunteerRequest.class));
+                }
             }
         });
     }
@@ -205,11 +230,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mAdapter.notifyDataSetChanged();
 
         mDb.collection("helpSeekerRequests").document(value.getRequestId()).update("status", Status.Completed);
+        mDb.collection("helpSeekerRequests").document(value.getRequestId()).delete();
+
+        mAdapter.clear();
+        fetchHelpSeekerRequests();
     }
 
     @Override
     public void onContactButtonClickListener(int position, HelpSeekerRequest value) {
-        startPhoneActivity(Intent.ACTION_DIAL, "tel:5551234");
+        queryToGetVolunteerPhone(value);
     }
 
     public void startPhoneActivity(String action, String uri) {
@@ -222,6 +251,20 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
        if(intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    public void queryToGetVolunteerPhone(HelpSeekerRequest request) {
+        Query query = mVolunteerRequestsCollection.whereEqualTo("request.requestId",
+                request.getRequestId());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    volunteerRequest = snapshot.toObject(VolunteerRequest.class);
+                    startPhoneActivity(Intent.ACTION_DIAL, "tel:" + volunteerRequest.getVolunteer().getPhoneNum());
+                }
+            }
+        });
     }
 
 }

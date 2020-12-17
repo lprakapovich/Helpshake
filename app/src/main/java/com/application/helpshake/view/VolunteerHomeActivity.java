@@ -93,7 +93,10 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mBinding.notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //add code to go to notifications
+                startActivity(new Intent(
+                        VolunteerHomeActivity.this,
+                        AcceptedHelpOffersActivity.class
+                ));
             }
         });
     }
