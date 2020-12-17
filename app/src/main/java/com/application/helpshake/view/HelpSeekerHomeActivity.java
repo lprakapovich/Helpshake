@@ -236,7 +236,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onContactButtonClickListener(int position, HelpSeekerRequest value) {
         queryToGetVolunteerPhone(value);
-        startPhoneActivity(Intent.ACTION_DIAL, volunteerRequest.getVolunteer().getPhoneNum());
     }
 
     public void startPhoneActivity(String action, String uri) {
@@ -259,6 +258,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
                     volunteerRequest = snapshot.toObject(VolunteerRequest.class);
+                    startPhoneActivity(Intent.ACTION_DIAL, "tel:" + volunteerRequest.getVolunteer().getPhoneNum());
                 }
             }
         });
