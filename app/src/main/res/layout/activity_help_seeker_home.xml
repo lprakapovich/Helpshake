@@ -21,21 +21,21 @@
 
                 <Button
                     android:id="@+id/offeredHelpButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginLeft="40dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="84dp"
+                    android:layout_marginLeft="84dp"
                     android:layout_marginBottom="15dp"
-                    android:text="Notif."
+                    android:background="@drawable/notification"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/newRequestButton" />
 
                 <Button
                     android:id="@+id/newRequestButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginBottom="15dp"
-                    android:text="New request"
+                    android:background="@drawable/add"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -43,12 +43,12 @@
 
                 <Button
                     android:id="@+id/profileViewButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="40dp"
-                    android:layout_marginRight="40dp"
-                    android:layout_marginBottom="15dp"
-                    android:text="Profile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="88dp"
+                    android:layout_marginRight="88dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/profile"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/newRequestButton" />
             </androidx.constraintlayout.widget.ConstraintLayout>
