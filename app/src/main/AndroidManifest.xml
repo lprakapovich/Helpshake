@@ -6,35 +6,41 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".model.UserClient"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.helpseeker.AcceptedHelpOffersActivity"></activity>
-        <activity android:name=".view.volunteer.EditVolunteerProfileActivity" />
 
-        <activity android:name=".view.EditProfileActivity" />
+        <activity android:name=".view.helpseeker.EditProfileHelpSeekerActivity" />
         <activity android:name=".view.helpseeker.OfferListHelpSeekerActivity" />
-        <activity android:name=".view.VolunteerHomeActivity" />
-        <activity android:name=".view.ReviewsActivity" />
+        <activity android:name=".view.helpseeker.HelpSeekerHomeActivity" />
         <activity android:name=".view.helpseeker.HelpSeekerProfilePage" />
-        <activity android:name=".view.VolunteerProfilePage" />
+        <activity android:name=".view.volunteer.VolunteerHomeActivity" />
+        <activity android:name=".view.volunteer.VolunteerProfilePage" />
+        <activity android:name=".view.volunteer.CurrentHelpOffersActivity" />
+        <activity android:name=".view.volunteer.EditProfileVolunteerActivity" />
+
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".view.auth.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.RegisterActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".view.helpseeker.HelpSeekerHomeActivity" />
 
         <activity
-            android:name=".view.SettingsPopUp"
-            android:theme="@style/AppTheme.PopUpTheme" />
-    </application>
+            android:name=".view.auth.RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".view.others.SettingsPopUp"
+            android:theme="@style/AppTheme.PopUpTheme" />
+
+        <activity android:name=".view.others.ReviewsActivity" />
+
+    </application>
 </manifest>

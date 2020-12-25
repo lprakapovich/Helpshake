@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.LoginActivity"
+        tools:context=".view.auth.LoginActivity"
         android:background="#A8EEE6">
 
         <EditText

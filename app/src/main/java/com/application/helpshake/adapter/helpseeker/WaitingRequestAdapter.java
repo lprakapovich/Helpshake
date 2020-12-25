@@ -1,0 +1,91 @@
+package com.application.helpshake.adapter.helpseeker;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Build;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
+import com.application.helpshake.R;
+import com.application.helpshake.model.PublishedHelpRequest;
+
+import java.util.ArrayList;
+
+public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
+
+    public interface OfferListAdapterListener {
+        void OnOfferAccepted(int position, PublishedHelpRequest request);
+        void OnOfferRejected(int position, PublishedHelpRequest request);
+    }
+
+    OfferListAdapterListener mListener;
+
+    private static class ViewHolder {
+        TextView nameAndSurname;
+        TextView distance;
+        ImageView mapPoint;
+        Button acceptButton;
+        Button rejectButton;
+        TextView infoText;
+        TextView title;
+    }
+
+    public WaitingRequestAdapter(ArrayList<PublishedHelpRequest> data, Context context, Activity listener) {
+        super(context, R.layout.list_item_helpseeker_waiting_request, data);
+        mListener = (OfferListAdapterListener) listener;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @NonNull
+    @Override
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+        final PublishedHelpRequest request = getItem(position);
+
+        WaitingRequestAdapter.ViewHolder viewHolder;
+
+        if (convertView == null) {
+            viewHolder = new WaitingRequestAdapter.ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.list_item_helpseeker_waiting_request, parent, false);
+            viewHolder.nameAndSurname =  convertView.findViewById(R.id.nameAndSurnameText);
+            viewHolder.distance = convertView.findViewById(R.id.distanceText);
+            viewHolder.infoText =  convertView.findViewById(R.id.informationText);
+            viewHolder.mapPoint = convertView.findViewById(R.id.mapPoint);
+            viewHolder.acceptButton = convertView.findViewById(R.id.acceptBtn);
+            viewHolder.rejectButton = convertView.findViewById(R.id.rejectBtn);
+            viewHolder.title = convertView.findViewById(R.id.requestTitle);
+
+            viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.OnOfferAccepted(position, request);
+                }
+            });
+
+            viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.OnOfferRejected(position, request);
+                }
+            });
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (WaitingRequestAdapter.ViewHolder) convertView.getTag();
+        }
+
+         viewHolder.nameAndSurname.setText(request.getVolunteer().getName());
+         viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
+
+        return convertView;
+    }
+}

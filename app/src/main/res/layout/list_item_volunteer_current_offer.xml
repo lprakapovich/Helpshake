@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <ImageView
+        android:id="@+id/helpSeekerPhoto"
+        android:layout_width="135dp"
+        android:layout_height="76dp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/help_seeker_photo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/hespSeeker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.282"
+        tools:srcCompat="@drawable/camera" />
+
+    <TextView
+        android:id="@+id/hespSeeker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="You are helping: "
+        app:layout_constraintBottom_toTopOf="@+id/nameAndSurnameText"
+        app:layout_constraintEnd_toStartOf="@+id/mapPoint"
+        app:layout_constraintStart_toEndOf="@+id/helpSeekerPhoto"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nameAndSurnameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:text="@string/name_and_surname"
+        app:layout_constraintBottom_toTopOf="@+id/contact"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.69"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hespSeeker" />
+
+    <ImageView
+        android:id="@+id/mapPoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="34dp"
+        android:contentDescription="@string/map_point_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/hespSeeker"
+        app:srcCompat="@drawable/distance" />
+
+    <Button
+        android:id="@+id/contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="Contact"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.65"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
+        app:layout_constraintVertical_bias="0.776" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

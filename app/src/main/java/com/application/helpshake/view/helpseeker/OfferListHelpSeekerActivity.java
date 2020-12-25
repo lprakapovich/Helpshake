@@ -2,65 +2,65 @@ package com.application.helpshake.view.helpseeker;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
+import com.application.helpshake.adapter.helpseeker.WaitingRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
-import com.application.helpshake.helper.DialogBuilder;
-import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.model.Status;
-import com.application.helpshake.model.VolunteerRequest;
-import com.application.helpshake.adapters.helpseeker.OfferListAdapterHelpSeeker;
+import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.BaseUser;
+import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.UserClient;
+import com.application.helpshake.util.DialogBuilder;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OfferListHelpSeekerActivity extends AppCompatActivity
-        implements OfferListAdapterHelpSeeker.OfferListAdapterListener {
+        implements WaitingRequestAdapter.OfferListAdapterListener {
 
     private ActivityHelpOffersToAcceptBinding mBinding;
-    private FirebaseUser mUser;
-    private CollectionReference mVolunteerRequestsCollection;
-    FirebaseFirestore mDb;
-    HelpSeekerRequest helpRequest;
-    OfferListAdapterHelpSeeker mAdapter;
+    private WaitingRequestAdapter mAdapter;
 
-    private ArrayList<VolunteerRequest> mVolunteerRequests;
+    private FirebaseFirestore mDb;
+    private CollectionReference mPublishedRequestsCollection;
+
+    private BaseUser mUser;
+    private ArrayList<PublishedHelpRequest> mRequests = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBinding = DataBindingUtil.setContentView(
-                this, R.layout.activity_help_offers_to_accept);
-
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_help_offers_to_accept);
         mDb = FirebaseFirestore.getInstance();
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
-        mUser = mAuth.getCurrentUser();
-        mVolunteerRequests = new ArrayList<>();
-        mVolunteerRequestsCollection = mDb.collection("volunteerRequest");
+        mUser = ((UserClient) (getApplicationContext())).getCurrentUser();
         fetchVolunteerRequests();
     }
 
     private void fetchVolunteerRequests() {
-        Query query = mVolunteerRequestsCollection
-                .whereEqualTo("request.helpSeekerUid", mUser.getUid())
-                .whereEqualTo("request.status", Status.WaitingForApproval);
+        Query query = mPublishedRequestsCollection
+                .whereEqualTo("request.helpSeeker.uid", mUser.getUid())
+                .whereEqualTo("status", Status.WaitingForApproval.toString());
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-                    mVolunteerRequests.add(snapshot.toObject(VolunteerRequest.class));
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mRequests.add(ds.toObject(PublishedHelpRequest.class));
                 }
                 initializeListAdapter();
             }
@@ -68,137 +68,73 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     private void initializeListAdapter() {
-        mAdapter = new OfferListAdapterHelpSeeker(
-                mVolunteerRequests, this, OfferListHelpSeekerActivity.this);
+        mAdapter = new WaitingRequestAdapter(mRequests, this, OfferListHelpSeekerActivity.this);
         mBinding.list.setAdapter(mAdapter);
     }
 
     @Override
-    public void onOfferAccepted(int position, final VolunteerRequest request) {
+    public void OnOfferAccepted(int position, final PublishedHelpRequest request) {
 
-        mVolunteerRequests.remove(position);
+        mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
 
-        Query query = mVolunteerRequestsCollection
-               .whereEqualTo("request.requestId", request.getRequest().getRequestId())
-                .whereEqualTo("volunteer.uid", request.getVolunteer().getUid())
-                .limit(1);
+        updateRequestStatus(request.getUid(), Status.InProgress);
 
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshot) {
-                String id = snapshot.getDocuments().get(0).getId();
-                VolunteerRequest request = snapshot.getDocuments().get(0).toObject(VolunteerRequest.class);
-                request.getRequest().setStatus(Status.InProgress);
-                updateRequest(id, request);
-            }
-        });
-
-
-//
-//        mVolunteerRequests.remove(position);
-//        mAdapter.notifyDataSetChanged();
-//
-//        Query query = mDb.collection("helpSeekerRequests")
-//                .whereEqualTo("requestId", request.getRequest().getRequestId());
-//
-//        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot snapshots) {
-//                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-//
-//                    helpRequest = snapshot.toObject(HelpSeekerRequest.class);
-//                    helpRequest.setStatus(Status.InProgress);
-//
-//                    mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
-//
-//                    deleteOtherRequestsWhenAccepted(request);
-//
-//                }
-//                DialogBuilder.showMessageDialog(
-//                        getSupportFragmentManager(),
-//                        "Request accepted",
-//                        "Thank you!"
-//                );
-//            }
-//        });
+        String id = request.getRequest().getUid();
+        deleteCorrespondingOpenRequest(id);
+        rejectOtherOffers(id);
     }
 
-    private void updateRequest(String documentId, VolunteerRequest request) {
-        mVolunteerRequestsCollection.document(documentId).update("request.status", request.getRequest().getStatus())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void deleteCorrespondingOpenRequest(String id) {
+        DocumentReference documentToDelete = mDb.collection(
+                "PublishedHelpRequests").document(id);
+        documentToDelete.delete();
+    }
+
+    @Override
+    public void OnOfferRejected(int position, final PublishedHelpRequest request) {
+
+        mRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+        updateRequestStatus(request.getUid(), Status.Rejected);
+    }
+
+    private void updateRequestStatus(String id, Status status) {
+
+        final String title = status.equals(Status.InProgress) ? "Request accepted" : "Request rejected";
+        final String message = status.equals(Status.InProgress) ? "Great! A volunteer will get informed immediately."
+                : "What a pity! We will let the volunteer know about your decision.";
+
+        mDb.collection("PublishedHelpRequests")
+                .document(id)
+                .update("status", status)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         DialogBuilder.showMessageDialog(
-                        getSupportFragmentManager(),
-                        "Request accepted",
-                        "Thank you!");
+                                getSupportFragmentManager(),
+                                title,
+                                message
+                        );
                     }
                 });
     }
 
-    public void deleteOtherRequestsWhenAccepted(VolunteerRequest request) {
-        Query query = mDb.collection("volunteerRequest")
-                .whereEqualTo("request.helpSeekerUid", mUser.getUid())
-                .whereEqualTo("request.requestUid", request.getRequest().getRequestId())
-                .whereNotEqualTo("request.volunteer.uid", request.getVolunteer().getUid());
+    private void rejectOtherOffers(String id) {
+        Query query = mDb.collection("PublishedHelpRequests")
+                .whereEqualTo("request.uid", id)
+                .whereEqualTo("status", Status.WaitingForApproval.toString());
 
+        // get all remaining requests, set their status to rejected
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-                        snapshot.getReference().delete();
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mDb.collection("PublishedHelpRequests")
+                            .document(ds.getId())
+                            .update("status", Status.Rejected);
                 }
             }
         });
     }
-
-    @Override
-    public void onOfferRejected(int position, final VolunteerRequest request) {
-
-        mVolunteerRequests.remove(position);
-        mAdapter.notifyDataSetChanged();
-
-        Query query = mDb.collection("helpSeekerRequests")
-                .whereEqualTo("requestId", request.getRequest().getRequestId());
-
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-
-                    helpRequest = snapshot.toObject(HelpSeekerRequest.class);
-                    helpRequest.setStatus(Status.Open);
-
-                    mDb.collection("helpSeekerRequests").document(snapshot.getId()).set(helpRequest);
-                    deleteVolunteerFromRequest(request);
-                }
-                DialogBuilder.showMessageDialog(
-                        getSupportFragmentManager(),
-                        "Request rejected",
-                        "Thank you!"
-                );
-            }
-        });
-    }
-
-    public void deleteVolunteerFromRequest(VolunteerRequest request) {
-        Query query = mDb.collection("volunteerRequest")
-                .whereEqualTo("request.helpSeekerUid", mUser.getUid())
-                .whereEqualTo("request.requestUid", request.getRequest().getRequestId())
-                .whereEqualTo("request.volunteer.uid", request.getVolunteer().getUid());
-
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-                    snapshot.getReference().delete();
-                }
-            }
-        });
-
-        mAdapter.clear();
-        fetchVolunteerRequests();
-    }
-
 }

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="nameAndSurname"
             type="String" />
@@ -13,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.VolunteerProfilePage">
+        tools:context=".view.volunteer.VolunteerProfilePage">
 
         <TextView
             android:id="@+id/nameAndSurnameText"
@@ -90,14 +89,15 @@
             android:id="@+id/deleteAccountButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="32dp"
             android:text="Delete account"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintHorizontal_bias="0.17"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editProfileButton" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView4"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_alignParentBottom="true"
@@ -143,6 +143,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+        <Button
+            android:id="@+id/becomeHelpSeeker"
+            android:layout_width="126dp"
+            android:layout_height="52dp"
+            android:text="Become a HelpSeeker"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.894"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.918" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

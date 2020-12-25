@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,21 +14,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
-import com.application.helpshake.adapters.helpseeker.CompletedRequestListViewAdapter;
+import com.application.helpshake.adapter.helpseeker.CompletedRequestAdapter;
+import com.application.helpshake.adapter.helpseeker.InProgressRequestAdapter;
+import com.application.helpshake.adapter.helpseeker.OpenRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpSeekerHomeBinding;
-import com.application.helpshake.helper.DialogBuilder;
-import com.application.helpshake.model.HelpCategory;
-import com.application.helpshake.model.HelpSeekerRequest;
-import com.application.helpshake.model.Status;
-import com.application.helpshake.model.User;
-import com.application.helpshake.model.VolunteerRequest;
-import com.application.helpshake.ui.DialogHelpRequest;
-import com.application.helpshake.adapters.helpseeker.InProcessRequestListAdapterHelpSeeker;
-import com.application.helpshake.adapters.helpseeker.RequestListAdapterHelpSeeker;
+import com.application.helpshake.dialog.DialogNewHelpRequest;
+import com.application.helpshake.model.enums.HelpCategory;
+import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.BaseUser;
+import com.application.helpshake.model.HelpRequest;
+import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.UserClient;
+import com.application.helpshake.model.UserHelpRequest;
+import com.application.helpshake.util.DialogBuilder;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -37,33 +35,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
-        implements DialogHelpRequest.RequestSubmittedListener,
-        InProcessRequestListAdapterHelpSeeker.InProcessRequestListAdapterListener {
+        implements DialogNewHelpRequest.NewRequestListener,
+        InProgressRequestAdapter.InProcessRequestListAdapterListener {
 
-    FirebaseAuth mAuth;
-    FirebaseUser mUser;
-    FirebaseFirestore mDb;
-    CollectionReference mRequestsCollection;
-    CollectionReference mUsersCollection;
-    CollectionReference mVolunteerRequestsCollection;
+    private FirebaseFirestore mDb;
+    private BaseUser mCurrentBaseUser;
 
-    DialogHelpRequest mDialog;
-    RequestListAdapterHelpSeeker mAdapter;
-    InProcessRequestListAdapterHelpSeeker mInProcessAdapter;
-    CompletedRequestListViewAdapter mCompletedAdapter;
+    private ActivityHelpSeekerHomeBinding mBinding;
+    private DialogNewHelpRequest mDialog;
 
-    ArrayList<HelpSeekerRequest> mHelpRequests;
-    ArrayList<VolunteerRequest> mVolunteerRequests;
-
-    User user;
-
-    ActivityHelpSeekerHomeBinding mBinding;
-
-    Status mSelectedStatus;
+    private Status mSelectedStatus;
+    private ArrayList<PublishedHelpRequest> mPublishedHelpRequests = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,7 +71,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(HelpSeekerHomeActivity.this, OfferListHelpSeekerActivity.class
+                        startActivity(new Intent(
+                                HelpSeekerHomeActivity.this,
+                                OfferListHelpSeekerActivity.class
                         ));
                     }
                 }
@@ -98,121 +84,85 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(
-                                HelpSeekerHomeActivity.this, HelpSeekerProfilePage.class
+                                HelpSeekerHomeActivity.this,
+                                HelpSeekerProfilePage.class
                         ));
                     }
                 }
         );
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
         mDb = FirebaseFirestore.getInstance();
-        mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
-        mUsersCollection = mDb.collection(getString(R.string.collectionUsers));
-        mVolunteerRequestsCollection = mDb.collection("volunteerRequest");
-
-        mHelpRequests = new ArrayList<>();
-        mVolunteerRequests = new ArrayList<>();
-
         mSelectedStatus = Status.Open;
 
-        queryUser();
-        fetchRequests();
+        getCurrentUser();
+        configureQuery();
     }
 
-
-    private void fetchRequests() {
-        if (mSelectedStatus.equals(Status.InProgress) || mSelectedStatus.equals(Status.Completed)) {
-            fetchFromVolunteerRequestCollection();
-        } else {
-            fetchFromHelpSeekerRequestsCollection();
-        }
+    public void getCurrentUser() {
+        mCurrentBaseUser = ((UserClient)(getApplicationContext())).getCurrentUser();
     }
 
-    private void fetchFromHelpSeekerRequestsCollection() {
-        mHelpRequests.clear();
-        Query query = mRequestsCollection
-                .whereEqualTo(getString(R.string.collection_doc_uid), mUser.getUid())
-                .whereEqualTo(getString(R.string.collectionNodeStatus), mSelectedStatus);
+    private void configureQuery() {
+        Query query = mSelectedStatus.equals(Status.Open) ? queryOpenRequests() : queryOtherRequests();
+        fetchPublishedRequests(query);
+    }
+
+    private Query queryOpenRequests() {
+        return mDb.collection("PublishedHelpRequests")
+                .whereEqualTo("request.helpSeeker.uid", mCurrentBaseUser.getUid())
+                .whereEqualTo("status", mSelectedStatus.toString())
+                .whereEqualTo("volunteer", null);
+    }
+
+    private Query queryOtherRequests() {
+        return mDb.collection("PublishedHelpRequests")
+                .whereEqualTo("request.helpSeeker.uid", mCurrentBaseUser.getUid())
+                .whereEqualTo("status", mSelectedStatus.toString());
+    }
+
+    private void fetchPublishedRequests(Query query) {
+        mPublishedHelpRequests.clear();
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-                    mHelpRequests.add(
-                            snapshot.toObject(HelpSeekerRequest.class));
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mPublishedHelpRequests.add(ds.toObject(PublishedHelpRequest.class));
                 }
-                initializeListAdapter();
-            }
-        });
-    }
 
-    private void fetchFromVolunteerRequestCollection() {
-        mVolunteerRequests.clear();
-        Query query = mVolunteerRequestsCollection
-                .whereEqualTo("request.helpSeekerUid", mUser.getUid())
-                .whereEqualTo("request.status", mSelectedStatus);
-
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-                    mVolunteerRequests.add(snapshot.toObject(VolunteerRequest.class));
-                }
-                initializeListAdapter();
+                setAdapter();
             }
         });
     }
 
 
-//    private void fetchVolunteerRequests() {
-//
-//        // if it is an completed, fetch from the
-//        Query query = mVolunteerRequestsCollection.whereEqualTo(
-//                "request.helpSeekerUid", mUser.getUid())
-//                .whereEqualTo("request.status", Status.InProgress);
-//
-//        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot snapshots) {
-//                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-//                    mVolunteerRequestsCollection.add(
-//                            snapshot.toObject(VolunteerRequest.class));
-//                }
-//            }
-//        });
-//    }
-
-
-    private void initializeListAdapter() {
-        switch(mSelectedStatus) {
+    private void setAdapter() {
+        switch (mSelectedStatus) {
+            case Open:
+                OpenRequestAdapter mOpenRequestAdapter = new OpenRequestAdapter(mPublishedHelpRequests, this);
+                mBinding.list.setAdapter(mOpenRequestAdapter);
+                break;
             case InProgress:
-                mInProcessAdapter = new InProcessRequestListAdapterHelpSeeker(mVolunteerRequests, this);
+                InProgressRequestAdapter mInProcessAdapter = new InProgressRequestAdapter(mPublishedHelpRequests, this);
                 mBinding.list.setAdapter(mInProcessAdapter);
                 break;
-
             case Completed:
-                mCompletedAdapter = new CompletedRequestListViewAdapter(mVolunteerRequests, this);
+                CompletedRequestAdapter mCompletedAdapter = new CompletedRequestAdapter(mPublishedHelpRequests, this);
                 mBinding.list.setAdapter(mCompletedAdapter);
-                break;
-
-            default:
-                mAdapter = new RequestListAdapterHelpSeeker(mHelpRequests, this);
-                mBinding.list.setAdapter(mAdapter);
                 break;
         }
     }
 
     private void openNewRequestDialog() {
-        mDialog = new DialogHelpRequest();
+        mDialog = new DialogNewHelpRequest();
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
     @Override
-    public void onRequestSubmitted(String title, String comment, List<HelpCategory> categories) {
+    public void OnRequestCreated(String title, String comment, List<HelpCategory> categories) {
         mDialog.dismiss();
         createNewRequest(title, comment, categories);
-        fetchRequests();
+        configureQuery();
     }
 
     @Override
@@ -220,52 +170,42 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mDialog.dismiss();
     }
 
-    private void createNewRequest(String title, String comment, List<HelpCategory> categories) {
-        HelpSeekerRequest request = new HelpSeekerRequest(
-                UUID.randomUUID().toString(),
-                mUser.getUid(),
-                user.getName(),
-                user.getSurname(),
-                categories,
-                Status.Open,
+    private void createNewRequest(String title, String description, List<HelpCategory> categories) {
+        HelpRequest request = new HelpRequest(
                 title,
-                comment
+                description,
+                categories
         );
 
-        String collection = getString(R.string.collectionHelpSeekerRequests);
+        String id = mDb.collection("PublishedHelpRequests")
+                .document().getId();
 
-        mDb.collection(collection).document(request.getRequestId()).set(request)
+        PublishedHelpRequest publishedHelpRequest = new PublishedHelpRequest(
+                new UserHelpRequest(mCurrentBaseUser, request, id),
+                null,
+                Status.Open,
+                id
+        );
+
+        mDb.collection("PublishedHelpRequests")
+                .document(id)
+                .set(publishedHelpRequest)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                DialogBuilder.showMessageDialog(
-                        getSupportFragmentManager(),
-                        getString(R.string.request_published),
-                        getString(R.string.request_published_msg)
-                );
-            }
-        });
-
-//        RequestEnrollment requestEnrollment = new RequestEnrollment(request.getRequestId());
-//        mDb.collection("requests_enrollments").document(requestEnrollment.getRequestId()).set(requestEnrollment);
-    }
-
-    public void queryUser() {
-        Query query = mUsersCollection.whereEqualTo("uid", mUser.getUid());
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
-                   user = snapshot.toObject(User.class);
-                }
-            }
-        });
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        DialogBuilder.showMessageDialog(
+                            getSupportFragmentManager(),
+                            getString(R.string.request_published),
+                            getString(R.string.request_published_msg)
+                        );
+                    }
+                });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.filtering, menu);
+        inflater.inflate(R.menu.menu_request_filtering, menu);
         return true;
     }
 
@@ -290,26 +230,34 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 break;
         }
 
-        fetchRequests();
+        configureQuery();
         return true;
     }
 
-//    @Override
-//    public void onFinishButtonClickListener(int position, HelpSeekerRequest value) {
-//        mHelpRequests.remove(position);
-//        mAdapter.notifyDataSetChanged();
-//
-//        mDb.collection("helpSeekerRequests").document(value.getRequestId()).update("status", Status.Completed);
-//        mDb.collection("helpSeekerRequests").document(value.getRequestId()).delete();
-//
-//        mAdapter.clear();
-//        fetchRequests();
-//    }
+    @Override
+    public void OnMarkFinished(int position, PublishedHelpRequest request) {
 
-//    @Override
-//    public void onContactButtonClickListener(int position, HelpSeekerRequest value) {
-//        queryToGetVolunteerPhone(value);
-//    }
+        DialogBuilder.showMessageDialog(
+                getSupportFragmentManager(),
+                getString(R.string.request_finished),
+                getString(R.string.request_finished_msg)
+        );
+
+        request.setStatus(Status.Completed);
+        updateRequest(request);
+    }
+
+
+    private void updateRequest(PublishedHelpRequest request) {
+        mDb.collection("PublishedHelpRequests").document(request.getUid()).
+                update("status", request.getStatus()
+        );
+    }
+
+    @Override
+    public void OnContact(int position, PublishedHelpRequest request) {
+        startPhoneActivity(Intent.ACTION_DIAL, "tel:" + request.getVolunteer().getPhoneNumber());
+    }
 
     public void startPhoneActivity(String action, String uri) {
         Uri location = Uri.parse(uri);
@@ -318,49 +266,8 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     public void checkImplicitIntent(Intent intent) {
-       if(intent.resolveActivity(getPackageManager()) != null) {
+        if(intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
-    }
-
-    @Override
-    public void OnMarkFinishedClicked(int position, VolunteerRequest request) {
-        mVolunteerRequests.remove(position);
-        mInProcessAdapter.notifyDataSetChanged();
-
-        DialogBuilder.showMessageDialog(
-                getSupportFragmentManager(),
-                getString(R.string.request_finished),
-                getString(R.string.request_finished_msg)
-        );
-
-        request.getRequest().setStatus(Status.Completed);
-
-        Query q = mDb.collection("volunteerRequest")
-                .whereEqualTo("request.requestId", request.getRequest().getRequestId())
-                .whereEqualTo("volunteer.uid", request.getVolunteer().getUid())
-                .limit(1);
-
-        q.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                VolunteerRequest request = snapshots.getDocuments().get(0).toObject(VolunteerRequest.class);
-                request.getRequest().setStatus(Status.Completed);
-                String id = snapshots.getDocuments().get(0).getId();
-                updateRequest(id, request);
-            }
-        });
-    }
-
-
-    private void updateRequest(String documentId, VolunteerRequest request) {
-        mDb.collection("volunteerRequest").document(documentId).update(
-                "request.status", request.getRequest().getStatus()
-        );
-    }
-
-    @Override
-    public void OnContact(int position, VolunteerRequest request) {
-        startPhoneActivity(Intent.ACTION_DIAL, "tel:" + request.getVolunteer().getPhoneNum());
     }
 }
