@@ -14,9 +14,9 @@ import com.application.helpshake.adapter.volunteer.OpenRequestAdapterVolunteer;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.PublishedHelpRequest;
-import com.application.helpshake.model.UserClient;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.dialog.DialogRequestDetails;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,7 +38,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
     FirebaseAuth mAuth;
     FirebaseUser mFirebaseUser;
     FirebaseFirestore mDb;
-    CollectionReference mRequestsCollection;
+    CollectionReference mPublishedRequestsCollection;
 
     ActivityVolunteerHomeBinding mBinding;
     DialogRequestDetails mDialog;
@@ -63,12 +63,15 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mDb = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mAuth.getCurrentUser();
-        mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
+        setBindings();
         getCurrentUser();
         initHomeView();
+    }
 
-        mBinding.profileButton.setOnClickListener(new View.OnClickListener() {
+    private void setBindings() {
+        mBinding.profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(
@@ -78,7 +81,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
             }
         });
 
-        mBinding.settingsButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(
@@ -88,7 +91,17 @@ public class VolunteerHomeActivity extends AppCompatActivity
             }
         });
 
-        mBinding.notifButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(
+                        VolunteerHomeActivity.this,
+                        VolunteerNotificationActivity.class
+                ));
+            }
+        });
+
+        mBinding.myRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(
@@ -116,7 +129,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
     private void fetchHelpSeekerRequests(ArrayList<String> categories) {
 
-        Query query = mDb.collection("PublishedHelpRequests")
+        Query query = mPublishedRequestsCollection
                 .whereEqualTo("status", Status.Open.toString())
                 .whereEqualTo("volunteer", null)
                 .whereArrayContainsAny("request.helpRequest.categoryList", categories);
@@ -134,7 +147,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
 
     private void initializeListAdapter() {
-        mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, this, this);
+        mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, this);
         mBinding.listRequests.setAdapter(mAdapter);
         mBinding.listRequests.setItemsCanFocus(false);
 
@@ -149,19 +162,17 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
 
     @Override
-    public void OnHelpOffered() {
+    public void onHelpOffered() {
 
         mDialog.dismiss();
 
-        String id = mDb.collection("PublishedHelpRequests").document().getId();
+        String id = mPublishedRequestsCollection.document().getId();
 
         mPublishedRequest.setStatus(Status.WaitingForApproval);
         mPublishedRequest.setVolunteer(mCurrentUser);
         mPublishedRequest.setUid(id);
 
-        mDb.collection("PublishedHelpRequests")
-                .document(id)
-                .set(mPublishedRequest)
+        mPublishedRequestsCollection.document(id).set(mPublishedRequest)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -172,7 +183,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void OnDialogClosed() {
+    public void onDialogClosed() {
         mDialog.dismiss();
     }
 
@@ -181,15 +192,13 @@ public class VolunteerHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void OnDetailsClicked(PublishedHelpRequest request) {
+    public void onDetails(PublishedHelpRequest request) {
         mPublishedRequest = request;
         mDialog = new DialogRequestDetails(request);
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
-    /**
-     * Refactor!
-     */
+
     private void setSharedPreferences() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         editor = sharedPref.edit();

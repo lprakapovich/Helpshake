@@ -9,11 +9,15 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerProfilePageBinding;
+import com.application.helpshake.dialog.DialogSingleResult;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.notification.NotificationClosedRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.UserClient;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.auth.RegisterActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,12 +27,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class VolunteerProfilePage extends AppCompatActivity {
+public class VolunteerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener {
 
     private ActivityVolunteerProfilePageBinding mBinding;
+    private DialogSingleResult mDialogResult;
 
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
+    CollectionReference mNotificationsCollection;
+
     CollectionReference mUsersCollection;
     BaseUser mCurrentUser;
 
@@ -41,11 +48,15 @@ public class VolunteerProfilePage extends AppCompatActivity {
                 this, R.layout.activity_volunteer_profile_page);
 
         mDb = FirebaseFirestore.getInstance();
-        mRequestsCollection = mDb.collection(getString(R.string.collectionHelpSeekerRequests));
+        mRequestsCollection = mDb.collection("PublishedHelpRequests");
+        mNotificationsCollection = mDb.collection("Notifications");
         mUsersCollection = mDb.collection("BaseUsers");
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
+        setBindings();
+    }
 
-        mBinding.setNameAndSurname(mCurrentUser.getName() + " " + mCurrentUser.getLastName());
+    private void setBindings() {
+        mBinding.setNameAndSurname(mCurrentUser.getFullName());
 
         mBinding.homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,29 +68,27 @@ public class VolunteerProfilePage extends AppCompatActivity {
         mBinding.editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(
-                        VolunteerProfilePage.this, EditProfileVolunteerActivity.class
-                ));
+                startActivity(new Intent(VolunteerProfilePage.this, EditProfileVolunteerActivity.class));
             }
         });
 
-       mBinding.deleteAccountButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.deleteAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteAccount();
             }
         });
 
-       mBinding.becomeHelpSeeker.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               becomeHelpSeeker();
-           }
-       });
+        mBinding.becomeHelpSeeker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                becomeHelpSeeker();
+            }
+        });
     }
 
     private void becomeHelpSeeker() {
-        Query query = mDb.collection("PublishedHelpRequests")
+        Query query =mRequestsCollection
                 .whereEqualTo("volunteer.uid", mCurrentUser.getUid())
                 .whereEqualTo("status", Status.InProgress.toString());
 
@@ -94,17 +103,39 @@ public class VolunteerProfilePage extends AppCompatActivity {
                                     "unless all your help offers are completed. "
                     );
                 } else {
-                    deleteAllPendingHelpOffers();
+                    closeAllPendingHelpOffers();
                     updateUserRole();
                 }
             }
         });
     }
 
-    private void deleteAllPendingHelpOffers() {
-        //
-    }
+    private void closeAllPendingHelpOffers() {
+        Query query = mRequestsCollection.whereEqualTo("volunteer.uid", mCurrentUser.getUid())
+                .whereEqualTo("status", Status.WaitingForApproval.toString());
 
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mRequestsCollection.document(ds.getId()).update("status", Status.Closed);
+
+                    PublishedHelpRequest r = ds.toObject(PublishedHelpRequest.class);
+
+                    NotificationClosedRequest notification = new NotificationClosedRequest(
+                        r.getRequest().getHelpSeeker(),
+                            r.getVolunteer(),
+                            "Help offer was closed",
+                            "Volunteer has switched to a help seeker role, all his help offers were suspended",
+                            false,
+                            r.getUid()
+                    );
+
+                    mNotificationsCollection.document().set(notification);
+                }
+            }
+        });
+    }
 
     private void updateUserRole() {
         mDb.collection("BaseUsers").document(mCurrentUser.getUid())
@@ -112,11 +143,12 @@ public class VolunteerProfilePage extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                DialogBuilder.showMessageDialog(
-                        getSupportFragmentManager(),
-                        "Role was changed",
-                        "Please, login once again to complete all the changes."
-                );
+
+                mDialogResult = new DialogSingleResult(
+                        "Role updated",
+                        "You're now a help seeker. Login once again to apply all the changes.",
+                        VolunteerProfilePage.this);
+                mDialogResult.show(getSupportFragmentManager(), "tag");
             }
         });
     }
@@ -144,5 +176,10 @@ public class VolunteerProfilePage extends AppCompatActivity {
                 "Your account was deleted",
                 "Thanks for using our app."
         );
+    }
+
+    @Override
+    public void onResult() {
+        startActivity(new Intent(VolunteerProfilePage.this, LoginActivity.class));
     }
 }

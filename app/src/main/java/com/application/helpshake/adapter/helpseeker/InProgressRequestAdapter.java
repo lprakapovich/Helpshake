@@ -14,15 +14,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
-import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 
 import java.util.ArrayList;
 
 public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>  {
 
     public interface InProcessRequestListAdapterListener {
-        void OnMarkFinished(int position, PublishedHelpRequest value);
-        void OnContact(int position, PublishedHelpRequest value);
+        void onMarkFinished(int position, PublishedHelpRequest value);
+        void onContact(int position, PublishedHelpRequest value);
     }
 
     InProcessRequestListAdapterListener listener;
@@ -65,7 +65,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
                     @Override
                     public void onClick(View v) {
                         if (listener != null) {
-                            listener.OnContact(position, request);
+                            listener.onContact(position, request);
                         }
                     }
                 });
@@ -74,7 +74,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
                     @Override
                     public void onClick(View v) {
                         if (listener != null) {
-                            listener.OnMarkFinished(position, request);
+                            listener.onMarkFinished(position, request);
                         }
                     }
                 });
@@ -84,7 +84,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
         }
 
         viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
-        viewHolder.volunteerName.setText(request.getVolunteer().getName());
+        viewHolder.volunteerName.setText(request.getVolunteer().getFullName());
         return convertView;
     }
 }

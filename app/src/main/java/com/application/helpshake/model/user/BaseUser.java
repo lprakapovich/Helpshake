@@ -1,4 +1,4 @@
-package com.application.helpshake.model;
+package com.application.helpshake.model.user;
 
 import com.application.helpshake.model.enums.Role;
 
@@ -24,4 +24,3 @@ public class BaseUser {
         return name + " " + lastName;
     }
 }
-

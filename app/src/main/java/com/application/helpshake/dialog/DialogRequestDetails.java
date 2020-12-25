@@ -16,7 +16,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.DialogRequestDetailsBinding;
-import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 
 import static com.application.helpshake.model.enums.HelpCategory.DogWalking;
 import static com.application.helpshake.model.enums.HelpCategory.Drugstore;
@@ -25,8 +25,8 @@ import static com.application.helpshake.model.enums.HelpCategory.Grocery;
 public class DialogRequestDetails extends DialogFragment {
 
     public interface RequestSubmittedListener {
-        void OnHelpOffered();
-        void OnDialogClosed();
+        void onHelpOffered();
+        void onDialogClosed();
     }
 
     DialogRequestDetailsBinding mBinding;
@@ -68,14 +68,14 @@ public class DialogRequestDetails extends DialogFragment {
         mBinding.offerHelpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.OnHelpOffered();
+                mListener.onHelpOffered();
             }
         });
 
         mBinding.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.OnDialogClosed();
+                mListener.onDialogClosed();
             }
         });
 

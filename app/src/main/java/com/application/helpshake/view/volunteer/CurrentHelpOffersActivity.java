@@ -9,11 +9,12 @@ import android.widget.Toast;
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.CurrentHelpOffersAdapter;
 import com.application.helpshake.databinding.ActivityCurrentHelpOffersBinding;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.PublishedHelpRequest;
-import com.application.helpshake.model.UserClient;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.model.enums.Status;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -27,6 +28,7 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
     CurrentHelpOffersAdapter mAdapter;
 
     FirebaseFirestore mDb;
+    CollectionReference mPublishedRequestsCollection;
     BaseUser mCurrentUser;
 
     ArrayList<PublishedHelpRequest> mOffers = new ArrayList<>();
@@ -39,6 +41,7 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
                 this, R.layout.activity_current_help_offers);
 
         mDb = FirebaseFirestore.getInstance();
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
 
@@ -47,7 +50,7 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
 
     private void fetchHelpOffers() {
 
-        Query query = mDb.collection("PublishedHelpRequests")
+        Query query = mPublishedRequestsCollection
                 .whereEqualTo("volunteer.uid", mCurrentUser.getUid())
                 .whereEqualTo("status", Status.InProgress.toString());
 
@@ -69,7 +72,7 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
     }
 
     @Override
-    public void OnContact(PublishedHelpRequest request) {
-        Toast.makeText(this, request.getRequest().getHelpSeeker().getName(), Toast.LENGTH_LONG).show();
+    public void onContact(PublishedHelpRequest request) {
+        Toast.makeText(this, request.getRequest().getHelpSeeker().getPhoneNumber(), Toast.LENGTH_LONG).show();
     }
 }

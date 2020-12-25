@@ -29,8 +29,8 @@ import java.util.Set;
 public class DialogNewHelpRequest extends DialogFragment {
 
     public interface NewRequestListener {
-        void OnRequestCreated(String title, String comment, List<HelpCategory> categories);
-        void OnRequestCancelled();
+        void onRequestCreated(String title, String comment, List<HelpCategory> categories);
+        void onRequestCancelled();
     }
 
     DialogNewHelpRequestBinding mBinding;
@@ -69,7 +69,7 @@ public class DialogNewHelpRequest extends DialogFragment {
         mBinding.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.OnRequestCancelled();
+                mListener.onRequestCancelled();
             }
         });
 
@@ -83,7 +83,7 @@ public class DialogNewHelpRequest extends DialogFragment {
     private boolean isTitleProvided() { return !mBinding.title.getText().toString().isEmpty();}
 
     private void submitRequest() {
-        mListener.OnRequestCreated(
+        mListener.onRequestCreated(
                 mBinding.title.getText().toString(),
                 mBinding.comment.getText().toString(),
                 new ArrayList<>(mCategories)

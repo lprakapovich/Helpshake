@@ -3,7 +3,8 @@ package com.application.helpshake.model.enums;
 public enum Status {
     Open,
     WaitingForApproval,
-    Rejected,
+    Declined,
     InProgress,
-    Completed
+    Completed,
+    Closed
 }

@@ -1,6 +1,5 @@
 package com.application.helpshake.adapter.helpseeker;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -16,21 +15,21 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
-import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 
 import java.util.ArrayList;
 
 public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
     public interface OfferListAdapterListener {
-        void OnOfferAccepted(int position, PublishedHelpRequest request);
-        void OnOfferRejected(int position, PublishedHelpRequest request);
+        void onHelpAccepted(int position, PublishedHelpRequest request);
+        void onHelpDeclined(int position, PublishedHelpRequest request);
     }
 
     OfferListAdapterListener mListener;
 
     private static class ViewHolder {
-        TextView nameAndSurname;
+        TextView fullName;
         TextView distance;
         ImageView mapPoint;
         Button acceptButton;
@@ -39,9 +38,9 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         TextView title;
     }
 
-    public WaitingRequestAdapter(ArrayList<PublishedHelpRequest> data, Context context, Activity listener) {
+    public WaitingRequestAdapter(ArrayList<PublishedHelpRequest> data, Context context) {
         super(context, R.layout.list_item_helpseeker_waiting_request, data);
-        mListener = (OfferListAdapterListener) listener;
+        mListener = (OfferListAdapterListener) context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -57,7 +56,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder = new WaitingRequestAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_waiting_request, parent, false);
-            viewHolder.nameAndSurname =  convertView.findViewById(R.id.nameAndSurnameText);
+            viewHolder.fullName =  convertView.findViewById(R.id.nameAndSurnameText);
             viewHolder.distance = convertView.findViewById(R.id.distanceText);
             viewHolder.infoText =  convertView.findViewById(R.id.informationText);
             viewHolder.mapPoint = convertView.findViewById(R.id.mapPoint);
@@ -68,14 +67,14 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.OnOfferAccepted(position, request);
+                    mListener.onHelpAccepted(position, request);
                 }
             });
 
             viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.OnOfferRejected(position, request);
+                    mListener.onHelpDeclined(position, request);
                 }
             });
             convertView.setTag(viewHolder);
@@ -83,7 +82,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder = (WaitingRequestAdapter.ViewHolder) convertView.getTag();
         }
 
-         viewHolder.nameAndSurname.setText(request.getVolunteer().getName());
+         viewHolder.fullName.setText(request.getVolunteer().getFullName());
          viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
 
         return convertView;

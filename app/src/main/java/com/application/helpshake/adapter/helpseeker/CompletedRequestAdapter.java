@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.application.helpshake.R;
-import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 
 import java.util.ArrayList;
 
@@ -42,15 +42,13 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
             convertView = inflater.inflate(R.layout.list_item_helpseeker_completed_request, parent, false);
             viewHolder.title = convertView.findViewById(R.id.title);
             viewHolder.volunteerName = convertView.findViewById(R.id.volunteerName);
-
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
-        viewHolder.volunteerName.setText(request.getVolunteer().getName());
+        viewHolder.volunteerName.setText(request.getVolunteer().getFullName());
         return convertView;
     }
 }

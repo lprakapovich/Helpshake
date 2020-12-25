@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,13 +23,14 @@ import com.application.helpshake.databinding.ActivityHelpSeekerHomeBinding;
 import com.application.helpshake.dialog.DialogNewHelpRequest;
 import com.application.helpshake.model.enums.HelpCategory;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.HelpRequest;
-import com.application.helpshake.model.PublishedHelpRequest;
-import com.application.helpshake.model.UserClient;
-import com.application.helpshake.model.UserHelpRequest;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.request.HelpRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.UserClient;
+import com.application.helpshake.model.request.UserHelpRequest;
 import com.application.helpshake.util.DialogBuilder;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -41,13 +44,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         InProgressRequestAdapter.InProcessRequestListAdapterListener {
 
     private FirebaseFirestore mDb;
+    private CollectionReference mPublishedRequestsCollection;
     private BaseUser mCurrentBaseUser;
 
     private ActivityHelpSeekerHomeBinding mBinding;
     private DialogNewHelpRequest mDialog;
 
     private Status mSelectedStatus;
-    private ArrayList<PublishedHelpRequest> mPublishedHelpRequests = new ArrayList<>();
+    private ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
+    private ArrayAdapter<PublishedHelpRequest> mCurrentAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,65 +97,62 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         );
 
         mDb = FirebaseFirestore.getInstance();
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
         mSelectedStatus = Status.Open;
 
         getCurrentUser();
-        configureQuery();
+        fetchRequests();
     }
 
     public void getCurrentUser() {
         mCurrentBaseUser = ((UserClient)(getApplicationContext())).getCurrentUser();
     }
 
-    private void configureQuery() {
+    private void fetchRequests() {
         Query query = mSelectedStatus.equals(Status.Open) ? queryOpenRequests() : queryOtherRequests();
-        fetchPublishedRequests(query);
+        fetchPublishedRequestsWithQuery(query);
     }
 
     private Query queryOpenRequests() {
-        return mDb.collection("PublishedHelpRequests")
+        return mPublishedRequestsCollection
                 .whereEqualTo("request.helpSeeker.uid", mCurrentBaseUser.getUid())
                 .whereEqualTo("status", mSelectedStatus.toString())
                 .whereEqualTo("volunteer", null);
     }
 
     private Query queryOtherRequests() {
-        return mDb.collection("PublishedHelpRequests")
+        return mPublishedRequestsCollection
                 .whereEqualTo("request.helpSeeker.uid", mCurrentBaseUser.getUid())
                 .whereEqualTo("status", mSelectedStatus.toString());
     }
 
-    private void fetchPublishedRequests(Query query) {
-        mPublishedHelpRequests.clear();
-
+    private void fetchPublishedRequestsWithQuery(Query query) {
+        mPublishedRequests.clear();
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
-                    mPublishedHelpRequests.add(ds.toObject(PublishedHelpRequest.class));
+                    mPublishedRequests.add(ds.toObject(PublishedHelpRequest.class));
                 }
-
                 setAdapter();
             }
         });
     }
 
-
     private void setAdapter() {
         switch (mSelectedStatus) {
             case Open:
-                OpenRequestAdapter mOpenRequestAdapter = new OpenRequestAdapter(mPublishedHelpRequests, this);
-                mBinding.list.setAdapter(mOpenRequestAdapter);
+                mCurrentAdapter = new OpenRequestAdapter(mPublishedRequests, this);
                 break;
             case InProgress:
-                InProgressRequestAdapter mInProcessAdapter = new InProgressRequestAdapter(mPublishedHelpRequests, this);
-                mBinding.list.setAdapter(mInProcessAdapter);
+                mCurrentAdapter = new InProgressRequestAdapter(mPublishedRequests, this);
                 break;
             case Completed:
-                CompletedRequestAdapter mCompletedAdapter = new CompletedRequestAdapter(mPublishedHelpRequests, this);
-                mBinding.list.setAdapter(mCompletedAdapter);
+                mCurrentAdapter = new CompletedRequestAdapter(mPublishedRequests, this);
                 break;
         }
+
+        mBinding.list.setAdapter(mCurrentAdapter);
     }
 
     private void openNewRequestDialog() {
@@ -159,37 +161,28 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void OnRequestCreated(String title, String comment, List<HelpCategory> categories) {
+    public void onRequestCreated(String title, String comment, List<HelpCategory> categories) {
         mDialog.dismiss();
         createNewRequest(title, comment, categories);
-        configureQuery();
+        fetchRequests();
+        mCurrentAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void OnRequestCancelled() {
+    public void onRequestCancelled() {
         mDialog.dismiss();
     }
 
     private void createNewRequest(String title, String description, List<HelpCategory> categories) {
-        HelpRequest request = new HelpRequest(
-                title,
-                description,
-                categories
-        );
 
-        String id = mDb.collection("PublishedHelpRequests")
-                .document().getId();
+        HelpRequest helpRequest = new HelpRequest(title, description, categories);
+
+        String id = mPublishedRequestsCollection.document().getId();
 
         PublishedHelpRequest publishedHelpRequest = new PublishedHelpRequest(
-                new UserHelpRequest(mCurrentBaseUser, request, id),
-                null,
-                Status.Open,
-                id
-        );
+                new UserHelpRequest(mCurrentBaseUser, helpRequest, id), null, Status.Open, id);
 
-        mDb.collection("PublishedHelpRequests")
-                .document(id)
-                .set(publishedHelpRequest)
+        mPublishedRequestsCollection.document(id).set(publishedHelpRequest)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -230,12 +223,12 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 break;
         }
 
-        configureQuery();
+        fetchRequests();
         return true;
     }
 
     @Override
-    public void OnMarkFinished(int position, PublishedHelpRequest request) {
+    public void onMarkFinished(int position, PublishedHelpRequest request) {
 
         DialogBuilder.showMessageDialog(
                 getSupportFragmentManager(),
@@ -249,13 +242,16 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
 
     private void updateRequest(PublishedHelpRequest request) {
-        mDb.collection("PublishedHelpRequests").document(request.getUid()).
-                update("status", request.getStatus()
-        );
+        mPublishedRequestsCollection.document(request.getUid()).update("status", request.getStatus());
     }
 
+    /**
+     * Doesn't work :c
+     */
+
     @Override
-    public void OnContact(int position, PublishedHelpRequest request) {
+    public void onContact(int position, PublishedHelpRequest request) {
+        Toast.makeText(this, request.getVolunteer().getPhoneNumber(), Toast.LENGTH_LONG).show();
         startPhoneActivity(Intent.ACTION_DIAL, "tel:" + request.getVolunteer().getPhoneNumber());
     }
 

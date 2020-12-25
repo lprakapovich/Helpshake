@@ -9,11 +9,13 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityHelpSeekerProfilePageBinding;
+import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.UserClient;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.auth.RegisterActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,11 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class HelpSeekerProfilePage extends AppCompatActivity {
+public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener {
 
     private ActivityHelpSeekerProfilePageBinding mBinding;
+    private DialogSingleResult mDialogResult;
+
     private FirebaseFirestore mDb;
     private CollectionReference mUsersCollection;
+    private CollectionReference mRequestsCollection;
     private BaseUser mCurrentUser;
 
     @Override
@@ -41,16 +46,19 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
 
         mDb = FirebaseFirestore.getInstance();
         mUsersCollection = mDb.collection("BaseUsers");
+        mRequestsCollection = mDb.collection("PublishedHelpRequests");
 
+        setBindings();
+    }
+
+    private void setBindings() {
         mBinding.setNameAndSurname(mCurrentUser.getName());
 
         mBinding.editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(
-                        HelpSeekerProfilePage.this,
-                        EditProfileHelpSeekerActivity.class
-                ));
+                        HelpSeekerProfilePage.this, EditProfileHelpSeekerActivity.class));
             }
         });
 
@@ -70,7 +78,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
     }
 
     private void becomeVolunteer() {
-        Query query = mDb.collection("PublishedHelpRequests")
+        Query query = mRequestsCollection
                 .whereEqualTo("request.helpSeeker.uid", mCurrentUser.getUid())
                 .whereEqualTo("status", Status.InProgress.toString());
 
@@ -86,31 +94,29 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
                     );
                 } else {
                     deleteAllOpenRequests();
+                    closeAllWaitingRequests();
                     updateUserRole();
                 }
             }
         });
     }
 
-    private void updateUserRole() {
-        mDb.collection("BaseUsers").document(mCurrentUser.getUid())
-                .update("role", Role.Volunteer)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        DialogBuilder.showMessageDialog(
-                                getSupportFragmentManager(),
-                                "Role was changed",
-                                "Please, login once again to complete all the changes."
-                        );
+    private void closeAllWaitingRequests() {
+        Query query = mRequestsCollection.whereEqualTo("request.helpSeeker.uid", mCurrentUser.getUid())
+                .whereEqualTo("status", Status.WaitingForApproval.toString());
 
-                        // go to login page on a dialog closed
-                    }
-                });
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mRequestsCollection.document(ds.getId()).update("status", Status.Closed);
+                }
+            }
+        });
     }
 
     private void deleteAllOpenRequests() {
-        Query query = mDb.collection("PublishedHelpRequests")
+        Query query = mRequestsCollection
                 .whereEqualTo("request.helpSeeker.uid", mCurrentUser.getUid())
                 .whereEqualTo("status", Status.Open);
 
@@ -118,10 +124,26 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
-                    mDb.collection("PublishedHelpRequests").document(ds.getId()).delete();
+                    mRequestsCollection.document(ds.getId()).delete();
                 }
             }
         });
+    }
+
+    private void updateUserRole() {
+        mUsersCollection.document(mCurrentUser.getUid())
+                .update("role", Role.Volunteer)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        mDialogResult = new DialogSingleResult(
+                                "Role updated",
+                                "You're now a volunteer. Login once again to apply all the changes.",
+                                HelpSeekerProfilePage.this);
+                        mDialogResult.show(getSupportFragmentManager(), "tag");
+                    }
+                });
     }
 
     private void deleteAccount() {
@@ -147,5 +169,10 @@ public class HelpSeekerProfilePage extends AppCompatActivity {
                 "Your account was deleted",
                 "Thanks for using our app."
         );
+    }
+
+    @Override
+    public void onResult() {
+        startActivity(new Intent(HelpSeekerProfilePage.this, LoginActivity.class));
     }
 }

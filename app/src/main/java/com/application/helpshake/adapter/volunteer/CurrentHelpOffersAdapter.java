@@ -1,6 +1,5 @@
 package com.application.helpshake.adapter.volunteer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.application.helpshake.R;
-import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 
 import java.util.ArrayList;
 
 public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
     public interface CurrentHelpOfferListener {
-        void OnContact(PublishedHelpRequest request);
+        void onContact(PublishedHelpRequest request);
     }
 
     CurrentHelpOfferListener mListener;
 
     private static class ViewHolder {
         ImageView photo;
-        TextView nameAndSurname;
+        TextView fullName;
         Button contact;
     }
 
@@ -48,7 +47,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_volunteer_current_offer, parent, false);
             viewHolder.photo = convertView.findViewById(R.id.helpSeekerPhoto);
-            viewHolder.nameAndSurname =  convertView.findViewById(R.id.nameAndSurnameText);
+            viewHolder.fullName =  convertView.findViewById(R.id.nameAndSurnameText);
             viewHolder.contact = convertView.findViewById(R.id.contact);
             convertView.setTag(viewHolder);
 
@@ -56,11 +55,11 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.nameAndSurname.setText(request.getRequest().getHelpSeeker().getName());
+        viewHolder.fullName.setText(request.getRequest().getHelpSeeker().getFullName());
         viewHolder.contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.OnContact(request);
+                mListener.onContact(request);
             }
         });
 

@@ -1,4 +1,4 @@
-package com.application.helpshake.model;
+package com.application.helpshake.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

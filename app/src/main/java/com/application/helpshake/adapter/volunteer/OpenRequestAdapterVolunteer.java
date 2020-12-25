@@ -1,6 +1,5 @@
 package com.application.helpshake.adapter.volunteer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -16,29 +15,30 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.request.UserHelpRequest;
 import com.application.helpshake.model.enums.HelpCategory;
-import com.application.helpshake.model.PublishedHelpRequest;
 
 import java.util.ArrayList;
 
 public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpRequest> {
 
     public interface OpenRequestAdapterListener {
-        void OnDetailsClicked(PublishedHelpRequest request);
+        void onDetails(PublishedHelpRequest request);
     }
 
     OpenRequestAdapterListener mListener;
 
     private static class ViewHolder {
         ImageView photo;
-        TextView nameAndSurname;
+        TextView fullName;
         TextView category;
         Button details;
     }
 
-    public OpenRequestAdapterVolunteer(ArrayList<PublishedHelpRequest> data, Context context, Activity activity) {
+    public OpenRequestAdapterVolunteer(ArrayList<PublishedHelpRequest> data, Context context) {
         super(context, R.layout.list_item_volunteer_open_request, data);
-        mListener = (OpenRequestAdapterListener) activity;
+        mListener = (OpenRequestAdapterListener) context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -53,7 +53,7 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_volunteer_open_request, parent, false);
             viewHolder.photo = convertView.findViewById(R.id.help_seeker_image);
-            viewHolder.nameAndSurname =  convertView.findViewById(R.id.list_item_name);
+            viewHolder.fullName =  convertView.findViewById(R.id.list_item_name);
             viewHolder.category = convertView.findViewById(R.id.list_item_category);
             viewHolder.details = convertView.findViewById(R.id.details);
             convertView.setTag(viewHolder);
@@ -62,8 +62,11 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             viewHolder = (OpenRequestAdapterVolunteer.ViewHolder) convertView.getTag();
         }
 
+        assert request != null;
+        UserHelpRequest userHelpRequest = request.getRequest();
+
         StringBuilder builder = new StringBuilder();
-        for (HelpCategory category : request.getRequest().getHelpRequest().getCategoryList()) {
+        for (HelpCategory category : userHelpRequest.getHelpRequest().getCategoryList()) {
 
             switch (category)
             {
@@ -81,14 +84,12 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             }
         }
 
-        viewHolder.nameAndSurname.setText(
-                String.format("%s %s", request.getRequest().getHelpSeeker().getName(),
-                        request.getRequest().getHelpSeeker().getLastName()));
+        viewHolder.fullName.setText(userHelpRequest.getHelpSeeker().getFullName());
         viewHolder.category.setText(builder.toString());
         viewHolder.details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.OnDetailsClicked(request);
+                mListener.onDetails(request);
             }
         });
 

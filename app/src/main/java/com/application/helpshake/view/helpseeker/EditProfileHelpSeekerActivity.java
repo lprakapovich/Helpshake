@@ -12,8 +12,8 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditHelpseekerProfileBinding;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.UserClient;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,27 +40,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
 
         setBindings();
-
-        mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                readUserInput();
-                saveInformationToDatabase();
-            }
-        });
-
-        mBinding.changeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                try {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                } catch (ActivityNotFoundException e) {
-                    // display error state to the user
-                }
-            }
-            }
-        );
     }
 
     @Override
@@ -75,8 +54,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
 
     private void readUserInput() {
         phoneNum = mBinding.phoneInput.getText().toString();
-//        street = mBinding.streetInput.getText().toString();
-//        homeNum = mBinding.homeNoInput.getText().toString();
     }
 
     private void saveInformationToDatabase() {
@@ -95,8 +72,28 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
     }
 
     private void setBindings() {
+
         mBinding.phoneInput.setText(mCurrentUser.getPhoneNumber());
-//        mBinding.streetInput.setText(mCurrentUser.getStreet());
-//        mBinding.homeNoInput.setText(mCurrentUser.getHomeNo());
+
+        mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readUserInput();
+                saveInformationToDatabase();
+            }
+        });
+
+        mBinding.changeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                  try {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    } catch (ActivityNotFoundException e) {
+                    // display error state to the user
+                  }
+                }
+            }
+        );
     }
 }

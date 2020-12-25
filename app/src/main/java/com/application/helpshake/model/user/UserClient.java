@@ -1,6 +1,8 @@
-package com.application.helpshake.model;
+package com.application.helpshake.model.user;
 
 import android.app.Application;
+
+import com.application.helpshake.model.user.BaseUser;
 
 /**
  * Singleton representing a currently authenticated user

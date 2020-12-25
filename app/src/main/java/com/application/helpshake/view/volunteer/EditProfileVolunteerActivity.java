@@ -12,8 +12,8 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditVolunteerProfileBinding;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.UserClient;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +42,10 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
 
         setPhoneNumber();
 
+        setBindings();
+    }
+
+    private void setBindings() {
         mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,8 +92,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
     }
 
     private void saveInformationToDatabase() {
-        mUsersCollection.document(mCurrentUser.getUid()).update(
-                "phoneNumber", phoneNum)
+        mUsersCollection.document(mCurrentUser.getUid()).update("phoneNumber", phoneNum)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

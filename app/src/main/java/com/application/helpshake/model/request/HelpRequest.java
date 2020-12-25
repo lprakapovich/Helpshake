@@ -1,4 +1,4 @@
-package com.application.helpshake.model;
+package com.application.helpshake.model.request;
 
 import com.application.helpshake.model.enums.HelpCategory;
 

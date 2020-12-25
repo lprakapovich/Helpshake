@@ -10,9 +10,9 @@ import com.application.helpshake.R;
 import com.application.helpshake.adapter.helpseeker.WaitingRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.BaseUser;
-import com.application.helpshake.model.PublishedHelpRequest;
-import com.application.helpshake.model.UserClient;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,7 +25,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class OfferListHelpSeekerActivity extends AppCompatActivity
         implements WaitingRequestAdapter.OfferListAdapterListener {
@@ -68,13 +67,12 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     private void initializeListAdapter() {
-        mAdapter = new WaitingRequestAdapter(mRequests, this, OfferListHelpSeekerActivity.this);
+        mAdapter = new WaitingRequestAdapter(mRequests, this);
         mBinding.list.setAdapter(mAdapter);
     }
 
     @Override
-    public void OnOfferAccepted(int position, final PublishedHelpRequest request) {
-
+    public void onHelpAccepted(int position, final PublishedHelpRequest request) {
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
 
@@ -82,21 +80,20 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
         String id = request.getRequest().getUid();
         deleteCorrespondingOpenRequest(id);
-        rejectOtherOffers(id);
+        declineOtherOffers(id);
     }
 
     private void deleteCorrespondingOpenRequest(String id) {
-        DocumentReference documentToDelete = mDb.collection(
-                "PublishedHelpRequests").document(id);
+        DocumentReference documentToDelete = mPublishedRequestsCollection.document(id);
         documentToDelete.delete();
     }
 
     @Override
-    public void OnOfferRejected(int position, final PublishedHelpRequest request) {
+    public void onHelpDeclined(int position, final PublishedHelpRequest request) {
 
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
-        updateRequestStatus(request.getUid(), Status.Rejected);
+        updateRequestStatus(request.getUid(), Status.Declined);
     }
 
     private void updateRequestStatus(String id, Status status) {
@@ -105,9 +102,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         final String message = status.equals(Status.InProgress) ? "Great! A volunteer will get informed immediately."
                 : "What a pity! We will let the volunteer know about your decision.";
 
-        mDb.collection("PublishedHelpRequests")
-                .document(id)
-                .update("status", status)
+        mPublishedRequestsCollection.document(id).update("status", status)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -120,19 +115,17 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 });
     }
 
-    private void rejectOtherOffers(String id) {
-        Query query = mDb.collection("PublishedHelpRequests")
+    private void declineOtherOffers(String id) {
+        Query query = mPublishedRequestsCollection
                 .whereEqualTo("request.uid", id)
                 .whereEqualTo("status", Status.WaitingForApproval.toString());
 
-        // get all remaining requests, set their status to rejected
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
-                    mDb.collection("PublishedHelpRequests")
-                            .document(ds.getId())
-                            .update("status", Status.Rejected);
+                    mPublishedRequestsCollection.document(ds.getId())
+                            .update("status", Status.Declined);
                 }
             }
         });

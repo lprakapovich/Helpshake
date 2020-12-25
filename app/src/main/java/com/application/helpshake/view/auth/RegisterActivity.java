@@ -13,7 +13,7 @@ import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityRegisterBinding;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.model.enums.Role;
-import com.application.helpshake.model.BaseUser;
+import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.dialog.DialogSelect;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;

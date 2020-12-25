@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.application.helpshake.R;
-import com.application.helpshake.model.PublishedHelpRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.enums.HelpCategory;
 
 import java.util.ArrayList;
