@@ -40,6 +40,10 @@
             android:name=".view.others.SettingsPopUp"
             android:theme="@style/AppTheme.PopUpTheme" />
         <activity android:name=".view.others.ReviewsActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
