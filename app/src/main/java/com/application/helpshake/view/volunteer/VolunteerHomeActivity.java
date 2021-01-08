@@ -50,6 +50,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
     BaseUser mCurrentUser;
     ArrayList<PublishedHelpRequest> mPublishedOpenRequests = new ArrayList<>();
+    ArrayList<PublishedHelpRequest> mPublishedWaitingRequests = new ArrayList<>();
     PublishedHelpRequest mPublishedRequest;
     OpenRequestAdapterVolunteer mAdapter;
 
@@ -104,6 +105,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mBinding.myRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 startActivity(new Intent(
                         VolunteerHomeActivity.this,
                         CurrentHelpOffersActivity.class
@@ -119,10 +121,12 @@ public class VolunteerHomeActivity extends AppCompatActivity
     private void initHomeView() {
         try {
             setActiveCategories();
+            findAllRequestsForUser();
             fetchHelpSeekerRequests(activeCategories);
         } catch (NullPointerException e) {
             setSharedPreferences();
             setActiveCategories();
+            findAllRequestsForUser();
             fetchHelpSeekerRequests(activeCategories);
         }
     }
@@ -140,11 +144,40 @@ public class VolunteerHomeActivity extends AppCompatActivity
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
                     mPublishedOpenRequests.add(ds.toObject(PublishedHelpRequest.class));
                 }
+
+                ArrayList<PublishedHelpRequest> requestsToDelete = new ArrayList<>();
+
+                for (int i = 0; i < mPublishedOpenRequests.size(); i++) {
+                    for (int j = 0; j < mPublishedWaitingRequests.size(); j++) {
+
+                        if (mPublishedOpenRequests.get(i).getRequest().getUid().equals(
+                                mPublishedWaitingRequests.get(j).getRequest().getUid())) {
+                            requestsToDelete.add(mPublishedOpenRequests.get(i));
+                        }
+                    }
+                }
+                for(PublishedHelpRequest r : requestsToDelete) {
+                    mPublishedOpenRequests.remove(r);
+                }
                 initializeListAdapter();
             }
         });
     }
 
+    public void findAllRequestsForUser() {
+        Query query = mPublishedRequestsCollection
+                .whereEqualTo("volunteer.uid", mCurrentUser.getUid())
+                .whereEqualTo("status", Status.WaitingForApproval.toString());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mPublishedWaitingRequests.add(ds.toObject(PublishedHelpRequest.class));
+                }
+            }
+        });
+    }
 
     private void initializeListAdapter() {
         mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, this);
@@ -180,6 +213,9 @@ public class VolunteerHomeActivity extends AppCompatActivity
                                 getString(R.string.help_offered_msg));
                     }
                 });
+
+        mPublishedOpenRequests.remove(mPublishedRequest);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -226,6 +262,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
         try {
             mAdapter.clear();
             setActiveCategories();
+            findAllRequestsForUser();
             fetchHelpSeekerRequests(activeCategories);
         } catch (NullPointerException e) {
             System.out.println("Don't know how to handle it :( But it works :)");
