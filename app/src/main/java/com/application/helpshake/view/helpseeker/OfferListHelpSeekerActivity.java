@@ -10,6 +10,7 @@ import com.application.helpshake.R;
 import com.application.helpshake.adapter.helpseeker.WaitingRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.notification.NotificationDeclinedRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
@@ -34,6 +35,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
     private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
+    private CollectionReference mNotificationsCollection;
 
     private BaseUser mUser;
     private ArrayList<PublishedHelpRequest> mRequests = new ArrayList<>();
@@ -45,6 +47,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_help_offers_to_accept);
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
+        mNotificationsCollection = mDb.collection("Notifications");
 
         mUser = ((UserClient) (getApplicationContext())).getCurrentUser();
         fetchVolunteerRequests();
@@ -94,6 +97,22 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
         updateRequestStatus(request.getUid(), Status.Declined);
+
+        DocumentReference notificationDocument = mNotificationsCollection.document();
+
+        NotificationDeclinedRequest notification = new NotificationDeclinedRequest(
+                notificationDocument.getId(),
+                request.getRequest().getHelpSeeker(),
+                request.getVolunteer(),
+                "Help offer was rejected",
+                "Unfortunately, the help seeker rejected your help offer.",
+                false,
+                request.getUid()
+        );
+
+        mNotificationsCollection.document().set(notification);
+
+
     }
 
     private void updateRequestStatus(String id, Status status) {
