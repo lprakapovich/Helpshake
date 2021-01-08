@@ -10,6 +10,7 @@ import com.application.helpshake.R;
 import com.application.helpshake.adapter.helpseeker.WaitingRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.notification.NotificationClosedRequest;
 import com.application.helpshake.model.notification.NotificationDeclinedRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
@@ -93,7 +94,6 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
     @Override
     public void onHelpDeclined(int position, final PublishedHelpRequest request) {
-
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
         updateRequestStatus(request.getUid(), Status.Declined);
@@ -111,8 +111,6 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         );
 
         mNotificationsCollection.document().set(notification);
-
-
     }
 
     private void updateRequestStatus(String id, Status status) {

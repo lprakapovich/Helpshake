@@ -94,6 +94,5 @@ public class VolunteerNotificationActivity extends AppCompatActivity
         DocumentReference documentToDelete = mNotificationsCollection.document(notification.getUid());
         documentToDelete.delete();
     }
-
 }
 
