@@ -12,13 +12,21 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditVolunteerProfileBinding;
+import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.application.helpshake.Constants.REQUEST_IMAGE_CAPTURE;
 
@@ -26,8 +34,11 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
 
     private ActivityEditVolunteerProfileBinding mBinding;
     private CollectionReference mUsersCollection;
+    private CollectionReference mPublishedRequestsCollection;
     private BaseUser mCurrentUser;
     private String phoneNum;
+
+    ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +48,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
 
         FirebaseFirestore mDb = FirebaseFirestore.getInstance();
         mUsersCollection = mDb.collection("BaseUsers");
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
 
@@ -103,6 +115,33 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                         );
                     }
                 });
+        findRequestsToUpdatePhoneNum();
+    }
+
+    private void findRequestsToUpdatePhoneNum() {
+        Query query = mPublishedRequestsCollection
+                .whereEqualTo("volunteer.uid", mCurrentUser.getUid())
+                .whereIn("status", Arrays.asList(Status.InProgress.toString(),
+                        Status.WaitingForApproval.toString(),
+                        Status.Closed.toString(),
+                        Status.Declined.toString(),
+                        Status.Closed.toString()));
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mPublishedRequests.add(ds.toObject(PublishedHelpRequest.class));
+                }
+                updatePhoneNumber();
+            }
+        });
+    }
+
+    private void updatePhoneNumber() {
+        for (PublishedHelpRequest request : mPublishedRequests) {
+            mPublishedRequestsCollection.document(request.getUid()).update("volunteer.phoneNumber", phoneNum);
+        }
     }
 
     public void setPhoneNumber() {
