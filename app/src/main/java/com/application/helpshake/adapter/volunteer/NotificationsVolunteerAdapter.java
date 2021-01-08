@@ -37,7 +37,8 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
     }
 
     public NotificationsVolunteerAdapter(ArrayList<NotificationDeclinedRequest> data,
-                                         ArrayList<PublishedHelpRequest> requests, Context context) {
+                                         ArrayList<PublishedHelpRequest> requests,
+                                         Context context) {
         super(context, R.layout.list_item_volunteer_declined_help_offers, data);
         mListener = ( NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener) context;
         this.requests = requests;

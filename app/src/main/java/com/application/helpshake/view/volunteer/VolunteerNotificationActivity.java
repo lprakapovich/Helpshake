@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.NotificationsVolunteerAdapter;
@@ -23,8 +22,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class VolunteerNotificationActivity extends AppCompatActivity
         implements NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener{
@@ -69,11 +66,15 @@ public class VolunteerNotificationActivity extends AppCompatActivity
             }
         });
 
-        Query query2 = mPublishedRequestsCollection
+        fetchDeclinedRequests();
+    }
+
+    private void fetchDeclinedRequests() {
+        Query query = mPublishedRequestsCollection
                 .whereEqualTo("status", Status.Declined.toString())
                 .whereEqualTo("volunteer.uid", mUser.getUid());
 
-        query2.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
@@ -94,9 +95,18 @@ public class VolunteerNotificationActivity extends AppCompatActivity
         mNotifications.remove(position);
         mAdapter.notifyDataSetChanged();
 
-        DocumentReference documentToDelete = mNotificationsCollection.document(notification.getUid());
+        deleteReadNotification(notification.getUid());
+        deleteRelatingDeclinedRequests(notification.getDeclinedRequestId());
+    }
+
+    public void deleteReadNotification(String uid) {
+        DocumentReference documentToDelete = mNotificationsCollection.document(uid);
         documentToDelete.delete();
-        System.out.println(notification.getUid());
+    }
+
+    public void deleteRelatingDeclinedRequests(String requestId) {
+        DocumentReference documentToDelete = mPublishedRequestsCollection.document(requestId);
+        documentToDelete.delete();
     }
 }
 

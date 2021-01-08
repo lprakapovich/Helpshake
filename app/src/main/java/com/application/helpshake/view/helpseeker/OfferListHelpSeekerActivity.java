@@ -10,7 +10,6 @@ import com.application.helpshake.R;
 import com.application.helpshake.adapter.helpseeker.WaitingRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.notification.NotificationClosedRequest;
 import com.application.helpshake.model.notification.NotificationDeclinedRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
