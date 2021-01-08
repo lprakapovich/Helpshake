@@ -245,25 +245,12 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mPublishedRequestsCollection.document(request.getUid()).update("status", request.getStatus());
     }
 
-    /**
-     * Doesn't work :c
-     */
-
     @Override
     public void onContact(int position, PublishedHelpRequest request) {
-        Toast.makeText(this, request.getVolunteer().getPhoneNumber(), Toast.LENGTH_LONG).show();
-        startPhoneActivity(Intent.ACTION_DIAL, "tel:" + request.getVolunteer().getPhoneNumber());
-    }
-
-    public void startPhoneActivity(String action, String uri) {
-        Uri location = Uri.parse(uri);
-        Intent intent = new Intent (action, location);
-        checkImplicitIntent(intent);
-    }
-
-    public void checkImplicitIntent(Intent intent) {
-        if(intent.resolveActivity(getPackageManager()) != null) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + request.getVolunteer().getPhoneNumber()));
+        if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
-        }
     }
+
 }
