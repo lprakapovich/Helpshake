@@ -110,6 +110,10 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="sign_in">Sign in</string>
     <string name="username">Username</string>
+    <string name="request_title">Request title</string>
+    <string name="mark_as_read">mark as read</string>
+    <string name="notification_title">Notification title</string>
+    <string name="notification_message">notification message</string>
 
 
 </resources>

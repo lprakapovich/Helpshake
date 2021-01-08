@@ -22,6 +22,7 @@ import com.application.helpshake.view.auth.RegisterActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -122,8 +123,11 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
 
                     PublishedHelpRequest r = ds.toObject(PublishedHelpRequest.class);
 
+                    DocumentReference notificationDocument = mDb.collection("Notification").document();
+
                     NotificationClosedRequest notification = new NotificationClosedRequest(
-                        r.getRequest().getHelpSeeker(),
+                            notificationDocument.getId(),
+                            r.getRequest().getHelpSeeker(),
                             r.getVolunteer(),
                             "Help offer was closed",
                             "Volunteer has switched to a help seeker role, all his help offers were suspended",

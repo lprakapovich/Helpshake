@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public abstract class Notification {
 
+    protected String uid;
     protected BaseUser from;
     protected BaseUser to;
     protected String title;

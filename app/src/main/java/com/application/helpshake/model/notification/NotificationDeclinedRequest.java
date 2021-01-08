@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotificationClosedRequest extends Notification {
-    String closedRequestId;
+public class NotificationDeclinedRequest extends Notification {
+    String declinedRequestId;
 
-    public NotificationClosedRequest(String uid,
+    public NotificationDeclinedRequest(String uid,
                                      BaseUser from,
                                      BaseUser to,
                                      String title,
@@ -20,6 +20,7 @@ public class NotificationClosedRequest extends Notification {
                                      Boolean isChecked,
                                      String id) {
         super(uid, from, to, title, message, isChecked);
-        closedRequestId = id;
+        declinedRequestId = id;
     }
+
 }
