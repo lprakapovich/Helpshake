@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.NotificationsVolunteerAdapter;
@@ -22,6 +23,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class VolunteerNotificationActivity extends AppCompatActivity
         implements NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener{
@@ -87,12 +90,13 @@ public class VolunteerNotificationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMarkAsRead(int position, NotificationDeclinedRequest notification) {
-        mRequests.remove(position);
+    public void onMarkAsRead(int position, final NotificationDeclinedRequest notification) {
+        mNotifications.remove(position);
         mAdapter.notifyDataSetChanged();
 
         DocumentReference documentToDelete = mNotificationsCollection.document(notification.getUid());
         documentToDelete.delete();
+        System.out.println(notification.getUid());
     }
 }
 

@@ -98,10 +98,10 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         mAdapter.notifyDataSetChanged();
         updateRequestStatus(request.getUid(), Status.Declined);
 
-        DocumentReference notificationDocument = mNotificationsCollection.document();
+        String id = mNotificationsCollection.document().getId();
 
         NotificationDeclinedRequest notification = new NotificationDeclinedRequest(
-                notificationDocument.getId(),
+                id,
                 request.getRequest().getHelpSeeker(),
                 request.getVolunteer(),
                 "Help offer was rejected",
@@ -110,7 +110,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 request.getUid()
         );
 
-        mNotificationsCollection.document().set(notification);
+        mNotificationsCollection.document(id).set(notification);
     }
 
     private void updateRequestStatus(String id, Status status) {

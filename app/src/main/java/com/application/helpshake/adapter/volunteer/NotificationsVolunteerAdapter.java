@@ -78,6 +78,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
         viewHolder.notificationMessage.setText(notification.getMessage());
         viewHolder.fullName.setText(notification.getFrom().getFullName());
         viewHolder.requestTitle.setText(findRequestTitle(notification.getDeclinedRequestId()));
+
         return convertView;
     }
 
