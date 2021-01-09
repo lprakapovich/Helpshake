@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -202,7 +204,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
     @Override
     public void onHelpOffered() {
 
-        if (!mCurrentUser.getPhoneNumber().equals("")) {
+        if (!StringUtils.isBlank(mCurrentUser.getPhoneNumber())) {
             mDialog.dismiss();
 
             String id = mPublishedRequestsCollection.document().getId();
