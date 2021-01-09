@@ -115,6 +115,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                         );
                     }
                 });
+        mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
     }
 

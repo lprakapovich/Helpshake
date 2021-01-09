@@ -202,25 +202,33 @@ public class VolunteerHomeActivity extends AppCompatActivity
     @Override
     public void onHelpOffered() {
 
-        mDialog.dismiss();
+        if (!mCurrentUser.getPhoneNumber().equals("")) {
+            mDialog.dismiss();
 
-        String id = mPublishedRequestsCollection.document().getId();
+            String id = mPublishedRequestsCollection.document().getId();
 
-        mPublishedRequest.setStatus(Status.WaitingForApproval);
-        mPublishedRequest.setVolunteer(mCurrentUser);
-        mPublishedRequest.setUid(id);
+            mPublishedRequest.setStatus(Status.WaitingForApproval);
+            mPublishedRequest.setVolunteer(mCurrentUser);
+            mPublishedRequest.setUid(id);
 
-        mPublishedRequestsCollection.document(id).set(mPublishedRequest)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        showDialog(getString(R.string.help_offered),
-                                getString(R.string.help_offered_msg));
-                    }
-                });
+            mPublishedRequestsCollection.document(id).set(mPublishedRequest)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            showDialog(getString(R.string.help_offered),
+                                    getString(R.string.help_offered_msg));
+                        }
+                    });
 
-        mPublishedOpenRequests.remove(mPublishedRequest);
-        mAdapter.notifyDataSetChanged();
+            mPublishedOpenRequests.remove(mPublishedRequest);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            DialogBuilder.showMessageDialog(
+                    getSupportFragmentManager(),
+                    getString(R.string.missing_phone),
+                    getString(R.string.missing_phone_message)
+            );
+        }
     }
 
     @Override

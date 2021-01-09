@@ -108,6 +108,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
                         );
                     }
                 });
+        mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
     }
 

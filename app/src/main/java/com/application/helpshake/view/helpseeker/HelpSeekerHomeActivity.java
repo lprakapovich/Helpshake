@@ -63,11 +63,18 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
 
+        getCurrentUser();
+
         mBinding.newRequestButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        openNewRequestDialog();
+                        if (!mCurrentBaseUser.getPhoneNumber().equals("")) {
+                            openNewRequestDialog();
+                        }
+                        else {
+                            openPhoneNumInfo();
+                        }
                     }
                 }
         );
@@ -100,8 +107,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
         mSelectedStatus = Status.Open;
 
-        getCurrentUser();
         fetchRequests();
+    }
+
+    public void openPhoneNumInfo() {
+        DialogBuilder.showMessageDialog(
+                getSupportFragmentManager(),
+                getString(R.string.missing_phone_number),
+                getString(R.string.missing_phone_number_message)
+        );
     }
 
     public void getCurrentUser() {
