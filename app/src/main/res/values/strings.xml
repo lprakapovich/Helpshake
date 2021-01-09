@@ -118,5 +118,12 @@
     <string name="missing_phone_number_message">You must enter your phone number, if you want to add a new request.</string>
     <string name="missing_phone">Phone number not entered</string>
     <string name="missing_phone_message">You must enter a phone number, if you want to offer help, otherwise the help seeker will not be able to contact with you.</string>
+    <string name="change_of_the_role">Change of the role</string>
+    <string name="confirmation_question">Are you sure that you want to change the role and become a volunteer?</string>
+    <string name="no">NO</string>
+    <string name="yes_confirm">yes</string>
+    <string name="change_role_on_volunteer">If you switch to a volunteer role, all your requests for help with open or pending status will be closed. You will lose access to them and volunteers will not receive information about them.</string>
+    <string name="info_text">info text</string>
+    <string name="question">question</string>
 
 </resources>
