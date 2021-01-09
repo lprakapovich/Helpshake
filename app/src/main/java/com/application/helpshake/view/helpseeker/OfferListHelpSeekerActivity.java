@@ -106,7 +106,8 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 "Help offer was rejected",
                 "Unfortunately, the help seeker rejected your help offer.",
                 false,
-                request.getUid()
+                request.getUid(),
+                request.getRequest().getHelpRequest().getTitle()
         );
 
         mNotificationsCollection.document(id).set(notification);

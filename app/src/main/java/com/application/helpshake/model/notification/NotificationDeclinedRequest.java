@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NotificationDeclinedRequest extends Notification {
     String declinedRequestId;
+    String declinedRequestTitle;
 
     public NotificationDeclinedRequest(String uid,
                                        BaseUser from,
@@ -18,9 +19,11 @@ public class NotificationDeclinedRequest extends Notification {
                                        String title,
                                        String message,
                                        Boolean isChecked,
-                                       String id) {
+                                       String id,
+                                       String requestTitle) {
         super(uid, from, to, title, message, isChecked);
         declinedRequestId = id;
+        declinedRequestTitle = requestTitle;
     }
 
 }
