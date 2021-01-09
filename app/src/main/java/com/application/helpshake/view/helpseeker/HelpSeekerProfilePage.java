@@ -34,12 +34,12 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
 
     private ActivityHelpSeekerProfilePageBinding mBinding;
     private DialogSingleResult mDialogResult;
+    private DialogInfoRoleUpdate mDialog;
 
     private FirebaseFirestore mDb;
     private CollectionReference mUsersCollection;
     private CollectionReference mRequestsCollection;
     private BaseUser mCurrentUser;
-    private DialogInfoRoleUpdate mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +178,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
     }
 
     public void openDialogToGetConfirmation() {
-        mDialog = new DialogInfoRoleUpdate();
+        mDialog = new DialogInfoRoleUpdate(mCurrentUser);
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 

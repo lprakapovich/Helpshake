@@ -16,6 +16,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.DialogInfoAboutLostInformationBinding;
+import com.application.helpshake.model.enums.Role;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.user.UserClient;
 
 public class DialogInfoRoleUpdate extends DialogFragment {
 
@@ -26,6 +29,11 @@ public class DialogInfoRoleUpdate extends DialogFragment {
 
     DialogInfoAboutLostInformationBinding mBinding;
     DialogInfoRoleUpdate.RoleUpdateListener mListener;
+    BaseUser mCurrentBaseUser;
+
+    public DialogInfoRoleUpdate(BaseUser mCurrentBaseUser) {
+        this.mCurrentBaseUser = mCurrentBaseUser;
+    }
 
     @NonNull
     @Override
@@ -40,9 +48,14 @@ public class DialogInfoRoleUpdate extends DialogFragment {
         builder.setView(mBinding.getRoot())
                 .setCancelable(false);
 
-        mBinding.infoText.setText(getString(R.string.change_role_on_volunteer));
-        mBinding.questionText.setText(getString(R.string.confirmation_question));
 
+        if(mCurrentBaseUser.getRole() == Role.HelpSeeker) {
+            mBinding.infoText.setText(getString(R.string.change_role_on_volunteer));
+            mBinding.questionText.setText(getString(R.string.confirmation_question));
+        } else {
+            mBinding.infoText.setText(getString(R.string.change_role_on_helpSeeker));
+            mBinding.questionText.setText(getString(R.string.confirmation_question_role));
+        }
         mBinding.yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
