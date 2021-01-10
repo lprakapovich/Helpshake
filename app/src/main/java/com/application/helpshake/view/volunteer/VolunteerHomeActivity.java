@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -50,6 +52,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
 
     BaseUser mCurrentUser;
     ArrayList<PublishedHelpRequest> mPublishedOpenRequests = new ArrayList<>();
+    ArrayList<PublishedHelpRequest> mPublishedWaitingRequests = new ArrayList<>();
     PublishedHelpRequest mPublishedRequest;
     OpenRequestAdapterVolunteer mAdapter;
 
@@ -104,6 +107,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mBinding.myRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 startActivity(new Intent(
                         VolunteerHomeActivity.this,
                         CurrentHelpOffersActivity.class
@@ -119,10 +123,12 @@ public class VolunteerHomeActivity extends AppCompatActivity
     private void initHomeView() {
         try {
             setActiveCategories();
+            findWaitingRequestsForUser();
             fetchHelpSeekerRequests(activeCategories);
         } catch (NullPointerException e) {
             setSharedPreferences();
             setActiveCategories();
+            findWaitingRequestsForUser();
             fetchHelpSeekerRequests(activeCategories);
         }
     }
@@ -140,11 +146,45 @@ public class VolunteerHomeActivity extends AppCompatActivity
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
                     mPublishedOpenRequests.add(ds.toObject(PublishedHelpRequest.class));
                 }
+
+                deleteRequestsIfHelpOfferWasSend();
+
                 initializeListAdapter();
             }
         });
     }
 
+    private void findWaitingRequestsForUser() {
+        Query query = mPublishedRequestsCollection
+                .whereEqualTo("volunteer.uid", mCurrentUser.getUid())
+                .whereEqualTo("status", Status.WaitingForApproval.toString());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mPublishedWaitingRequests.add(ds.toObject(PublishedHelpRequest.class));
+                }
+            }
+        });
+    }
+
+    private void deleteRequestsIfHelpOfferWasSend() {
+        ArrayList<PublishedHelpRequest> requestsToDelete = new ArrayList<>();
+
+        for (int i = 0; i < mPublishedOpenRequests.size(); i++) {
+            for (int j = 0; j < mPublishedWaitingRequests.size(); j++) {
+
+                if (mPublishedOpenRequests.get(i).getRequest().getUid().equals(
+                        mPublishedWaitingRequests.get(j).getRequest().getUid())) {
+                    requestsToDelete.add(mPublishedOpenRequests.get(i));
+                }
+            }
+        }
+        for(PublishedHelpRequest r : requestsToDelete) {
+            mPublishedOpenRequests.remove(r);
+        }
+    }
 
     private void initializeListAdapter() {
         mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, this);
@@ -164,22 +204,33 @@ public class VolunteerHomeActivity extends AppCompatActivity
     @Override
     public void onHelpOffered() {
 
-        mDialog.dismiss();
+        if (!StringUtils.isBlank(mCurrentUser.getPhoneNumber())) {
+            mDialog.dismiss();
 
-        String id = mPublishedRequestsCollection.document().getId();
+            String id = mPublishedRequestsCollection.document().getId();
 
-        mPublishedRequest.setStatus(Status.WaitingForApproval);
-        mPublishedRequest.setVolunteer(mCurrentUser);
-        mPublishedRequest.setUid(id);
+            mPublishedRequest.setStatus(Status.WaitingForApproval);
+            mPublishedRequest.setVolunteer(mCurrentUser);
+            mPublishedRequest.setUid(id);
 
-        mPublishedRequestsCollection.document(id).set(mPublishedRequest)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        showDialog(getString(R.string.help_offered),
-                                getString(R.string.help_offered_msg));
-                    }
-                });
+            mPublishedRequestsCollection.document(id).set(mPublishedRequest)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            showDialog(getString(R.string.help_offered),
+                                    getString(R.string.help_offered_msg));
+                        }
+                    });
+
+            mPublishedOpenRequests.remove(mPublishedRequest);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            DialogBuilder.showMessageDialog(
+                    getSupportFragmentManager(),
+                    getString(R.string.missing_phone),
+                    getString(R.string.missing_phone_message)
+            );
+        }
     }
 
     @Override
@@ -226,6 +277,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
         try {
             mAdapter.clear();
             setActiveCategories();
+            findWaitingRequestsForUser();
             fetchHelpSeekerRequests(activeCategories);
         } catch (NullPointerException e) {
             System.out.println("Don't know how to handle it :( But it works :)");

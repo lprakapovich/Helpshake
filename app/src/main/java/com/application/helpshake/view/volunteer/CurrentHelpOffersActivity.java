@@ -3,6 +3,8 @@ package com.application.helpshake.view.volunteer;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -73,6 +75,10 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
 
     @Override
     public void onContact(PublishedHelpRequest request) {
-        Toast.makeText(this, request.getRequest().getHelpSeeker().getPhoneNumber(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + request.getRequest().getHelpSeeker().getPhoneNumber()));
+        if (intent.resolveActivity(getPackageManager()) != null)
+            startActivity(intent);
     }
+
 }

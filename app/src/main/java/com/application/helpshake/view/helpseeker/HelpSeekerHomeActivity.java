@@ -36,6 +36,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +65,18 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
 
+        getCurrentUser();
+
         mBinding.newRequestButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        openNewRequestDialog();
+                        if (!StringUtils.isBlank(mCurrentBaseUser.getPhoneNumber())) {
+                            openNewRequestDialog();
+                        }
+                        else {
+                            openPhoneNumInfo();
+                        }
                     }
                 }
         );
@@ -100,8 +109,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
         mSelectedStatus = Status.Open;
 
-        getCurrentUser();
         fetchRequests();
+    }
+
+    public void openPhoneNumInfo() {
+        DialogBuilder.showMessageDialog(
+                getSupportFragmentManager(),
+                getString(R.string.missing_phone_number),
+                getString(R.string.missing_phone_number_message)
+        );
     }
 
     public void getCurrentUser() {
@@ -245,25 +261,12 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mPublishedRequestsCollection.document(request.getUid()).update("status", request.getStatus());
     }
 
-    /**
-     * Doesn't work :c
-     */
-
     @Override
     public void onContact(int position, PublishedHelpRequest request) {
-        Toast.makeText(this, request.getVolunteer().getPhoneNumber(), Toast.LENGTH_LONG).show();
-        startPhoneActivity(Intent.ACTION_DIAL, "tel:" + request.getVolunteer().getPhoneNumber());
-    }
-
-    public void startPhoneActivity(String action, String uri) {
-        Uri location = Uri.parse(uri);
-        Intent intent = new Intent (action, location);
-        checkImplicitIntent(intent);
-    }
-
-    public void checkImplicitIntent(Intent intent) {
-        if(intent.resolveActivity(getPackageManager()) != null) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + request.getVolunteer().getPhoneNumber()));
+        if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
-        }
     }
+
 }

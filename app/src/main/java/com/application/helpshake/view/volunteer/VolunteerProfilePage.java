@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityVolunteerProfilePageBinding;
+import com.application.helpshake.dialog.DialogInfoRoleUpdate;
 import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.notification.NotificationClosedRequest;
@@ -22,15 +23,18 @@ import com.application.helpshake.view.auth.RegisterActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class VolunteerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener {
+public class VolunteerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener,
+        DialogInfoRoleUpdate.RoleUpdateListener{
 
     private ActivityVolunteerProfilePageBinding mBinding;
     private DialogSingleResult mDialogResult;
+    private DialogInfoRoleUpdate mDialog;
 
     FirebaseFirestore mDb;
     CollectionReference mRequestsCollection;
@@ -38,6 +42,7 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
 
     CollectionReference mUsersCollection;
     BaseUser mCurrentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mBinding.becomeHelpSeeker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                becomeHelpSeeker();
+                openDialogToGetConfirmation();
             }
         });
     }
@@ -122,8 +127,11 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
 
                     PublishedHelpRequest r = ds.toObject(PublishedHelpRequest.class);
 
+                    DocumentReference notificationDocument = mNotificationsCollection.document();
+
                     NotificationClosedRequest notification = new NotificationClosedRequest(
-                        r.getRequest().getHelpSeeker(),
+                            notificationDocument.getId(),
+                            r.getRequest().getHelpSeeker(),
                             r.getVolunteer(),
                             "Help offer was closed",
                             "Volunteer has switched to a help seeker role, all his help offers were suspended",
@@ -151,6 +159,11 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
                 mDialogResult.show(getSupportFragmentManager(), "tag");
             }
         });
+    }
+
+    public void openDialogToGetConfirmation() {
+        mDialog = new DialogInfoRoleUpdate(mCurrentUser);
+        mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
     public void deleteAccount() {
@@ -181,5 +194,16 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
     @Override
     public void onResult() {
         startActivity(new Intent(VolunteerProfilePage.this, LoginActivity.class));
+    }
+
+    @Override
+    public void onConfirm() {
+        mDialog.dismiss();
+        becomeHelpSeeker();
+    }
+
+    @Override
+    public void onCancel() {
+        mDialog.dismiss();
     }
 }

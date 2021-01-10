@@ -1,5 +1,7 @@
 package com.application.helpshake.view.helpseeker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,8 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityHelpSeekerProfilePageBinding;
+import com.application.helpshake.dialog.DialogInfoRoleUpdate;
+import com.application.helpshake.dialog.DialogNewHelpRequest;
 import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.enums.Status;
@@ -25,10 +29,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener {
+public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener,
+        DialogInfoRoleUpdate.RoleUpdateListener {
 
     private ActivityHelpSeekerProfilePageBinding mBinding;
     private DialogSingleResult mDialogResult;
+    private DialogInfoRoleUpdate mDialog;
 
     private FirebaseFirestore mDb;
     private CollectionReference mUsersCollection;
@@ -72,7 +78,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
         mBinding.becomeVolunteerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                becomeVolunteer();
+                openDialogToGetConfirmation();
             }
         });
     }
@@ -171,8 +177,24 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
         );
     }
 
+    public void openDialogToGetConfirmation() {
+        mDialog = new DialogInfoRoleUpdate(mCurrentUser);
+        mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
+    }
+
     @Override
     public void onResult() {
         startActivity(new Intent(HelpSeekerProfilePage.this, LoginActivity.class));
+    }
+
+    @Override
+    public void onConfirm() {
+        mDialog.dismiss();
+        becomeVolunteer();
+    }
+
+    @Override
+    public void onCancel() {
+        mDialog.dismiss();
     }
 }
