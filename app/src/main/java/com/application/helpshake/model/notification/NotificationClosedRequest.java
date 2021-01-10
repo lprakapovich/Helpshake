@@ -3,7 +3,9 @@ package com.application.helpshake.model.notification;
 import com.application.helpshake.model.user.BaseUser;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class NotificationClosedRequest extends Notification {
     String closedRequestId;
