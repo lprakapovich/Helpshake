@@ -79,8 +79,7 @@
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="0dp">
+            android:layout_height="662dp">
 
         </ListView>
     </RelativeLayout>

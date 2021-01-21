@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -14,73 +14,91 @@
             app:layout_constraintBottom_toTopOf="@+id/insertCommentEditText"
             app:layout_constraintTop_toTopOf="@+id/insertCommentEditText">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/specifyHelpText">
+
+                <CheckBox
+                    android:id="@+id/other"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/checkbox_others"
+                    android:button="@null"
+                    app:layout_constraintStart_toEndOf="@+id/drugstore"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/dogwalking"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/checkbox_dog"
+                    android:button="@null"
+                    app:layout_constraintStart_toEndOf="@+id/grocery"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/drugstore"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/checkbox_drugstore"
+                    android:button="@null"
+                    app:layout_constraintStart_toEndOf="@+id/dogwalking"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/grocery"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:background="@drawable/checkbox_groceries"
+                    android:button="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/specifyHelpText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/varela_round"
                 android:text="@string/question_about_help_needed"
-                android:textSize="18sp"
+                android:textColor="@color/justText"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <CheckBox
-                android:id="@+id/grocery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="53dp"
-                android:layout_marginLeft="53dp"
-                android:layout_marginTop="15dp"
-                android:text="@string/category_grocery"
-                app:layout_constraintStart_toStartOf="@+id/specifyHelpText"
-                app:layout_constraintTop_toBottomOf="@+id/specifyHelpText" />
-
-            <CheckBox
-                android:id="@+id/dogwalking"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/category_dog_walking"
-                app:layout_constraintStart_toStartOf="@+id/grocery"
-                app:layout_constraintTop_toBottomOf="@+id/grocery" />
-
-            <CheckBox
-                android:id="@+id/drugstore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/category_drugstore"
-                app:layout_constraintStart_toStartOf="@+id/dogwalking"
-                app:layout_constraintTop_toBottomOf="@+id/dogwalking" />
-
-            <CheckBox
-                android:id="@+id/other"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/category_other"
-                app:layout_constraintStart_toStartOf="@+id/drugstore"
-                app:layout_constraintTop_toBottomOf="@+id/drugstore" />
 
             <EditText
                 android:id="@+id/title"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="30dp"
                 android:layout_weight="1"
                 android:autofillHints=""
+                android:fontFamily="@font/varela_round"
                 android:hint="Title"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="2000"
                 android:maxLines="4"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
                 android:scrollHorizontally="false"
+                android:textColor="@color/justText"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/other" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
             <EditText
                 android:id="@+id/comment"
@@ -91,11 +109,13 @@
                 android:layout_marginEnd="30dp"
                 android:layout_weight="1"
                 android:autofillHints=""
+                android:fontFamily="@font/varela_round"
                 android:hint="@string/help_request_comment"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="2000"
                 android:maxLines="4"
                 android:scrollHorizontally="false"
+                android:textColor="@color/justText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -108,13 +128,15 @@
                 android:id="@+id/addRequestBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="48dp"
-                android:layout_marginRight="48dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginRight="35dp"
                 android:layout_marginBottom="20dp"
-                android:background="@android:color/transparent"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:padding="12dp"
                 android:text="@string/add_request"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/textOnButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/comment"
@@ -124,16 +146,17 @@
                 android:id="@+id/cancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginLeft="35dp"
                 android:layout_marginBottom="20dp"
-                android:background="@android:color/transparent"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:padding="12dp"
                 android:text="@string/cancel"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/textOnButton"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/addRequestBtn"
-                app:layout_constraintHorizontal_bias="0.292"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/comment"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintStart_toStartOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
