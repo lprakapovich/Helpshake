@@ -34,6 +34,7 @@ public class VolunteerNotificationActivity extends AppCompatActivity
     private CollectionReference mNotificationsCollection;
 
     private BaseUser mUser;
+    private ArrayList<PublishedHelpRequest> mRequests = new ArrayList<>();
     private ArrayList<NotificationDeclinedRequest> mNotifications = new ArrayList<>();
 
     @Override
@@ -64,11 +65,28 @@ public class VolunteerNotificationActivity extends AppCompatActivity
                 }
             }
         });
-        initializeListAdapter();
+
+        fetchDeclinedRequests();
+    }
+
+    private void fetchDeclinedRequests() {
+        Query query = mPublishedRequestsCollection
+                .whereEqualTo("status", Status.Declined.toString())
+                .whereEqualTo("volunteer.uid", mUser.getUid());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (DocumentSnapshot ds : snapshots.getDocuments()) {
+                    mRequests.add(ds.toObject(PublishedHelpRequest.class));
+                }
+                initializeListAdapter();
+            }
+        });
     }
 
     private void initializeListAdapter() {
-        mAdapter = new NotificationsVolunteerAdapter(mNotifications,this);
+        mAdapter = new NotificationsVolunteerAdapter(mNotifications, mRequests,this);
         mBinding.listRequests.setAdapter(mAdapter);
     }
 
