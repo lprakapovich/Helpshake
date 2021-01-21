@@ -25,8 +25,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
         void onMarkAsRead(int position, NotificationDeclinedRequest notification);
     }
 
-    NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener mListener;
-    ArrayList<PublishedHelpRequest> requests;
+    DeclinedOfferListAdapterListener mListener;
 
     private static class ViewHolder {
         TextView notificationTitle;
@@ -36,12 +35,9 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
         Button markAsReadButton;
     }
 
-    public NotificationsVolunteerAdapter(ArrayList<NotificationDeclinedRequest> data,
-                                         ArrayList<PublishedHelpRequest> requests,
-                                         Context context) {
+    public NotificationsVolunteerAdapter(ArrayList<NotificationDeclinedRequest> data, Context context) {
         super(context, R.layout.list_item_volunteer_declined_help_offers, data);
-        mListener = ( NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener) context;
-        this.requests = requests;
+        mListener = (NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener) context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -78,18 +74,8 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
         viewHolder.notificationTitle.setText(notification.getTitle());
         viewHolder.notificationMessage.setText(notification.getMessage());
         viewHolder.fullName.setText(notification.getFrom().getFullName());
-        viewHolder.requestTitle.setText(findRequestTitle(notification.getDeclinedRequestId()));
-
+        viewHolder.requestTitle.setText(notification.getTitle());
         return convertView;
-    }
-
-    public String findRequestTitle(String uid) {
-        for (PublishedHelpRequest request : requests) {
-            if (request.getUid().equals(uid)) {
-                return request.getRequest().getHelpRequest().getTitle();
-            }
-        }
-        return null;
     }
 }
 

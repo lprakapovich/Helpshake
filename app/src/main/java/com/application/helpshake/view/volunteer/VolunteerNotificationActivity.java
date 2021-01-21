@@ -1,16 +1,14 @@
 package com.application.helpshake.view.volunteer;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-
-import android.os.Bundle;
 
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.NotificationsVolunteerAdapter;
 import com.application.helpshake.databinding.ActivityVolunteerNotificationBinding;
-import com.application.helpshake.model.enums.Status;
 import com.application.helpshake.model.notification.NotificationDeclinedRequest;
-import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +20,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class VolunteerNotificationActivity extends AppCompatActivity
         implements NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener{
@@ -53,10 +50,9 @@ public class VolunteerNotificationActivity extends AppCompatActivity
 
     private void fetchNotificationAboutDeclinedRequests() {
         Query query = mNotificationsCollection
-                .whereEqualTo("to.uid", mUser.getUid());
-
-               /* .whereEqualTo("checked", false)
-                .whereEqualTo("title", "Help offer was rejected");*/
+                .whereEqualTo("to.uid", mUser.getUid())
+                .whereEqualTo("checked", false)
+                .whereEqualTo("title", "Help offer was rejected");
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -79,16 +75,16 @@ public class VolunteerNotificationActivity extends AppCompatActivity
         mNotifications.remove(position);
         mAdapter.notifyDataSetChanged();
 
-        deleteReadNotification(notification.getUid());
-        deleteRelatingDeclinedRequests(notification.getDeclinedRequestId());
+        deleteMarkedAsReadNotification(notification.getUid());
+        deleteRelatedDeclinedRequests(notification.getDeclinedRequestId());
     }
 
-    public void deleteReadNotification(String uid) {
+    public void deleteMarkedAsReadNotification(String uid) {
         DocumentReference documentToDelete = mNotificationsCollection.document(uid);
         documentToDelete.delete();
     }
 
-    public void deleteRelatingDeclinedRequests(String requestId) {
+    public void deleteRelatedDeclinedRequests(String requestId) {
         DocumentReference documentToDelete = mPublishedRequestsCollection.document(requestId);
         documentToDelete.delete();
     }
