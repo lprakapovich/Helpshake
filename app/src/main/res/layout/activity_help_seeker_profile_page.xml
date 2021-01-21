@@ -34,7 +34,7 @@
                     android:id="@+id/homeButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/search"
+                    android:background="@drawable/ic_baseline_home_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
