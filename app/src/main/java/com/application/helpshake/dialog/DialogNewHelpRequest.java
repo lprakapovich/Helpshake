@@ -73,6 +73,8 @@ public class DialogNewHelpRequest extends DialogFragment {
             }
         });
 
+        setInitialInactiveCheckBoxButtonsOpacity();
+
         return builder.create();
     }
 
@@ -103,11 +105,20 @@ public class DialogNewHelpRequest extends DialogFragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mCategories.add(category);
+                    buttonView.setAlpha((float) 1.0);
                 } else {
                     mCategories.remove(category);
+                    buttonView.setAlpha((float) 0.5);
                 }
             }
         });
+    }
+
+    void setInitialInactiveCheckBoxButtonsOpacity(){
+        mBinding.grocery.setAlpha((float) 0.5);
+        mBinding.dogwalking.setAlpha((float) 0.5);
+        mBinding.drugstore.setAlpha((float) 0.5);
+        mBinding.other.setAlpha((float) 0.5);
     }
 
     // sets calling activity as a listener

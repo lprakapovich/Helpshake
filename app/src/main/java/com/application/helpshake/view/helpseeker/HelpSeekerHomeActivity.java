@@ -36,8 +36,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +69,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!StringUtils.isBlank(mCurrentBaseUser.getPhoneNumber())) {
+                        if (!mCurrentBaseUser.getPhoneNumber().equals("")) {
                             openNewRequestDialog();
                         }
                         else {

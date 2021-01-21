@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.application.helpshake.R;
@@ -15,6 +16,8 @@ import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.view.helpseeker.HelpSeekerHomeActivity;
+import com.application.helpshake.view.helpseeker.HelpSeekerProfilePage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,7 +50,19 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
 
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
 
+        bindButtons();
         fetchHelpOffers();
+    }
+
+    private void bindButtons() {
+        mBinding.home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CurrentHelpOffersActivity.this, HelpSeekerHomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchHelpOffers() {

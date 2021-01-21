@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
 import com.application.helpshake.model.notification.NotificationDeclinedRequest;
+import com.application.helpshake.model.request.PublishedHelpRequest;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
     }
 
     NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener mListener;
+    ArrayList<PublishedHelpRequest> requests;
 
     private static class ViewHolder {
         TextView notificationTitle;
@@ -35,9 +37,11 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
     }
 
     public NotificationsVolunteerAdapter(ArrayList<NotificationDeclinedRequest> data,
+                                         ArrayList<PublishedHelpRequest> requests,
                                          Context context) {
         super(context, R.layout.list_item_volunteer_declined_help_offers, data);
         mListener = ( NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener) context;
+        this.requests = requests;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -74,9 +78,18 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
         viewHolder.notificationTitle.setText(notification.getTitle());
         viewHolder.notificationMessage.setText(notification.getMessage());
         viewHolder.fullName.setText(notification.getFrom().getFullName());
-        viewHolder.requestTitle.setText(notification.getDeclinedRequestTitle());
+        viewHolder.requestTitle.setText(findRequestTitle(notification.getDeclinedRequestId()));
 
         return convertView;
+    }
+
+    public String findRequestTitle(String uid) {
+        for (PublishedHelpRequest request : requests) {
+            if (request.getUid().equals(uid)) {
+                return request.getRequest().getHelpRequest().getTitle();
+            }
+        }
+        return null;
     }
 }
 

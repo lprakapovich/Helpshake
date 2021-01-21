@@ -20,6 +20,8 @@ import com.application.helpshake.model.enums.Status;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.auth.RegisterActivity;
+import com.application.helpshake.view.helpseeker.HelpSeekerHomeActivity;
+import com.application.helpshake.view.helpseeker.HelpSeekerProfilePage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -88,6 +90,23 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
             @Override
             public void onClick(View v) {
                 openDialogToGetConfirmation();
+            }
+        });
+        mBinding.homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VolunteerProfilePage.this, VolunteerHomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
+        mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
+            // TODO: Add logout
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(VolunteerProfilePage.this, LoginActivity.class
+                ));
             }
         });
     }

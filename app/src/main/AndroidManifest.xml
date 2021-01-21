@@ -18,8 +18,9 @@
         <activity android:name=".view.helpseeker.EditProfileHelpSeekerActivity" />
         <activity android:name=".view.helpseeker.OfferListHelpSeekerActivity" />
         <activity android:name=".view.helpseeker.HelpSeekerHomeActivity" />
-        <activity android:name=".view.helpseeker.HelpSeekerProfilePage" />
-        <activity android:name=".view.volunteer.VolunteerHomeActivity"/>
+        <activity android:name=".view.helpseeker.HelpSeekerProfilePage"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".view.volunteer.VolunteerHomeActivity" />
         <activity android:name=".view.volunteer.VolunteerProfilePage" />
         <activity android:name=".view.volunteer.CurrentHelpOffersActivity"/>
         <activity android:name=".view.volunteer.EditProfileVolunteerActivity" />
