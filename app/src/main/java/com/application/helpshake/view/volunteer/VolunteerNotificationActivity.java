@@ -22,6 +22,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VolunteerNotificationActivity extends AppCompatActivity
         implements NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener{
@@ -52,9 +53,10 @@ public class VolunteerNotificationActivity extends AppCompatActivity
 
     private void fetchNotificationAboutDeclinedRequests() {
         Query query = mNotificationsCollection
-                .whereEqualTo("to.uid", mUser.getUid())
-                .whereEqualTo("checked", false)
-                .whereEqualTo("title", "Help offer was rejected");
+                .whereEqualTo("to.uid", mUser.getUid());
+
+               /* .whereEqualTo("checked", false)
+                .whereEqualTo("title", "Help offer was rejected");*/
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -62,9 +64,9 @@ public class VolunteerNotificationActivity extends AppCompatActivity
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
                     mNotifications.add(ds.toObject(NotificationDeclinedRequest.class));
                 }
+                initializeListAdapter();
             }
         });
-        initializeListAdapter();
     }
 
     private void initializeListAdapter() {
