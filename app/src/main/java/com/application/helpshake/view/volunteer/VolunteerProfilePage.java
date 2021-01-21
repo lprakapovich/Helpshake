@@ -100,6 +100,15 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
                 startActivity(intent);
             }
         });
+
+        mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
+            // TODO: Add logout
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(VolunteerProfilePage.this, LoginActivity.class
+                ));
+            }
+        });
     }
 
     private void becomeHelpSeeker() {
