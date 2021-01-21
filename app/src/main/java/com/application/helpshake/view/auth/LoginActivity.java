@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.Constants;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityLoginBinding;
+import com.application.helpshake.helper.RedirectManager;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
@@ -113,13 +114,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void openHomePage() {
-        Class<? extends AppCompatActivity> target;
-        if (mCurrentUser.getRole().equals(Role.HelpSeeker)) {
-            target = HelpSeekerHomeActivity.class;
-        } else {
-            target = VolunteerHomeActivity.class;
-        }
-        startActivity(new Intent(LoginActivity.this, target));
+        startActivity(new Intent(LoginActivity.this, RedirectManager.redirectTo(mCurrentUser)));
     }
 
     private boolean emptyInput() {
