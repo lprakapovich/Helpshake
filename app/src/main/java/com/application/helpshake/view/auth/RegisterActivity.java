@@ -1,6 +1,7 @@
 package com.application.helpshake.view.auth;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -25,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 public class RegisterActivity extends AppCompatActivity
@@ -42,6 +46,9 @@ public class RegisterActivity extends AppCompatActivity
 
     private Role mRole;
 
+    private static final int GALLERY_REQUEST_CODE = 123;
+    Uri imageData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,18 @@ public class RegisterActivity extends AppCompatActivity
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_register);
+
+        mBinding.photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent ();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(Intent.createChooser(intent, "Pick an image"), GALLERY_REQUEST_CODE);
+                }
+            }
+        });
 
         mBinding.register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +162,8 @@ public class RegisterActivity extends AppCompatActivity
                 null,
                 null);
 
+        handleUpload(imageData,  baseUserDocument.getId());
+
         baseUserDocument.set(baseUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -198,5 +219,34 @@ public class RegisterActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            imageData = data.getData();
+            mBinding.photo.setImageURI(imageData);
+
+        }
+    }
+
+    // save to Firebase storage
+    private void handleUpload(Uri uri, String uid) {
+
+        String path = "profileImages/" + uid + ".jpeg";
+        final StorageReference reference = FirebaseStorage.getInstance().getReference(path);
+
+        reference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        // Picasso.get().load(task.getResult()).into(mBinding.changeImage);
+                    }
+                });
+            }
+        });
     }
 }

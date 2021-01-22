@@ -134,5 +134,6 @@
     <string name="phone_number_h">Phone number</string>
     <string name="street">Street</string>
     <string name="house_number">House number</string>
+    <string name="photouser">photoUser</string>
 
 </resources>
