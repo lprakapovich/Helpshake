@@ -18,14 +18,62 @@
             app:backgroundTint="#543073"
             app:srcCompat="@drawable/add" />
 
+        <RadioGroup
+            android:id="@+id/filterButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="5dp">
+
+            <RadioButton
+                android:id="@+id/openButton"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:text="Open"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF"/>
+
+            <RadioButton
+                android:id="@+id/inProgressButton"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:text="In progress"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF"/>
+
+            <RadioButton
+                android:id="@+id/completedButton"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:text="Finished"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF"/>
+        </RadioGroup>
+
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="27dp"
-            android:dividerHeight="10dp"
+            android:layout_below="@id/filterButtons"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:divider="@android:color/transparent"
-            android:layout_margin="15dp"/>
+            android:dividerHeight="10dp" />
 
     </RelativeLayout>
 

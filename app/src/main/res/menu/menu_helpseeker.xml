@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/open_request"
-        android:title="Open" />
-    <item
-        android:id="@+id/in_progress_request"
-        android:title="In progress" />
-    <item
-        android:id="@+id/completed_request"
-        android:title="Completed" />
-    <item
-        android:id="@+id/notifications"
-        android:title="Waiting" />
-    <item
-        android:id="@+id/ratings"
-        android:title="Ratings" />
-    <item
-        android:id="@+id/profile"
-        android:title="Profile" />
-    <item
-        android:id="@+id/logOut"
-        android:title="Log out" />
+        android:title="Menu"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/open_request"
+                android:title="Open" />
+            <item
+                android:id="@+id/in_progress_request"
+                android:title="In progress" />
+            <item
+                android:id="@+id/completed_request"
+                android:fontFamily="@font/varela_round"
+                android:title="Completed" />
+            <item
+                android:id="@+id/notifications"
+                android:icon="@drawable/settings"
+                android:title="Waiting"
+                android:fontFamily="@font/varela_round"
+                app:showAsAction="always" />
+            <item
+                android:id="@+id/ratings"
+                android:title="Ratings" />
+            <item
+                android:id="@+id/profile"
+                android:title="Profile" />
+            <item
+                android:id="@+id/logOut"
+                android:title="Log out" />
+        </menu>
+    </item>
+
 </menu>
