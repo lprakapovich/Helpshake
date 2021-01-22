@@ -127,5 +127,13 @@
     <string name="change_role_on_helpSeeker">If you switch to a help seeker role, all your help offers, that have not been approved by the help seeker yet, will be cancelled. They will not be displayed to a help seeker and you will also lose access to them.</string>
     <string name="info_text">info text</string>
     <string name="question">question</string>
+    <string name="name_and_surname_2">name and surname</string>
+    <string name="change_preferences">Change preferences</string>
+    <string name="save">Save</string>
+    <string name="phone_number">phone number</string>
+    <string name="phone_number_h">Phone number</string>
+    <string name="street">Street</string>
+    <string name="house_number">House number</string>
+    <string name="photouser">photoUser</string>
 
 </resources>

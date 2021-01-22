@@ -24,7 +24,8 @@
             app:layout_constraintBottom_toTopOf="@+id/surname"
             app:layout_constraintEnd_toEndOf="@+id/surname"
             app:layout_constraintStart_toStartOf="@+id/surname"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:autofillHints="" />
 
 
         <EditText
@@ -33,7 +34,7 @@
             android:layout_height="60dp"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="25dp"
-            android:layout_marginBottom="19dp"
+            android:layout_marginBottom="20dp"
             android:autofillHints=""
             android:background="@drawable/text_box_shape"
             android:fontFamily="@font/varela_round"
@@ -53,7 +54,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:background="@drawable/text_box_shape"
             android:fontFamily="@font/varela_round"
@@ -74,7 +75,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:background="@drawable/text_box_shape"
             android:ems="10"
@@ -96,7 +97,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginEnd="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:background="@drawable/text_box_shape"
             android:ems="10"
@@ -136,7 +137,7 @@
             android:layout_height="60dp"
             android:layout_marginStart="80dp"
             android:layout_marginEnd="80dp"
-            android:layout_marginBottom="36dp"
+            android:layout_marginBottom="35dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
@@ -153,7 +154,7 @@
             android:id="@+id/haveAnAccountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
+            android:layout_marginBottom="10dp"
             android:fontFamily="@font/varela_round"
             android:text="@string/already_have_an_account"
             android:textAllCaps="false"
@@ -173,6 +174,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/photo"
+            android:layout_width="139dp"
+            android:layout_height="135dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:contentDescription="@string/photouser"
+            android:src="@drawable/empty_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
