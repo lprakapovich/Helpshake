@@ -1,20 +1,27 @@
 package com.application.helpshake.view.auth;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityRegisterBinding;
+import com.application.helpshake.model.dto.RegistrationDto;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.dialog.DialogSelect;
+import com.application.helpshake.validator.UserRegistrationValidator;
+import com.application.helpshake.validator.UserRegistrationValidator.ValidationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 
 public class RegisterActivity extends AppCompatActivity
@@ -53,11 +61,13 @@ public class RegisterActivity extends AppCompatActivity
                 this, R.layout.activity_register);
 
         mBinding.register.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 readUserInput();
+                validateInput();
                 if (nonEmptyInputs() && passwordsMatch()) {
-                    selectUserRole();
+                    //selectUserRole();
                 }
             }
         });
@@ -69,6 +79,21 @@ public class RegisterActivity extends AppCompatActivity
                 ));
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void validateInput() {
+        ValidationResult result = UserRegistrationValidator.isEmailValid()
+                .and(UserRegistrationValidator.isPasswordValid())
+                .apply(new RegistrationDto(
+                        mName,
+                        mSurname,
+                        mEmail,
+                        mPassword,
+                        mRepeatPassword
+                ));
+
+        Log.d("VALIDATION", result.name());
     }
 
     private boolean passwordsMatch() {

@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.application.helpshake.Constants;
 import com.application.helpshake.R;
-import com.application.helpshake.helper.RedirectManager;
+import com.application.helpshake.util.RedirectManager;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.view.auth.LoginActivity;

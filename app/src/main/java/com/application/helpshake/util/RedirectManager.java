@@ -1,4 +1,4 @@
-package com.application.helpshake.helper;
+package com.application.helpshake.util;
 
 import androidx.appcompat.app.AppCompatActivity;
 
