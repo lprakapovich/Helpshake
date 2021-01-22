@@ -67,14 +67,12 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/changeImage"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="34dp"
-            android:layout_marginRight="34dp"
+            android:layout_width="160dp"
+            android:layout_height="141dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
             android:src="@drawable/camera"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

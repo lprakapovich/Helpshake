@@ -24,8 +24,11 @@ import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.others.SettingsPopUp;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -37,6 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,7 +59,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
 
     ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
 
-    private static final int TAKE_IMAGE_CODE = 10001;
+    private static final int GALLERY_REQUEST_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +73,15 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
 
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
 
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + mCurrentUser.getUid() + ".jpeg");
+        ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                Picasso.get().load(task.getResult()).into(mBinding.changeImage);
+            }
+        });
         setPhoneNumber();
-
         setBindings();
     }
 
@@ -86,10 +97,13 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         mBinding.changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent intent = new Intent ();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                    startActivityForResult(Intent.createChooser(intent, "Pick an image"), GALLERY_REQUEST_CODE);
                 }
+
             }
         });
 
@@ -107,51 +121,31 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                mBinding.changeImage.setImageBitmap(bitmap);
-                handleUpload(bitmap);
-            }
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Uri imageData = data.getData();
+            mBinding.changeImage.setImageURI(imageData);
+            handleUpload(imageData);
         }
     }
 
-    private void handleUpload(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+    // save to Firebase storage
+    private void handleUpload(Uri uri) {
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final StorageReference reference = FirebaseStorage.getInstance().getReference()
-                .child("profileImages")
-                .child(uid + ".jpeg");
+        String uid = mCurrentUser.getUid();
+        String path = "profileImages/" + uid + ".jpeg";
+        final StorageReference reference = FirebaseStorage.getInstance().getReference(path);
 
-        reference.putBytes(baos.toByteArray())
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        reference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        getDownloadUrl(reference);
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        Picasso.get().load(task.getResult()).into(mBinding.changeImage);
                     }
                 });
-    }
-
-    private void getDownloadUrl(StorageReference reference) {
-        reference.getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        setUserProfileUrl(uri);
-                    }
-                });
-    }
-
-    private void setUserProfileUrl(Uri uri) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(uri)
-                .build();
-
-        user.updateProfile(request);
+            }
+        });
     }
 
     private void readUserInput() {
@@ -172,6 +166,8 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                 });
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
+
+
     }
 
     private void findRequestsToUpdatePhoneNum() {
@@ -203,4 +199,6 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
     public void setPhoneNumber() {
         mBinding.volunteerPhoneInput.setText(mCurrentUser.getPhoneNumber());
     }
+
+
 }
