@@ -30,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +63,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
         mBinding.nameHelpSeeker.setText(mCurrentUser.getFullName());
 
-        //setImageProfile();
+        setImageProfile();
         setPhoneNumber();
         setBindings();
     }
@@ -165,5 +166,17 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
 
     public void setPhoneNumber() {
         mBinding.phoneInput.setText(mCurrentUser.getPhoneNumber());
+    }
+
+    public void setImageProfile() {
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + mCurrentUser.getUid() + ".jpeg");
+
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(mBinding.changeButton);
+            }
+        });
     }
 }
