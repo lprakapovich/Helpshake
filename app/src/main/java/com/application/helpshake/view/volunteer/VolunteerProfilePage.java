@@ -102,11 +102,10 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         });
 
         mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
-            // TODO: Add logout
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(VolunteerProfilePage.this, LoginActivity.class
-                ));
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(VolunteerProfilePage.this, LoginActivity.class));
             }
         });
     }

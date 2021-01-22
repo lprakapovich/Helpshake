@@ -89,6 +89,17 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
                 startActivity(intent);
             }
         });
+
+        mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(
+                        HelpSeekerProfilePage.this,
+                        LoginActivity.class
+                ));
+            }
+        });
     }
 
     private void becomeVolunteer() {

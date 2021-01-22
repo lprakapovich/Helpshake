@@ -27,7 +27,7 @@ public interface UserRegistrationValidator extends Function<RegistrationDto, Val
     }
 
     static UserRegistrationValidator isPasswordValid () {
-        return registrationData -> registrationData.getPassword().equals(registrationData.getConformPassword())
+        return registrationData -> registrationData.getPassword().equals(registrationData.getConfirmPassword())
                 ? SUCCESS : PASSWORDS_NOT_MATCH;
     }
 
@@ -35,7 +35,7 @@ public interface UserRegistrationValidator extends Function<RegistrationDto, Val
         return registrationData ->
                 StringUtils.isAnyEmpty(
                         registrationData.getEmail(),
-                        registrationData.getConformPassword(),
+                        registrationData.getConfirmPassword(),
                         registrationData.getName(),
                         registrationData.getSurname(),
                         registrationData.getPassword()
