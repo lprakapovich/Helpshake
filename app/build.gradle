@@ -41,6 +41,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.1'
     implementation 'androidx.navigation:navigation-ui:2.3.1'
     implementation 'com.google.firebase:firebase-core:18.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -59,6 +60,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 }
 
