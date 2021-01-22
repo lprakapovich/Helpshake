@@ -60,6 +60,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
     ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
 
     private static final int GALLERY_REQUEST_CODE = 123;
+    Uri imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +73,9 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
+        mBinding.nameText.setText(mCurrentUser.getFullName());
 
-        StorageReference ref = FirebaseStorage.getInstance()
-                .getReference("profileImages/" + mCurrentUser.getUid() + ".jpeg");
-        ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                Picasso.get().load(task.getResult()).into(mBinding.changeImage);
-            }
-        });
+        setImageProfile();
         setPhoneNumber();
         setBindings();
     }
@@ -122,9 +117,9 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Uri imageData = data.getData();
+            imageData = data.getData();
             mBinding.changeImage.setImageURI(imageData);
-            handleUpload(imageData);
+
         }
     }
 
@@ -141,7 +136,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                 reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-                        Picasso.get().load(task.getResult()).into(mBinding.changeImage);
+                       // Picasso.get().load(task.getResult()).into(mBinding.changeImage);
                     }
                 });
             }
@@ -166,8 +161,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                 });
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
-
-
+        handleUpload(imageData);
     }
 
     private void findRequestsToUpdatePhoneNum() {
@@ -200,5 +194,15 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         mBinding.volunteerPhoneInput.setText(mCurrentUser.getPhoneNumber());
     }
 
-
+    public void setImageProfile() {
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + mCurrentUser.getUid() + ".jpeg");
+        imageData = Uri.parse(ref.getDownloadUrl().toString());
+        ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                Picasso.get().load(task.getResult()).into(mBinding.changeImage);
+            }
+        });
+    }
 }
