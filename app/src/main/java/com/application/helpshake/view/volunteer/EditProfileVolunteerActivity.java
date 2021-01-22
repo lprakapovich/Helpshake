@@ -201,7 +201,9 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(mBinding.changeImage);
+                Glide.with(getApplicationContext()).load(uri)
+                        .fitCenter().into(mBinding.changeImage);
+                //Picasso.get().load(uri).into(mBinding.changeImage);
             }
         });
     }

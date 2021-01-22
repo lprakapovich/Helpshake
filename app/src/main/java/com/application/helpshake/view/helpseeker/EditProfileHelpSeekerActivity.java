@@ -19,6 +19,7 @@ import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -175,7 +176,9 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(mBinding.changeButton);
+                Glide.with(getApplicationContext()).load(uri)
+                        .fitCenter().into(mBinding.changeButton);
+                //Picasso.get().load(uri).into(mBinding.changeButton);
             }
         });
     }
