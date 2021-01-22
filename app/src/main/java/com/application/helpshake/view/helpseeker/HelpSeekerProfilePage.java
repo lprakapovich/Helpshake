@@ -21,6 +21,7 @@ import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.auth.RegisterActivity;
+import com.application.helpshake.view.volunteer.VolunteerProfilePage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -87,6 +88,15 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
                 Intent intent = new Intent(HelpSeekerProfilePage.this, HelpSeekerHomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+            }
+        });
+
+        mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
+            // TODO: Add logout
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HelpSeekerProfilePage.this, LoginActivity.class
+                ));
             }
         });
     }

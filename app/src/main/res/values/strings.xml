@@ -131,5 +131,8 @@
     <string name="change_preferences">Change preferences</string>
     <string name="save">Save</string>
     <string name="phone_number">phone number</string>
+    <string name="phone_number_h">Phone number</string>
+    <string name="street">Street</string>
+    <string name="house_number">House number</string>
 
 </resources>
