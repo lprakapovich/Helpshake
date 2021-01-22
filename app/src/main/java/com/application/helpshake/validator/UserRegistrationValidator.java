@@ -9,6 +9,8 @@ import com.application.helpshake.validator.UserRegistrationValidator.ValidationR
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.regex.Pattern;
+
 import io.opencensus.common.Function;
 
 import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.EMPTY_INPUT;
@@ -20,7 +22,7 @@ import static com.application.helpshake.validator.UserRegistrationValidator.Vali
 public interface UserRegistrationValidator extends Function<RegistrationDto, ValidationResult> {
 
     static UserRegistrationValidator isEmailValid () {
-        return registrationData -> registrationData.getEmail().contains("@")
+        return registrationData ->  Pattern.matches("[_a-zA-Z1-9]+(\\.[A-Za-z0-9]*)*@[A-Za-z0-9]+\\.[A-Za-z0-9]+(\\.[A-Za-z0-9]*)*", registrationData.getEmail())
                 ? SUCCESS : INVALID_EMAIL;
     }
 

@@ -3,8 +3,6 @@ package com.application.helpshake.view.auth;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -15,24 +13,22 @@ import androidx.fragment.app.DialogFragment;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityRegisterBinding;
+import com.application.helpshake.dialog.DialogSelect;
 import com.application.helpshake.model.dto.RegistrationDto;
-import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.user.BaseUser;
-import com.application.helpshake.dialog.DialogSelect;
+import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.validator.UserRegistrationValidator;
 import com.application.helpshake.validator.UserRegistrationValidator.ValidationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import org.apache.commons.lang3.StringUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 
 
 public class RegisterActivity extends AppCompatActivity
@@ -66,9 +62,6 @@ public class RegisterActivity extends AppCompatActivity
             public void onClick(View v) {
                 readUserInput();
                 validateInput();
-                if (nonEmptyInputs() && passwordsMatch()) {
-                    //selectUserRole();
-                }
             }
         });
 
@@ -83,7 +76,8 @@ public class RegisterActivity extends AppCompatActivity
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void validateInput() {
-        ValidationResult result = UserRegistrationValidator.isEmailValid()
+        ValidationResult result = UserRegistrationValidator.isInputEmpty()
+                .and(UserRegistrationValidator.isEmailValid())
                 .and(UserRegistrationValidator.isPasswordValid())
                 .apply(new RegistrationDto(
                         mName,
@@ -93,15 +87,26 @@ public class RegisterActivity extends AppCompatActivity
                         mRepeatPassword
                 ));
 
-        Log.d("VALIDATION", result.name());
-    }
-
-    private boolean passwordsMatch() {
-        return mPassword.equals(mRepeatPassword);
-    }
-
-    private boolean nonEmptyInputs() {
-        return !StringUtils.isAnyEmpty(mName, mSurname, mEmail, mPassword, mRepeatPassword);
+        switch (result) {
+            case SUCCESS:
+                selectUserRole();
+                break;
+            case EMPTY_INPUT:
+                DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                        "Missing data",
+                        "Fill all the fields to complete the registration");
+                break;
+            case INVALID_EMAIL:
+                DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                        "Invalid email",
+                        "Make sure email matches the common standards, e.g. *.@gmail.com");
+                break;
+            case PASSWORDS_NOT_MATCH:
+                DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                        "Invalid passwords",
+                        "Passwords don't match.");
+                break;
+        }
     }
 
     private void selectUserRole() {
@@ -156,7 +161,6 @@ public class RegisterActivity extends AppCompatActivity
     }
 
     private void saveCredentialsToFireStore() {
-
         DocumentReference baseUserDocument = mDb.collection("BaseUsers").document();
 
         BaseUser baseUser = new BaseUser(
