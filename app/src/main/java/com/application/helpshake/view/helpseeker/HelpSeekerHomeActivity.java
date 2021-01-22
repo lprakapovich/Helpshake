@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,17 +57,42 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     private Status mSelectedStatus;
     private ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
     private ArrayAdapter<PublishedHelpRequest> mCurrentAdapter;
+    private RadioGroup filterButtonsGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setTitle(getString(R.string.open_requests));
+        //getSupportActionBar().setTitle(getString(R.string.open_requests));
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
 
         getCurrentUser();
+
+        filterButtonsGroup = (RadioGroup) findViewById(R.id.filterButtons);
+        filterButtonsGroup.check(R.id.openButton); //initially checked
+
+        filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                switch(rb.getId()) {
+                    case R.id.openButton:
+                            mSelectedStatus = Status.Open;
+                        break;
+                    case R.id.waitingButton:
+                            mSelectedStatus = Status.WaitingForApproval;
+                        break;
+                    case R.id.inProgressButton:
+                            mSelectedStatus = Status.InProgress;
+                        break;
+                    case R.id.completedButton:
+                            mSelectedStatus = Status.Completed;
+                        break;
+            }
+            fetchRequests();
+        }});
 
         mBinding.newRequestButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -210,8 +237,8 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                     }
                 });
     }
-
-    @Override
+//---------------------menu----
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_request_filtering, menu);
@@ -241,7 +268,8 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         fetchRequests();
         return true;
-    }
+    }*/
+
 
     @Override
     public void onMarkFinished(int position, PublishedHelpRequest request) {

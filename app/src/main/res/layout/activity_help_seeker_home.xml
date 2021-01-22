@@ -7,10 +7,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RadioGroup
+            android:layout_alignParentTop="true"
+            android:id="@+id/filterButtons"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <RadioButton
+                android:id="@+id/openButton"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:text="Open"
+                android:textColor="#FFFFFF" />
+
+            <RadioButton
+                android:id="@+id/waitingButton"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:text="Waiting"
+                android:textColor="#FFFFFF" />
+
+            <RadioButton
+                android:id="@+id/inProgressButton"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:text="Progress"
+                android:textColor="#FFFFFF" />
+
+            <RadioButton
+                android:id="@+id/completedButton"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:text="Finished"
+                android:textColor="#FFFFFF" />
+        </RadioGroup>
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_alignBottom="@id/list"
             android:layout_alignParentBottom="true"
             android:background="#53426E">
 
@@ -58,10 +102,12 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/filterButtons"
+            android:layout_above="@id/bottomNavbar"
+            android:layout_margin="15dp"
             android:layout_marginBottom="27dp"
-            android:dividerHeight="10dp"
             android:divider="@android:color/transparent"
-            android:layout_margin="15dp"/>
+            android:dividerHeight="10dp" />
 
     </RelativeLayout>
 
