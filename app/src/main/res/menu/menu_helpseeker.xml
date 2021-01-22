@@ -4,12 +4,21 @@
         android:id="@+id/open_request"
         android:title="Open" />
     <item
-        android:id="@+id/waiting_for_approval_request"
-        android:title="Waiting" />
-    <item
         android:id="@+id/in_progress_request"
         android:title="In progress" />
     <item
         android:id="@+id/completed_request"
         android:title="Completed" />
+    <item
+        android:id="@+id/notifications"
+        android:title="Waiting" />
+    <item
+        android:id="@+id/ratings"
+        android:title="Ratings" />
+    <item
+        android:id="@+id/profile"
+        android:title="Profile" />
+    <item
+        android:id="@+id/logOut"
+        android:title="Log out" />
 </menu>
