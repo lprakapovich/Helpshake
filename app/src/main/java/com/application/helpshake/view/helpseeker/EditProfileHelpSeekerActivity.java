@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
 import static com.application.helpshake.Constants.REQUEST_IMAGE_CAPTURE;
 
 public class EditProfileHelpSeekerActivity extends AppCompatActivity {
@@ -47,7 +48,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
 
     ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
 
-    private static final int GALLERY_REQUEST_CODE = 123;
     Uri imageData;
 
     @Override
