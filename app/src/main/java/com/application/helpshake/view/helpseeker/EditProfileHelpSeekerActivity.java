@@ -19,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditHelpseekerProfileBinding;
 import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.Address;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.ParsedAddress;
 import com.application.helpshake.model.user.UserClient;
@@ -270,6 +271,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
     @Override
     public void onLocationFetched(GeoPoint geoPoint) {
         mFetchedGeoPoint = geoPoint;
+        ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         mBinding.currentLocation.setText(address.getCountry() + "," + address.getCity() +  "," + address.getState() + ", full address: "+ address.getAddress());
     }

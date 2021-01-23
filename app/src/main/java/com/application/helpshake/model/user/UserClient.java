@@ -4,6 +4,9 @@ import android.app.Application;
 
 import com.application.helpshake.model.user.BaseUser;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * Singleton representing a currently authenticated user
  * Instead of fetching the user from thr database, we set application context user (after each login),
@@ -12,15 +15,8 @@ import com.application.helpshake.model.user.BaseUser;
  * BaseUser user = ((UserClient)(getApplicationContext)).getCurrentUser();
  */
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class UserClient extends Application {
-
     private BaseUser currentUser = null;
-
-    public void setCurrentUser(BaseUser user) {
-        currentUser = user;
-    }
-
-    public BaseUser getCurrentUser() {
-        return currentUser;
-    }
 }

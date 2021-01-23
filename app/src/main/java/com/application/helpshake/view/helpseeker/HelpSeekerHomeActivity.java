@@ -79,15 +79,23 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!StringUtils.isBlank(mCurrentBaseUser.getPhoneNumber())) {
-                            openNewRequestDialog();
+                        if (!isPhoneNumberProvided()) {
+                            DialogBuilder.showMessageDialog(
+                                    getSupportFragmentManager(),
+                                    getString(R.string.missing_phone_number),
+                                    getString(R.string.missing_phone_number_message));
+                        } else if (!isAddressProvided()) {
+                            DialogBuilder.showMessageDialog(
+                                    getSupportFragmentManager(),
+                                    "Missing address",
+                                    "Please, go to your profile and update your current location"
+                                    );
                         } else {
-                            openPhoneNumInfo();
+                            openNewRequestDialog();
                         }
                     }
                 }
         );
-
 
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
@@ -96,11 +104,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         fetchRequests();
     }
 
-    public void setFilteringButtons() {
-
+    private void setFilteringButtons() {
         filterButtonsGroup = (RadioGroup) findViewById(R.id.filterButtons);
         filterButtonsGroup.check(R.id.openButton); //initially checked
-
         filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -119,8 +125,14 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 fetchRequests();
             }
         });
+    }
 
+    private boolean isPhoneNumberProvided() {
+        return !StringUtils.isBlank(mCurrentBaseUser.getPhoneNumber());
+    }
 
+    private boolean isAddressProvided() {
+        return mCurrentBaseUser.getAddress() != null;
     }
 
     public void openPhoneNumInfo() {
@@ -244,7 +256,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 getSupportActionBar().setTitle(getString(R.string.completed_requests));
                 mSelectedStatus = Status.Completed;
                 break;
-            //----filtering^^^^^-------
             case R.id.notifications:
                 startActivity(new Intent(
                         HelpSeekerHomeActivity.this,
@@ -295,5 +306,4 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
     }
-
 }
