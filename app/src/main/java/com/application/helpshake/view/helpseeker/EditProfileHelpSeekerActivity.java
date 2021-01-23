@@ -20,8 +20,10 @@ import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditHelpseekerProfileBinding;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.user.ParsedAddress;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.service.LocationService;
+import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -263,47 +265,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
     }
 
 
-//    private boolean checkMapServices() {
-//        return isServiceEnabled() && isMapsEnabled();
-//    }
 
-//    private boolean isMapsEnabled() {
-//        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//            buildAlertMessageNoGps();
-//            return false;
-//        }
-//        return true;
-//    }
-
-//    private boolean isServiceEnabled() {
-//        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(EditProfileHelpSeekerActivity.this);
-//        if (available == ConnectionResult.SUCCESS) {
-//            Log.d("LOCATION", "isServicesOK: Google Play Services is working");
-//            return true;
-//        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-//            Log.d("TAG", "isServicesOK: an error occured but we can fix it");
-//            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(EditProfileHelpSeekerActivity.this, available, 1);
-//            dialog.show();
-//        } else {
-//            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
-//        }
-//        return false;
-//    }
-
-//    private void buildAlertMessageNoGps() {
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
-//                .setCancelable(false)
-//                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-//                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                        startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
-//                    }
-//                });
-//        final AlertDialog alert = builder.create();
-//        alert.show();
-//    }
 
     @Override
     protected void onResume() {
@@ -363,84 +325,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
     @Override
     public void onLocationFetched(GeoPoint geoPoint) {
         mFetchedGeoPoint = geoPoint;
-        mBinding.currentLocation.setText(geoPoint.getLatitude() + ", " + geoPoint.getLongitude());
+        ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
+        mBinding.currentLocation.setText(address.getCountry() + "," + address.getCity() +  "," + address.getState() + ", full address: "+ address.getAddress());
     }
-
-//
-//    private void getLocationPermission() {
-//        if (permissionIsGranted()) {
-//            mLocationPermissionGranted = true;
-//            getLastKnownLocation();
-//            Toast.makeText(getApplicationContext(), "Location is ok", Toast.LENGTH_LONG).show();
-//        } else if (mLocationPermissionRejected) {
-//            Toast.makeText(getApplicationContext(), "Please enable permissions manually", Toast.LENGTH_LONG).show();
-//        } else {
-//            requestPermissionExplicitly();
-//        }
-//    }
-//
-//    private void requestPermissionExplicitly() {
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-//                REQUEST_CODE_LOCATION_PERMISSION);
-//    }
-//
-//    private boolean permissionIsGranted() {
-//        return ContextCompat.checkSelfPermission(this.getApplicationContext(),
-//                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           @NonNull String permissions[],
-//                                           @NonNull int[] grantResults) {
-//        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
-//            // If request is cancelled, the result arrays are empty.
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                mLocationPermissionGranted = true;
-//            } else {
-//                mLocationPermissionRejected = true;
-//            }
-//        }
-//    }
-//
-//    private void getLastKnownLocation() {
-//
-//        if (ActivityCompat.checkSelfPermission(this,
-//                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            Toast.makeText(getApplicationContext(), "ERROR WITH LOCATION", Toast.LENGTH_LONG).show();
-//            return;
-//        } else {
-//            Toast.makeText(getApplicationContext(), "its ok WITH LOCATION", Toast.LENGTH_LONG).show();
-//        }
-//
-//        mLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-//            @SneakyThrows
-//            @Override
-//            public void onComplete(@NonNull Task<android.location.Location> task) {
-//                if (task.isSuccessful()) {
-//                    if (task.getResult() != null) {
-//                        Log.d("FETCHED", task.getResult().toString());
-//                        Location location = task.getResult();
-//                        GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-//                        Log.d("LAST KNOWN LOCATION", geoPoint.getLatitude() + ", " + geoPoint.getLongitude());
-//
-//                        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-//                        List<Address> addresses = geocoder.getFromLocation(geoPoint.getLatitude(), geoPoint.getLongitude(), 1);
-//
-//                        String address = addresses.get(0).getAddressLine(0);
-//                        String city = addresses.get(0).getLocality();
-//                        String state = addresses.get(0).getAdminArea();
-//                        String country = addresses.get(0).getCountryName();
-//
-//                        Log.d("ADDRESS", address + ", " + city + "," + state + "," + country);
-//
-//                    } else {
-//                        Toast.makeText(getApplicationContext(), "TASK GET REQULT IS NULl", Toast.LENGTH_LONG).show();
-//
-//                    }
-//                }
-//            }
-//        });
-//    }
 }
