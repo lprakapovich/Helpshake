@@ -34,6 +34,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
+
 
 public class RegisterActivity extends AppCompatActivity
         implements DialogSelect.OptionSelectedListener {
@@ -50,7 +52,6 @@ public class RegisterActivity extends AppCompatActivity
 
     private Role mRole;
 
-    private static final int GALLERY_REQUEST_CODE = 123;
     Uri imageData;
 
     @Override
@@ -191,7 +192,9 @@ public class RegisterActivity extends AppCompatActivity
                 null,
                 null);
 
-        handleUpload(imageData,  baseUserDocument.getId());
+        if(imageData != null) {
+            handleUpload(imageData, baseUserDocument.getId());
+        }
 
         baseUserDocument.set(baseUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -202,6 +205,7 @@ public class RegisterActivity extends AppCompatActivity
                                 "Feedback",
                                 "User successfully created");
                     }
+
                 });
     }
 

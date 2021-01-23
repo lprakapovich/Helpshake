@@ -47,6 +47,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
 import static com.application.helpshake.Constants.REQUEST_IMAGE_CAPTURE;
 
 public class EditProfileVolunteerActivity extends AppCompatActivity {
@@ -59,7 +60,6 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
 
     ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
 
-    private static final int GALLERY_REQUEST_CODE = 123;
     Uri imageData;
 
     @Override
@@ -201,7 +201,9 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(mBinding.changeImage);
+                Glide.with(getApplicationContext()).load(uri)
+                        .fitCenter().into(mBinding.changeImage);
+                //Picasso.get().load(uri).into(mBinding.changeImage);
             }
         });
     }
