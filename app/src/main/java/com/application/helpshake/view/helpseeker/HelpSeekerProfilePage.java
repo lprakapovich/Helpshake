@@ -59,7 +59,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
     }
 
     private void setBindings() {
-        mBinding.setNameAndSurname(mCurrentUser.getName());
+        mBinding.nameAndSurnameText.setText(mCurrentUser.getName());
 
         mBinding.editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +72,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
         mBinding.deleteAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteAccount();
+                //deleteAccount();
             }
         });
 
