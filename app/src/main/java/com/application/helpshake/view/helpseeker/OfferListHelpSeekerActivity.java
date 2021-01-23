@@ -10,7 +10,7 @@ import com.application.helpshake.R;
 import com.application.helpshake.adapter.helpseeker.WaitingRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.notification.NotificationDeclinedRequest;
+import com.application.helpshake.model.notification.NotificationRequestVolunteer;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
@@ -78,12 +78,25 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     public void onHelpAccepted(int position, final PublishedHelpRequest request) {
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
-
         updateRequestStatus(request.getUid(), Status.InProgress);
 
         String id = request.getRequest().getUid();
         deleteCorrespondingOpenRequest(id);
         declineOtherOffers(id);
+
+        String uid = mNotificationsCollection.document().getId();
+
+        NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
+                uid,
+                request.getRequest().getHelpSeeker(),
+                request.getVolunteer(),
+                "Help offer was accepted",
+                "Great, the help seeker accepted your help offer.",
+                false,
+                request.getUid()
+        );
+
+        mNotificationsCollection.document(uid).set(notification);
     }
 
     private void deleteCorrespondingOpenRequest(String id) {
@@ -99,7 +112,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
         String id = mNotificationsCollection.document().getId();
 
-        NotificationDeclinedRequest notification = new NotificationDeclinedRequest(
+        NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
                 id,
                 request.getRequest().getHelpSeeker(),
                 request.getVolunteer(),
