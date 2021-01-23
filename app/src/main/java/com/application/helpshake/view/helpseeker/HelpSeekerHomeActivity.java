@@ -3,6 +3,7 @@ package com.application.helpshake.view.helpseeker;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,14 +37,19 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.imperiumlabs.geofirestore.GeoFirestore;
+import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.val;
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
         implements DialogNewHelpRequest.NewRequestListener,
@@ -51,6 +57,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
+    private CollectionReference mGeoFireStoreReference;
     private BaseUser mCurrentBaseUser;
 
     private ActivityHelpSeekerHomeBinding mBinding;
@@ -62,13 +69,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     private RadioGroup filterButtonsGroup;
 
+    GeoFirestore geoFirestore;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getCurrentUser();
 
-        getSupportActionBar().setTitle("Have a nice day, " + mCurrentBaseUser.getName() + "!");
+        //getSupportActionBar().setTitle("Have a nice day, " + mCurrentBaseUser.getName() + "!");
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
@@ -99,9 +108,47 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
+        mGeoFireStoreReference = mDb.collection("GeoFireStores");
         mSelectedStatus = Status.Open;
 
+        geoFirestore = new GeoFirestore(mGeoFireStoreReference);
+
         fetchRequests();
+
+       // if (mCurrentBaseUser.getAddress() != null) {
+            queryGeoPoints();
+        //}
+    }
+
+    private void queryGeoPoints() {
+        val geoGuery = geoFirestore.queryAtLocation(new GeoPoint(19.449926, 51.7478161), 20);
+
+        geoGuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String s, GeoPoint geoPoint) {
+                Log.d("FETCHED KEY REQUEST ID", s);
+            }
+
+            @Override
+            public void onKeyExited(String s) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String s, GeoPoint geoPoint) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(Exception e) {
+
+            }
+        });
     }
 
     private void setFilteringButtons() {
@@ -232,6 +279,8 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                         );
                     }
                 });
+
+        geoFirestore.setLocation(id, new GeoPoint(mCurrentBaseUser.getAddress().getLatitude(), mCurrentBaseUser.getAddress().getLongitude()));
     }
 
     @Override
@@ -293,7 +342,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         request.setStatus(Status.Completed);
         updateRequest(request);
     }
-
 
     private void updateRequest(PublishedHelpRequest request) {
         mPublishedRequestsCollection.document(request.getUid()).update("status", request.getStatus());
