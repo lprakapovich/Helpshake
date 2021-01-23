@@ -14,6 +14,7 @@ import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,7 +38,8 @@ public class SplashScreen extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public  void  onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
-                if (mAuth.getCurrentUser() != null) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (mAuth.getCurrentUser().getUid().length() > 0) {
                     setContextUser();
                 } else {
                     startActivity(new Intent(SplashScreen.this, LoginActivity.class));

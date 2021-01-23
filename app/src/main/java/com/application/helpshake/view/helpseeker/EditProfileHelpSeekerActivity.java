@@ -1,6 +1,5 @@
 package com.application.helpshake.view.helpseeker;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -26,7 +25,6 @@ import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
-import com.application.helpshake.view.volunteer.EditProfileVolunteerActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -45,6 +43,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
+import static com.application.helpshake.Constants.REQUEST_CODE_GPS_ENABLED;
 import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
 public class EditProfileHelpSeekerActivity extends AppCompatActivity {
@@ -59,6 +58,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
     private Uri imageData;
 
     private boolean mLocationPermissionGranted;
+    private boolean mLocationPermissionRejected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +75,11 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         mPublishedRequests = new ArrayList<>();
 
         mLocationPermissionGranted = false;
+        mLocationPermissionRejected = false;
 
         setImageProfile();
         setPhoneNumber();
         setBindings();
-
-        checkMapServices();
-
     }
 
     private void setBindings() {
@@ -108,28 +106,15 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         mBinding.fetchLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkLocationPermissions();
+                if (checkMapServices()) {
+                    if (mLocationPermissionGranted) {
+                        getLocation();
+                    } else {
+                        getLocationPermission();
+                    }
+                }
             }
         });
-    }
-
-    private void checkLocationPermissions() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.d("LOCATION", "permissions not granted");
-
-            ActivityCompat.requestPermissions(
-                    EditProfileHelpSeekerActivity.this,
-                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_LOCATION_PERMISSION
-            );
-        } else {
-            getCurrentLocation();
-        }
-    }
-
-    private void getCurrentLocation() {
-        Log.d("LOCATION", "started fetching a location");
     }
 
     @Override
@@ -138,7 +123,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             imageData = data.getData();
             mBinding.changeButton.setImageURI(imageData);
-
         }
     }
 
@@ -179,6 +163,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
                         );
                     }
                 });
+
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
         handleUpload(imageData);
@@ -228,9 +213,8 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
     }
 
     private boolean isMapsEnabled() {
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled( LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
             return false;
         }
@@ -238,9 +222,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
     }
 
     private boolean isServiceEnabled() {
-        Log.d("LOCATION", "isServicesOK: checking google services version");
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(EditProfileHelpSeekerActivity.this);
-
         if (available == ConnectionResult.SUCCESS) {
             Log.d("LOCATION", "isServicesOK: Google Play Services is working");
             return true;
@@ -248,7 +230,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
             Log.d("TAG", "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(EditProfileHelpSeekerActivity.this, available, 1);
             dialog.show();
-
         } else {
             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
@@ -262,7 +243,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(enableGpsIntent, 3);
+                        startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
                     }
                 });
         final AlertDialog alert = builder.create();
@@ -273,10 +254,52 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (checkMapServices()) {
-            if (mLocationPermissionGranted) {
+//        if (checkMapServices()) {
+//            if (mLocationPermissionGranted) {
+//                // everything is ok
+//            } else {
+//                getLocationPermission();
+//            }
+//        }
+    }
 
+    private void getLocationPermission() {
+        if (permissionIsGranted()) {
+            mLocationPermissionGranted = true;
+            Toast.makeText(getApplicationContext(), "Location is ok", Toast.LENGTH_LONG).show();
+        } else if (mLocationPermissionRejected) {
+            Toast.makeText(getApplicationContext(), "Please enable permissions manually", Toast.LENGTH_LONG).show();
+        } else {
+            requestPermissionExplicitly();
+        }
+    }
+
+    private void requestPermissionExplicitly() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_CODE_LOCATION_PERMISSION);
+    }
+
+    private boolean permissionIsGranted() {
+        return ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+            } else {
+                mLocationPermissionRejected = true;
             }
         }
+    }
+
+    private void getLocation() {
+
     }
 }
