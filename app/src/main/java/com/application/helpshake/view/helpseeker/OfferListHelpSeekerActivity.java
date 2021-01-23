@@ -39,7 +39,6 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
     private BaseUser mUser;
     private ArrayList<PublishedHelpRequest> mRequests = new ArrayList<>();
-    private ArrayList<String> mNotifications = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,19 +82,8 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         deleteCorrespondingOpenRequest(id);
         declineOtherOffers(id);
 
-        String uid = mNotificationsCollection.document().getId();
-
-        NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
-                uid,
-                request.getRequest().getHelpSeeker(),
-                request.getVolunteer(),
-                "Help offer was accepted",
-                "Great, the help seeker accepted your help offer.",
-                false,
-                request.getUid()
-        );
-
-        mNotificationsCollection.document(uid).set(notification);
+        createNotification(request, "Help offer was accepted",
+                "Great, the help seeker accepted your help offer.");
 
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
@@ -110,22 +98,10 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
     @Override
     public void onHelpDeclined(int position, PublishedHelpRequest request) {
-
         updateRequestStatus(request.getUid(), Status.Declined);
 
-        String id = mNotificationsCollection.document().getId();
-
-        NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
-                id,
-                request.getRequest().getHelpSeeker(),
-                request.getVolunteer(),
-                "Help offer was rejected",
-                "Unfortunately, the help seeker rejected your help offer.",
-                false,
-                request.getUid()
-        );
-
-        mNotificationsCollection.document(id).set(notification);
+        createNotification(request, "Help offer was rejected",
+                "Unfortunately, the help seeker rejected your help offer.");
 
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
@@ -163,19 +139,9 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                     mPublishedRequestsCollection.document(ds.getId())
                             .update("status", Status.Declined);
 
-                    String uid = mNotificationsCollection.document().getId();
-
-                    NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
-                            uid,
-                            ds.toObject(PublishedHelpRequest.class).getRequest().getHelpSeeker(),
-                            ds.toObject(PublishedHelpRequest.class).getVolunteer(),
+                    createNotification(ds.toObject(PublishedHelpRequest.class),
                             "Help offer was rejected",
-                            "The help seeker chose another help offer.",
-                            false,
-                             ds.toObject(PublishedHelpRequest.class).getUid()
-                    );
-
-                    mNotificationsCollection.document(uid).set(notification);
+                            "The help seeker chose another help offer.");
 
                     mRequests.remove(ds.toObject(PublishedHelpRequest.class));
                     mAdapter.notifyDataSetChanged();
@@ -184,5 +150,21 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         });
     }
 
+    private void createNotification(PublishedHelpRequest helpRequest,
+                                    String notificationTitle, String notificationMessage) {
 
+        String uid = mNotificationsCollection.document().getId();
+
+        NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
+                uid,
+                helpRequest.getRequest().getHelpSeeker(),
+                helpRequest.getVolunteer(),
+                notificationTitle,
+                notificationMessage,
+                false,
+                helpRequest.getUid()
+        );
+
+        mNotificationsCollection.document(uid).set(notification);
+    }
 }
