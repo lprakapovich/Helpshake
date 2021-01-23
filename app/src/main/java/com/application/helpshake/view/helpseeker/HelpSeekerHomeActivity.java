@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,16 +58,20 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     private ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
     private ArrayAdapter<PublishedHelpRequest> mCurrentAdapter;
 
+    private RadioGroup filterButtonsGroup;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setTitle(getString(R.string.open_requests));
+        getCurrentUser();
+
+        getSupportActionBar().setTitle("Have a nice day, " + mCurrentBaseUser.getName() + "!");
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
 
-        getCurrentUser();
+        setFilteringButtons();
 
         mBinding.floatingAddRequestButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -85,6 +92,33 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mSelectedStatus = Status.Open;
 
         fetchRequests();
+    }
+
+    public void setFilteringButtons() {
+
+        filterButtonsGroup = (RadioGroup) findViewById(R.id.filterButtons);
+        filterButtonsGroup.check(R.id.openButton); //initially checked
+
+        filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                switch (rb.getId()) {
+                    case R.id.openButton:
+                        mSelectedStatus = Status.Open;
+                        break;
+                    case R.id.inProgressButton:
+                        mSelectedStatus = Status.InProgress;
+                        break;
+                    case R.id.completedButton:
+                        mSelectedStatus = Status.Completed;
+                        break;
+                }
+                fetchRequests();
+            }
+        });
+
+
     }
 
     public void openPhoneNumInfo() {
@@ -228,36 +262,36 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 ));
                 break;
 
-}
+        }
 
-    fetchRequests();
+        fetchRequests();
         return true;
-                }
+    }
 
-@Override
-public void onMarkFinished(int position,PublishedHelpRequest request){
+    @Override
+    public void onMarkFinished(int position, PublishedHelpRequest request) {
 
         DialogBuilder.showMessageDialog(
-        getSupportFragmentManager(),
-        getString(R.string.request_finished),
-        getString(R.string.request_finished_msg)
+                getSupportFragmentManager(),
+                getString(R.string.request_finished),
+                getString(R.string.request_finished_msg)
         );
 
         request.setStatus(Status.Completed);
         updateRequest(request);
-        }
+    }
 
 
-private void updateRequest(PublishedHelpRequest request){
-        mPublishedRequestsCollection.document(request.getUid()).update("status",request.getStatus());
-        }
+    private void updateRequest(PublishedHelpRequest request) {
+        mPublishedRequestsCollection.document(request.getUid()).update("status", request.getStatus());
+    }
 
-@Override
-public void onContact(int position,PublishedHelpRequest request){
-        Intent intent=new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:"+request.getVolunteer().getPhoneNumber()));
-        if(intent.resolveActivity(getPackageManager())!=null)
-        startActivity(intent);
-        }
+    @Override
+    public void onContact(int position, PublishedHelpRequest request) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + request.getVolunteer().getPhoneNumber()));
+        if (intent.resolveActivity(getPackageManager()) != null)
+            startActivity(intent);
+    }
 
-        }
+}

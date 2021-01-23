@@ -32,7 +32,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class VolunteerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener,
-        DialogInfoRoleUpdate.RoleUpdateListener{
+        DialogInfoRoleUpdate.RoleUpdateListener {
 
     private ActivityVolunteerProfilePageBinding mBinding;
     private DialogSingleResult mDialogResult;
@@ -58,19 +58,12 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mRequestsCollection = mDb.collection("PublishedHelpRequests");
         mNotificationsCollection = mDb.collection("Notifications");
         mUsersCollection = mDb.collection("BaseUsers");
-        mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
+        mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
         setBindings();
     }
 
     private void setBindings() {
         mBinding.setNameAndSurname(mCurrentUser.getFullName());
-
-        mBinding.homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         mBinding.editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,14 +85,6 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
                 openDialogToGetConfirmation();
             }
         });
-        mBinding.homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(VolunteerProfilePage.this, VolunteerHomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
 
         mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
             // TODO: Add logout
@@ -112,7 +97,7 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
     }
 
     private void becomeHelpSeeker() {
-        Query query =mRequestsCollection
+        Query query = mRequestsCollection
                 .whereEqualTo("volunteer.uid", mCurrentUser.getUid())
                 .whereEqualTo("status", Status.InProgress.toString());
 
@@ -168,16 +153,16 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mDb.collection("BaseUsers").document(mCurrentUser.getUid())
                 .update("role", Role.HelpSeeker)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
+                    @Override
+                    public void onSuccess(Void aVoid) {
 
-                mDialogResult = new DialogSingleResult(
-                        "Role updated",
-                        "You're now a help seeker. Login once again to apply all the changes.",
-                        VolunteerProfilePage.this);
-                mDialogResult.show(getSupportFragmentManager(), "tag");
-            }
-        });
+                        mDialogResult = new DialogSingleResult(
+                                "Role updated",
+                                "You're now a help seeker. Login once again to apply all the changes.",
+                                VolunteerProfilePage.this);
+                        mDialogResult.show(getSupportFragmentManager(), "tag");
+                    }
+                });
     }
 
     public void openDialogToGetConfirmation() {
