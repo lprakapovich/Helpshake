@@ -82,14 +82,6 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
                 openDialogToGetConfirmation();
             }
         });
-        mBinding.homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HelpSeekerProfilePage.this, HelpSeekerHomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
 
         mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override

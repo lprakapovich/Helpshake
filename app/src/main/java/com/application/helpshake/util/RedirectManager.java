@@ -1,7 +1,5 @@
 package com.application.helpshake.util;
 
-import android.content.Context;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.application.helpshake.model.enums.Role;
