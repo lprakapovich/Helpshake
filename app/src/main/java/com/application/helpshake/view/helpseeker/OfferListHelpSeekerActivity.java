@@ -39,6 +39,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
     private BaseUser mUser;
     private ArrayList<PublishedHelpRequest> mRequests = new ArrayList<>();
+    private ArrayList<String> mNotifications = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         );
 
         mNotificationsCollection.document(id).set(notification);
+
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
         mAdapter.notifyDataSetInvalidated();
@@ -160,8 +162,27 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
                     mPublishedRequestsCollection.document(ds.getId())
                             .update("status", Status.Declined);
+
+                    String uid = mNotificationsCollection.document().getId();
+
+                    NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
+                            uid,
+                            ds.toObject(PublishedHelpRequest.class).getRequest().getHelpSeeker(),
+                            ds.toObject(PublishedHelpRequest.class).getVolunteer(),
+                            "Help offer was rejected",
+                            "The help seeker chose another help offer.",
+                            false,
+                             ds.toObject(PublishedHelpRequest.class).getUid()
+                    );
+
+                    mNotificationsCollection.document(uid).set(notification);
+
+                    mRequests.remove(ds.toObject(PublishedHelpRequest.class));
+                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
+
+
 }

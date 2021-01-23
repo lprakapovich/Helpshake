@@ -66,7 +66,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
         viewHolder.notificationTitle.setText(notification.getTitle());
         viewHolder.notificationMessage.setText(notification.getMessage());
         viewHolder.fullName.setText(notification.getFrom().getFullName());
-        viewHolder.requestTitle.setText(notification.getTitle());
+        viewHolder.requestTitle.setText("REQUEST TITLE SHOULD BE DISPLAYED");
 
         viewHolder.markAsReadButton.setOnClickListener(new View.OnClickListener() {
             @Override
