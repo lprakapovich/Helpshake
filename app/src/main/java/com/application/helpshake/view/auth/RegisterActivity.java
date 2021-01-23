@@ -99,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity
         ValidationResult result = UserRegistrationValidator.isInputEmpty()
                 .and(UserRegistrationValidator.isEmailValid())
                 .and(UserRegistrationValidator.isPasswordValid())
+                .and(UserRegistrationValidator.isPasswordLengthValid())
                 .apply(new RegistrationDto(
                         mName,
                         mSurname,
