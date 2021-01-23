@@ -58,13 +58,6 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
             viewHolder.requestTitle = convertView.findViewById(R.id.requestTitleById);
             viewHolder.markAsReadButton = convertView.findViewById(R.id.markButton);
 
-            viewHolder.markAsReadButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onMarkAsRead(position, notification);
-                }
-            });
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = ( NotificationsVolunteerAdapter.ViewHolder) convertView.getTag();
@@ -74,6 +67,14 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
         viewHolder.notificationMessage.setText(notification.getMessage());
         viewHolder.fullName.setText(notification.getFrom().getFullName());
         viewHolder.requestTitle.setText(notification.getTitle());
+
+        viewHolder.markAsReadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onMarkAsRead(position, notification);
+            }
+        });
+
         return convertView;
     }
 }

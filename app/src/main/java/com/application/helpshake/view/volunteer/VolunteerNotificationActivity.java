@@ -78,6 +78,7 @@ public class VolunteerNotificationActivity extends AppCompatActivity
         mAdapter.notifyDataSetChanged();
 
         deleteMarkedAsReadNotification(notification.getUid());
+        
         if (notification.getTitle().equals("Help offer was rejected")) {
             deleteRelatedDeclinedRequests(notification.getNotificationRequestId());
         }
