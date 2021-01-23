@@ -113,65 +113,10 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
                 if (mLocationService.checkLocationServices()) {
                     startLocationService();
                 }
-//                if (checkMapServices()) {
-//                    startLocationService();
-//                }
-
-//                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(
-//                            EditProfileHelpSeekerActivity.this,
-//                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-//                            REQUEST_CODE_LOCATION_PERMISSION
-//                    );
-//                } else {
-//                    getCurrentLocation();
-//                }
             }
         });
     }
 
-//    private void getCurrentLocation() {
-//        LocationRequest locationRequest = new LocationRequest();
-//        locationRequest.setInterval(1000);
-//        locationRequest.setFastestInterval(3000);
-//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//
-//        LocationServices.getFusedLocationProviderClient(EditProfileHelpSeekerActivity.this)
-//                .requestLocationUpdates(locationRequest, new LocationCallback() {
-//                    @SneakyThrows
-//                    @Override
-//                    public void onLocationResult(LocationResult result) {
-//                        LocationServices.getFusedLocationProviderClient(EditProfileHelpSeekerActivity.this)
-//                                .removeLocationUpdates(this);
-//
-//                        if (result != null && result.getLocations().size() > 0) {
-//                            int lastIndex = result.getLocations().size() - 1;
-//
-//                            double lat = result.getLocations().get(lastIndex).getLatitude();
-//                            double lon = result.getLocations().get(lastIndex).getLongitude();
-//
-//                            mBinding.currentLocation.setText(lat + ", " + lon);
-//                            Log.d("LOCATION FETCHED", lat + ", " + lon );
-//                            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-//
-//                        List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
-//
-//                        String address = addresses.get(0).getAddressLine(0);
-//                        String city = addresses.get(0).getLocality();
-//                        String state = addresses.get(0).getAdminArea();
-//                        String country = addresses.get(0).getCountryName();
-//
-//                        Log.d("ADDRESS", address + ", " + city + "," + state + "," + country);
-//                            mBinding.currentLocation.setText(address + ", " + city + "," + state + "," + country);
-//                        }
-//                    }
-//                }, Looper.myLooper());
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
