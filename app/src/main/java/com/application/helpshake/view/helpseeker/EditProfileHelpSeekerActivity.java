@@ -1,12 +1,18 @@
 package com.application.helpshake.view.helpseeker;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +26,10 @@ import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.view.volunteer.EditProfileVolunteerActivity;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -46,28 +55,34 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
     private BaseUser mCurrentUser;
     private String phoneNum;
 
-    ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
+    private ArrayList<PublishedHelpRequest> mPublishedRequests;
+    private Uri imageData;
 
-    Uri imageData;
+    private boolean mLocationPermissionGranted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_edit_helpseeker_profile);
-
         FirebaseFirestore mDb = FirebaseFirestore.getInstance();
         mUsersCollection = mDb.collection("BaseUsers");
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
         mBinding.nameHelpSeeker.setText(mCurrentUser.getFullName());
-        
+
+        mPublishedRequests = new ArrayList<>();
+
+        mLocationPermissionGranted = false;
+
         setImageProfile();
         setPhoneNumber();
         setBindings();
-    }
 
+        checkMapServices();
+
+    }
 
     private void setBindings() {
         mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
@@ -206,5 +221,62 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
                 //Picasso.get().load(uri).into(mBinding.changeButton);
             }
         });
+    }
+
+    private boolean checkMapServices() {
+        return isServiceEnabled() && isMapsEnabled();
+    }
+
+    private boolean isMapsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isServiceEnabled() {
+        Log.d("LOCATION", "isServicesOK: checking google services version");
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(EditProfileHelpSeekerActivity.this);
+
+        if (available == ConnectionResult.SUCCESS) {
+            Log.d("LOCATION", "isServicesOK: Google Play Services is working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Log.d("TAG", "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(EditProfileHelpSeekerActivity.this, available, 1);
+            dialog.show();
+
+        } else {
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, 3);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (checkMapServices()) {
+            if (mLocationPermissionGranted) {
+
+            }
+        }
     }
 }
