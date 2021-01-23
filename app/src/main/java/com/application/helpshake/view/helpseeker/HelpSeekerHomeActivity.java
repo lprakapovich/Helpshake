@@ -8,7 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,12 +30,15 @@ import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.model.request.UserHelpRequest;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.view.auth.LoginActivity;
+import com.application.helpshake.view.volunteer.VolunteerProfilePage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,60 +58,67 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     private ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
     private ArrayAdapter<PublishedHelpRequest> mCurrentAdapter;
 
+    private RadioGroup filterButtonsGroup;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setTitle(getString(R.string.open_requests));
+        getCurrentUser();
+
+        getSupportActionBar().setTitle("Have a nice day, " + mCurrentBaseUser.getName() + "!");
 
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_home);
 
-        getCurrentUser();
+        setFilteringButtons();
 
-        mBinding.newRequestButton.setOnClickListener(
+        mBinding.floatingAddRequestButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!mCurrentBaseUser.getPhoneNumber().equals("")) {
                             openNewRequestDialog();
-                        }
-                        else {
+                        } else {
                             openPhoneNumInfo();
                         }
                     }
                 }
         );
 
-        mBinding.offeredHelpButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(
-                                HelpSeekerHomeActivity.this,
-                                OfferListHelpSeekerActivity.class
-                        ));
-                    }
-                }
-        );
-
-        mBinding.profileViewButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(
-                                HelpSeekerHomeActivity.this,
-                                HelpSeekerProfilePage.class
-                        ));
-                    }
-                }
-        );
 
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
         mSelectedStatus = Status.Open;
 
         fetchRequests();
+    }
+
+    public void setFilteringButtons() {
+
+        filterButtonsGroup = (RadioGroup) findViewById(R.id.filterButtons);
+        filterButtonsGroup.check(R.id.openButton); //initially checked
+
+        filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                switch (rb.getId()) {
+                    case R.id.openButton:
+                        mSelectedStatus = Status.Open;
+                        break;
+                    case R.id.inProgressButton:
+                        mSelectedStatus = Status.InProgress;
+                        break;
+                    case R.id.completedButton:
+                        mSelectedStatus = Status.Completed;
+                        break;
+                }
+                fetchRequests();
+            }
+        });
+
+
     }
 
     public void openPhoneNumInfo() {
@@ -119,7 +130,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     public void getCurrentUser() {
-        mCurrentBaseUser = ((UserClient)(getApplicationContext())).getCurrentUser();
+        mCurrentBaseUser = ((UserClient) (getApplicationContext())).getCurrentUser();
     }
 
     private void fetchRequests() {
@@ -201,9 +212,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(Void aVoid) {
                         DialogBuilder.showMessageDialog(
-                            getSupportFragmentManager(),
-                            getString(R.string.request_published),
-                            getString(R.string.request_published_msg)
+                                getSupportFragmentManager(),
+                                getString(R.string.request_published),
+                                getString(R.string.request_published_msg)
                         );
                     }
                 });
@@ -212,20 +223,16 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_request_filtering, menu);
+        inflater.inflate(R.menu.menu_helpseeker, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.open_request:
                 getSupportActionBar().setTitle(getString(R.string.open_requests));
                 mSelectedStatus = Status.Open;
-                break;
-            case R.id.waiting_for_approval_request:
-                getSupportActionBar().setTitle(getString(R.string.pending_requests));
-                mSelectedStatus = Status.WaitingForApproval;
                 break;
             case R.id.in_progress_request:
                 getSupportActionBar().setTitle(getString(R.string.in_progress_requests));
@@ -235,6 +242,26 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 getSupportActionBar().setTitle(getString(R.string.completed_requests));
                 mSelectedStatus = Status.Completed;
                 break;
+            //----filtering^^^^^-------
+            case R.id.notifications:
+                startActivity(new Intent(
+                        HelpSeekerHomeActivity.this,
+                        OfferListHelpSeekerActivity.class
+                ));
+            case R.id.ratings:
+                break;
+            case R.id.profile:
+                startActivity(new Intent(
+                        HelpSeekerHomeActivity.this,
+                        HelpSeekerProfilePage.class
+                ));
+                break;
+            case R.id.logOut:
+                startActivity(new Intent(HelpSeekerHomeActivity.this,
+                        LoginActivity.class
+                ));
+                break;
+
         }
 
         fetchRequests();

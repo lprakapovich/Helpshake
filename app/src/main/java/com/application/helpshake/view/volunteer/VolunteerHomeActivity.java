@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -18,6 +22,7 @@ import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.dialog.DialogRequestDetails;
+import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,20 +76,48 @@ public class VolunteerHomeActivity extends AppCompatActivity
         initHomeView();
     }
 
-    private void setBindings() {
-        mBinding.profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_helpseeker, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.myRequests:
+                startActivity(new Intent(
+                        VolunteerHomeActivity.this,
+                        CurrentHelpOffersActivity.class
+                ));
+                break;
+            case R.id.notifications:
+                startActivity(new Intent(
+                        VolunteerHomeActivity.this,
+                        VolunteerNotificationActivity.class
+                ));
+            case R.id.ratings:
+                break;
+            case R.id.profile:
                 startActivity(new Intent(
                         VolunteerHomeActivity.this,
                         VolunteerProfilePage.class
                 ));
-            }
-        });
+                break;
+            case R.id.logOut:
+                startActivity(new Intent(VolunteerHomeActivity.this, LoginActivity.class
+                ));
+                break;
+        }
+        return true;
+    }
 
-        mBinding.search.setOnClickListener(new View.OnClickListener() {
+    private void setBindings() {
+
+        mBinding.floatingSetPreferencesButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 startActivity(new Intent(
                         VolunteerHomeActivity.this,
                         SettingsPopUp.class
@@ -92,30 +125,11 @@ public class VolunteerHomeActivity extends AppCompatActivity
             }
         });
 
-        mBinding.notification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(
-                        VolunteerHomeActivity.this,
-                        VolunteerNotificationActivity.class
-                ));
-            }
-        });
 
-        mBinding.myRequests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                startActivity(new Intent(
-                        VolunteerHomeActivity.this,
-                        CurrentHelpOffersActivity.class
-                ));
-            }
-        });
     }
 
     private void getCurrentUser() {
-        mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
+        mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
     }
 
     private void initHomeView() {
@@ -179,7 +193,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
                 }
             }
         }
-        for(PublishedHelpRequest r : requestsToDelete) {
+        for (PublishedHelpRequest r : requestsToDelete) {
             mPublishedOpenRequests.remove(r);
         }
     }

@@ -17,33 +17,6 @@
         app:layout_constraintStart_toStartOf="@+id/nameAndSurnameText"
         tools:context=".view.helpseeker.HelpSeekerProfilePage">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/navbar_shape"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp">
-
-                <Button
-                    android:id="@+id/homeButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/ic_baseline_home_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.bottomnavigation.BottomNavigationView>
-
         <TextView
             android:id="@+id/nameAndSurnameText"
             android:layout_width="wrap_content"
