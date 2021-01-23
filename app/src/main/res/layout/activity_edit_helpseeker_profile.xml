@@ -27,10 +27,29 @@
             app:layout_constraintTop_toBottomOf="@+id/nameHelpSeeker" />
 
 
+        <EditText
+            android:id="@+id/phoneInput2"
+            android:layout_width="230dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:autofillHints=""
+            android:background="@drawable/text_box_shape"
+            android:fontFamily="@font/varela_round"
+            android:hint="@string/phone_number_h"
+            android:inputType="text|phone"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameHelpSeeker" />
+
         <Button
             android:id="@+id/saveButton"
             android:layout_width="152dp"
-            android:layout_height="67dp"
+            android:layout_height="47dp"
             android:layout_marginStart="160dp"
             android:layout_marginLeft="160dp"
             android:layout_marginTop="50dp"
@@ -46,9 +65,34 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phoneInput" />
+            app:layout_constraintTop_toBottomOf="@+id/phoneInput"
+            app:layout_constraintVertical_bias="0.885" />
+
+        <Button
+            android:id="@+id/fetchLocation"
+            android:layout_width="152dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="160dp"
+            android:layout_marginLeft="160dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="160dp"
+            android:layout_marginRight="160dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/varela_round"
+            android:padding="12dp"
+            android:text="Set Location"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.508"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneInput"
+            app:layout_constraintVertical_bias="0.0" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/changeButton"
@@ -83,5 +127,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/changeButton" />
 
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_baseline_location_on_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.819"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.669">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/currentLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Location"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.74">
+
+        </TextView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

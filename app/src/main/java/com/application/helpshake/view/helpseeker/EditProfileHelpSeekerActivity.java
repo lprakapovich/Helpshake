@@ -1,20 +1,21 @@
 package com.application.helpshake.view.helpseeker;
 
-import android.content.ActivityNotFoundException;
+import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditHelpseekerProfileBinding;
-import com.application.helpshake.model.enums.Status;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
@@ -31,13 +32,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
-import static com.application.helpshake.Constants.REQUEST_IMAGE_CAPTURE;
+import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
 public class EditProfileHelpSeekerActivity extends AppCompatActivity {
 
@@ -63,7 +62,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
 
         mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
         mBinding.nameHelpSeeker.setText(mCurrentUser.getFullName());
-
+        
         setImageProfile();
         setPhoneNumber();
         setBindings();
@@ -90,6 +89,32 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
                 }
             }
         });
+        
+        mBinding.fetchLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkLocationPermissions();
+            }
+        });
+    }
+
+    private void checkLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d("LOCATION", "permissions not granted");
+
+            ActivityCompat.requestPermissions(
+                    EditProfileHelpSeekerActivity.this,
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_LOCATION_PERMISSION
+            );
+        } else {
+            getCurrentLocation();
+        }
+    }
+
+    private void getCurrentLocation() {
+        Log.d("LOCATION", "started fetching a location");
     }
 
     @Override
