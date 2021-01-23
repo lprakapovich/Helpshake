@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.application.helpshake.Constants;
 import com.application.helpshake.model.dto.RegistrationDto;
 import com.application.helpshake.validator.UserRegistrationValidator.ValidationResult;
 
@@ -17,6 +18,7 @@ import static com.application.helpshake.validator.UserRegistrationValidator.Vali
 import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.INVALID_EMAIL;
 import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.PASSWORDS_NOT_MATCH;
 import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.SUCCESS;
+import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.TOO_SHORT_PASSWORD;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public interface UserRegistrationValidator extends Function<RegistrationDto, ValidationResult> {
@@ -42,6 +44,11 @@ public interface UserRegistrationValidator extends Function<RegistrationDto, Val
                 ) ? EMPTY_INPUT : SUCCESS;
     }
 
+    static UserRegistrationValidator isPasswordLengthValid() {
+        return registrationData -> registrationData.getPassword().length() >= Constants.PASSWORD_MIN_LENGTH
+                ? SUCCESS : TOO_SHORT_PASSWORD;
+    }
+
     default UserRegistrationValidator and (UserRegistrationValidator other) {
         return registrationData -> {
             ValidationResult result = this.apply(registrationData);
@@ -54,6 +61,7 @@ public interface UserRegistrationValidator extends Function<RegistrationDto, Val
         EMPTY_INPUT,
         INVALID_NAME,
         INVALID_EMAIL,
-        PASSWORDS_NOT_MATCH
+        PASSWORDS_NOT_MATCH,
+        TOO_SHORT_PASSWORD
     }
 }

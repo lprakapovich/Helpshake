@@ -126,6 +126,10 @@ public class RegisterActivity extends AppCompatActivity
                         "Invalid passwords",
                         "Passwords don't match.");
                 break;
+            case TOO_SHORT_PASSWORD:
+                DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                        "Too short password",
+                        "For the sake of safety, password must be at least 6 characters long.");
         }
     }
 
