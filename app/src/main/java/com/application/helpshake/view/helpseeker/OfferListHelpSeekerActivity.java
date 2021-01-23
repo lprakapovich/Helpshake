@@ -75,15 +75,15 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onHelpAccepted(int position, final PublishedHelpRequest request) {
-        mRequests.remove(position);
-        mAdapter.notifyDataSetChanged();
-
+    public void onHelpAccepted(int position, PublishedHelpRequest request) {
         updateRequestStatus(request.getUid(), Status.InProgress);
 
         String id = request.getRequest().getUid();
         deleteCorrespondingOpenRequest(id);
         declineOtherOffers(id);
+        mRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetInvalidated();
     }
 
     private void deleteCorrespondingOpenRequest(String id) {
@@ -92,9 +92,8 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onHelpDeclined(int position, final PublishedHelpRequest request) {
-        mRequests.remove(position);
-        mAdapter.notifyDataSetChanged();
+    public void onHelpDeclined(int position, PublishedHelpRequest request) {
+
         updateRequestStatus(request.getUid(), Status.Declined);
 
         String id = mNotificationsCollection.document().getId();
@@ -110,6 +109,9 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         );
 
         mNotificationsCollection.document(id).set(notification);
+        mRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetInvalidated();
     }
 
     private void updateRequestStatus(String id, Status status) {
