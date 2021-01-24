@@ -1,8 +1,6 @@
 package com.application.helpshake.view.volunteer;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,8 +22,12 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.Constants;
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.OpenRequestAdapterVolunteer;
+import com.application.helpshake.adapter.volunteer.OpenRequestAdapterVolunteer.OpenRequestAdapterListener;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
 import com.application.helpshake.dialog.DialogRequestDetails;
+import com.application.helpshake.dialog.DialogRequestDetails.RequestSubmittedListener;
+import com.application.helpshake.dialog.DialogSingleResult;
+import com.application.helpshake.dialog.DialogSingleResult.DialogResultListener;
 import com.application.helpshake.model.enums.Status;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.Address;
@@ -34,16 +35,14 @@ import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.ParsedAddress;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.service.GeoFireService;
+import com.application.helpshake.service.GeoFireService.GeoFireListener;
 import com.application.helpshake.service.LocationService;
 import com.application.helpshake.service.LocationService.LocationServiceListener;
+import com.application.helpshake.service.MapService;
 import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
-import com.application.helpshake.util.DistanceEstimator;
 import com.application.helpshake.view.auth.LoginActivity;
-import com.application.helpshake.view.helpseeker.EditProfileHelpSeekerActivity;
 import com.application.helpshake.view.others.SettingsPopUp;
-import com.application.helpshake.adapter.volunteer.OpenRequestAdapterVolunteer.OpenRequestAdapterListener;
-import com.application.helpshake.dialog.DialogRequestDetails.RequestSubmittedListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +53,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.application.helpshake.service.GeoFireService.GeoFireListener;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -69,7 +67,8 @@ import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSI
 public class VolunteerHomeActivity extends AppCompatActivity implements RequestSubmittedListener,
         OpenRequestAdapterListener,
         LocationServiceListener,
-        GeoFireListener {
+        GeoFireListener,
+        DialogResultListener{
 
     private FirebaseAuth mAuth;
     private FirebaseUser mFirebaseUser;
@@ -95,6 +94,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private LocationService mLocationService;
     private boolean mLocationAccessDenied;
 
+    private DialogSingleResult mDialogResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,12 +191,10 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     }
 
     private void fetchHelpSeekerRequests(ArrayList<String> categories) {
-
         Query query = mPublishedRequestsCollection
                 .whereEqualTo("status", Status.Open.toString())
                 .whereEqualTo("volunteer", null)
                 .whereArrayContainsAny("request.helpRequest.categoryList", categories);
-                //.whereIn("request.uid", mFetchedIds);
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -303,12 +301,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         mPublishedRequest = request;
         mDialog = new DialogRequestDetails(request);
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
-
-        String requestId = request.getUid();
-        mGeoFireService.getAssociatedGeoPoint(requestId);
-        Log.d("ASSOCIATED GEPOINT",
-                mGeoFireService.getAssociatedGeoPoint(requestId).getLatitude()
-                        + ", " + mGeoFireService.getAssociatedGeoPoint(requestId).getLongitude());
     }
 
 
@@ -324,7 +316,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
 
     private void setActiveCategories() {
-        activeCategories = new ArrayList<String>(Arrays.asList(sharedPref.getString("cDog", "Do"),
+        activeCategories = new ArrayList<>(Arrays.asList(sharedPref.getString("cDog", "Do"),
                 sharedPref.getString("cDrug", "Dr"), sharedPref.getString("cGrocery", "Gr"),
                 sharedPref.getString("cOther", "Ot")));
         for (String s : activeCategories) {
@@ -336,6 +328,8 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     @Override
     protected void onResume() {
         super.onResume();
+        mPublishedOpenRequests.clear();
+
         if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
             startLocationService();
         }
@@ -380,17 +374,11 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     @Override
     public void onGpsDisabled() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
+        mDialogResult = new DialogSingleResult(
+                "Gps required",
+                "This application requires GPS to work properly, do you want to enable it?",
+                VolunteerHomeActivity.this);
+        mDialogResult.show(getSupportFragmentManager(), "tag");
     }
 
     @Override
@@ -398,8 +386,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
-        Log.d("LOCATION", address.getAddress());
-
         mGeoFireService.getGeoFireStoreKeysWithinRange(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()), Constants.DEFAULT_SEARCH_RADIUS);
     }
 
@@ -408,13 +394,24 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         mFetchedIds = Lists.newArrayList(keys.keySet());
         fetchHelpSeekerRequests(activeCategories);
 
-        for (String key: mFetchedIds) {
-            Log.d("KEY", key);
-        }
+//        for (String key: mFetchedIds) {
+//            Log.d("KEY", key);
+//        }
+//        GeoPoint me = new GeoPoint(mCurrentUser.getAddress().getLatitude(), mCurrentUser.getAddress().getLongitude());
+//        for (GeoPoint geoPoint : keys.values()) {
+//            Log.d("DISTANCE BETWEEN", DistanceEstimator.distanceBetween(me, geoPoint) + ".");
+//        }
+    }
 
-        GeoPoint me = new GeoPoint(mCurrentUser.getAddress().getLatitude(), mCurrentUser.getAddress().getLongitude());
-        for (GeoPoint geoPoint : keys.values()) {
-            Log.d("DISTANCE BETWEEN", DistanceEstimator.distanceBetween(me, geoPoint) + ".");
-        }
+    public void onShowOnMapClicked(PublishedHelpRequest request) {
+        GeoPoint geoPoint = mGeoFireService.getAssociatedGeoPoint(request.getUid());
+        Log.d("ASSOCIATED GEPOINT", geoPoint.getLatitude() + ", " + geoPoint.getLongitude());
+        MapService.showOnGoogleMap(geoPoint, this);
+    }
+
+    @Override
+    public void onResult() {
+        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
     }
 }
