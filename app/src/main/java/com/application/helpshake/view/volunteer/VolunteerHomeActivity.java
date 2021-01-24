@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -251,8 +252,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 //        mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                request = mHelpRequests.get(position);
-//                openRequestDialog(mHelpRequests.get(position));
+//
 //            }
 //        });
     }
@@ -303,6 +303,12 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         mPublishedRequest = request;
         mDialog = new DialogRequestDetails(request);
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
+
+        String requestId = request.getUid();
+        mGeoFireService.getAssociatedGeoPoint(requestId);
+        Log.d("ASSOCIATED GEPOINT",
+                mGeoFireService.getAssociatedGeoPoint(requestId).getLatitude()
+                        + ", " + mGeoFireService.getAssociatedGeoPoint(requestId).getLongitude());
     }
 
 

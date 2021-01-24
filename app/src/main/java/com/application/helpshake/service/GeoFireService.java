@@ -10,9 +10,7 @@ import com.google.firebase.firestore.GeoPoint;
 import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class GeoFireService {
 
@@ -22,7 +20,6 @@ public class GeoFireService {
 
     private GeoFireListener mListener;
     private GeoFirestore mGeoFireStore;
-    private List<String> mGeoFireKeys;
     private HashMap<String, GeoPoint> mKeyGeoPoints;
 
     public GeoFireService(Context context) {
@@ -30,7 +27,6 @@ public class GeoFireService {
         CollectionReference mGeoFireStoreReference = mDb.collection("GeoFireStores");
         mGeoFireStore = new GeoFirestore(mGeoFireStoreReference);
         mKeyGeoPoints = new HashMap<>();
-        //mGeoFireKeys = new ArrayList<>();
         mListener = (GeoFireListener) context;
     }
 
@@ -39,7 +35,6 @@ public class GeoFireService {
                 .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoPoint geoPoint) {
-                        //mGeoFireKeys.add(key);
                         mKeyGeoPoints.put(key, geoPoint);
                     }
                     @Override
@@ -65,5 +60,9 @@ public class GeoFireService {
 
     public void addGeoStore(String id, double latitude, double longitude) {
         mGeoFireStore.setLocation(id, new GeoPoint(latitude, longitude));
+    }
+
+    public GeoPoint getAssociatedGeoPoint(String requestId) {
+        return mKeyGeoPoints.get(requestId);
     }
 }
