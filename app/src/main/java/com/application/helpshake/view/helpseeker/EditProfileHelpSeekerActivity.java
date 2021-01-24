@@ -1,8 +1,5 @@
 package com.application.helpshake.view.helpseeker;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,12 +8,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditHelpseekerProfileBinding;
+import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.Address;
 import com.application.helpshake.model.user.BaseUser;
@@ -38,14 +34,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.application.helpshake.service.LocationService.LocationServiceListener;
+import com.application.helpshake.dialog.DialogSingleResult.DialogResultListener;
 
 import java.util.ArrayList;
 
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
-import static com.application.helpshake.Constants.REQUEST_CODE_GPS_ENABLED;
 import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
-public class EditProfileHelpSeekerActivity extends AppCompatActivity implements LocationService.LocationServiceListener {
+public class EditProfileHelpSeekerActivity extends AppCompatActivity implements LocationServiceListener, DialogResultListener {
 
     private ActivityEditHelpseekerProfileBinding mBinding;
     private CollectionReference mUsersCollection;
@@ -220,16 +217,16 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
     }
 
     private void startLocationService() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    EditProfileHelpSeekerActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_CODE_LOCATION_PERMISSION
-            );
+        if (permissionNotGranted()) {
+            LocationService.requestPermissions(this);
         } else {
             mLocationService.startLocationService();
         }
     }
+
+    private boolean permissionNotGranted() {
+        return !LocationService.permissionGranted(this);
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -249,17 +246,11 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
 
     @Override
     public void onGpsDisabled() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
+        DialogSingleResult mDialogResult = new DialogSingleResult(
+                "No GPS detected",
+                "This application requires GPS to work properly, do you want to enable it?",
+                EditProfileHelpSeekerActivity.this);
+        mDialogResult.show(getSupportFragmentManager(), "tag");
     }
 
     @Override
@@ -268,5 +259,10 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
         ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         mBinding.currentLocation.setText(address.getCountry() + "," + address.getCity() +  "," + address.getState() + ", full address: "+ address.getAddress());
+    }
+
+    @Override
+    public void onResult() {
+        LocationService.openGpsSettings(this);
     }
 }

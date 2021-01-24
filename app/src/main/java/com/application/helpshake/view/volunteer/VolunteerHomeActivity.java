@@ -1,6 +1,5 @@
 package com.application.helpshake.view.volunteer;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,8 +14,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.Constants;
@@ -61,7 +58,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.application.helpshake.Constants.REQUEST_CODE_GPS_ENABLED;
 import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
 public class VolunteerHomeActivity extends AppCompatActivity implements RequestSubmittedListener,
@@ -70,16 +66,12 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         GeoFireListener,
         DialogResultListener{
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mFirebaseUser;
-    private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
 
     private ActivityVolunteerHomeBinding mBinding;
     private DialogRequestDetails mDialog;
 
     private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
 
     private ArrayList<String> activeCategories;
     private List<String> mFetchedIds;
@@ -94,8 +86,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private LocationService mLocationService;
     private boolean mLocationAccessDenied;
 
-    private DialogSingleResult mDialogResult;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,9 +93,9 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_volunteer_home);
 
-        mDb = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mAuth.getCurrentUser();
+        FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser mFirebaseUser = mAuth.getCurrentUser();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
         mGeoFireService = new GeoFireService(this);
@@ -115,12 +105,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         setBindings();
         getCurrentUser();
         initHomeView();
-        fetchGeoFires(Constants.DEFAULT_SEARCH_RADIUS);
-    }
-
-    private void fetchGeoFires(float radius) {
-       // Address address = new Address()
-       // mGeoFireService.getGeoFireStoreKeysWithinRange(radius);
     }
 
     @Override
@@ -306,7 +290,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     private void setSharedPreferences() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        editor = sharedPref.edit();
+        SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("cDog", "DogWalking");
         editor.putString("cDrug", "Drugstore");
         editor.putString("cOther", "Other");
@@ -328,11 +312,8 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     @Override
     protected void onResume() {
         super.onResume();
-        mPublishedOpenRequests.clear();
+        //mPublishedOpenRequests.clear();
 
-        if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
-            startLocationService();
-        }
         try {
             mAdapter.clear();
             setActiveCategories();
@@ -341,18 +322,31 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         } catch (NullPointerException e) {
             System.out.println("Don't know how to handle it :( But it works :)");
         }
+
+        if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
+            startLocationService();
+        }
     }
 
     private void startLocationService() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    VolunteerHomeActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_CODE_LOCATION_PERMISSION
-            );
+        if (permissionNotGranted()) {
+           LocationService.requestPermissions(this);
         } else {
             mLocationService.startLocationService();
         }
+    }
+
+    private boolean permissionNotGranted() {
+        return !LocationService.permissionGranted(this);
+    };
+
+    private void requestPermissions() {
+//        ActivityCompat.requestPermissions(
+//                VolunteerHomeActivity.this,
+//                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION},
+//                REQUEST_CODE_LOCATION_PERMISSION
+//        );
     }
 
     @Override
@@ -374,8 +368,8 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     @Override
     public void onGpsDisabled() {
-        mDialogResult = new DialogSingleResult(
-                "Gps required",
+        DialogSingleResult mDialogResult = new DialogSingleResult(
+                "No GPS detected",
                 "This application requires GPS to work properly, do you want to enable it?",
                 VolunteerHomeActivity.this);
         mDialogResult.show(getSupportFragmentManager(), "tag");
@@ -411,7 +405,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     @Override
     public void onResult() {
-        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
+        LocationService.openGpsSettings(this);
     }
 }

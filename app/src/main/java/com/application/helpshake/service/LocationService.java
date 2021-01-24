@@ -4,14 +4,17 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.application.helpshake.Constants;
+import com.application.helpshake.view.volunteer.VolunteerHomeActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -21,6 +24,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.GeoPoint;
 
 import lombok.SneakyThrows;
+
+import static com.application.helpshake.Constants.REQUEST_CODE_GPS_ENABLED;
+import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
 public class LocationService {
 
@@ -98,5 +104,21 @@ public class LocationService {
                         }
                     }
                 }, Looper.myLooper());
+    }
+
+    public static void openGpsSettings(Activity activity) {
+        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        activity.startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
+    }
+
+    public static boolean permissionGranted(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void requestPermissions(Activity activity) {
+        ActivityCompat.requestPermissions(
+                activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                REQUEST_CODE_LOCATION_PERMISSION
+        );
     }
 }

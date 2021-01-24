@@ -11,4 +11,5 @@ public class RedirectManager  {
     public static Class<? extends AppCompatActivity> redirectTo(BaseUser user) {
         return user.getRole().equals(Role.HelpSeeker) ? HelpSeekerHomeActivity.class : VolunteerHomeActivity.class;
     }
+
 }
