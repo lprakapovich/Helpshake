@@ -79,6 +79,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private SharedPreferences.Editor editor;
 
     private ArrayList<String> activeCategories;
+    private List<String> mFetchedIds;
 
     private BaseUser mCurrentUser;
     private ArrayList<PublishedHelpRequest> mPublishedOpenRequests = new ArrayList<>();
@@ -181,7 +182,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             setSharedPreferences();
             setActiveCategories();
             findWaitingRequestsForUser();
-            fetchHelpSeekerRequests(activeCategories);
+            //fetchHelpSeekerRequests(activeCategories);
         }
     }
 
@@ -191,12 +192,15 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
                 .whereEqualTo("status", Status.Open.toString())
                 .whereEqualTo("volunteer", null)
                 .whereArrayContainsAny("request.helpRequest.categoryList", categories);
+                //.whereIn("request.uid", mFetchedIds);
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
-                    mPublishedOpenRequests.add(ds.toObject(PublishedHelpRequest.class));
+                    if (mFetchedIds.contains(ds.getId())) {
+                        mPublishedOpenRequests.add(ds.toObject(PublishedHelpRequest.class));
+                    }
                 }
                 deleteRequestsIfHelpOfferWasSend();
                 initializeListAdapter();
@@ -392,9 +396,11 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     @Override
     public void onKeysReceived(List<String> keys) {
+        mFetchedIds = keys;
+        fetchHelpSeekerRequests(activeCategories);
+
         for (String key: keys) {
             Log.d("KEY", key);
         }
-        //Toast.makeText(getApplicationContext(), keys.size(), Toast.LENGTH_LONG).show();
     }
 }

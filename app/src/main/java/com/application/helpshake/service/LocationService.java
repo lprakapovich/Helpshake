@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import com.application.helpshake.Constants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -71,8 +72,8 @@ public class LocationService {
 
     private void getCurrentLocation() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(30000);
+        locationRequest.setInterval(Constants.LOCATION_INITIAL_INTERVAL);
+        locationRequest.setFastestInterval(Constants.LOCATION_FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED

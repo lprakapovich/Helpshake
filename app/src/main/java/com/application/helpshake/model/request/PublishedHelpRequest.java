@@ -1,6 +1,7 @@
 package com.application.helpshake.model.request;
 
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.user.Address;
 import com.application.helpshake.model.user.BaseUser;
 
 import lombok.AllArgsConstructor;
