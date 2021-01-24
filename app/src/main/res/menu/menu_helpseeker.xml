@@ -19,7 +19,7 @@
             <item
                 android:id="@+id/notifications"
                 android:icon="@drawable/settings"
-                android:title="Waiting"
+                android:title="Notifications"
                 android:fontFamily="@font/varela_round"
                 app:showAsAction="always" />
             <item
