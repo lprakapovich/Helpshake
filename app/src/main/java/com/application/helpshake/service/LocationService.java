@@ -71,8 +71,8 @@ public class LocationService {
 
     private void getCurrentLocation() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(3000);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(30000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -93,13 +93,6 @@ public class LocationService {
                             double lat = result.getLocations().get(lastIndex).getLatitude();
                             double lon = result.getLocations().get(lastIndex).getLongitude();
                             GeoPoint geoPoint = new GeoPoint(lat, lon);
-//                            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-//                            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
-//                            String address = addresses.get(0).getAddressLine(0);
-//                            String city = addresses.get(0).getLocality();
-//                            String state = addresses.get(0).getAdminArea();
-//                            String country = addresses.get(0).getCountryName();
-
                             listener.onLocationFetched(geoPoint);
                         }
                     }

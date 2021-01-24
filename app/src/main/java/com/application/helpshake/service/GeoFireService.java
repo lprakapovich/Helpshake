@@ -31,8 +31,8 @@ public class GeoFireService {
         mListener = (GeoFireListener) context;
     }
 
-    public void getGeoFireStoreKeysWithinRange(Address address, Double radius) {
-        mGeoFireStore.queryAtLocation(new GeoPoint(address.getLatitude(), address.getLongitude()), 20)
+    public void getGeoFireStoreKeysWithinRange(Address address, float radius) {
+        mGeoFireStore.queryAtLocation(new GeoPoint(address.getLatitude(), address.getLongitude()), radius)
                 .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoPoint geoPoint) {

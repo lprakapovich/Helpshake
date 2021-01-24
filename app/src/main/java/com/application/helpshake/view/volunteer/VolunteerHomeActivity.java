@@ -1,65 +1,95 @@
 package com.application.helpshake.view.volunteer;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.application.helpshake.Constants;
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.OpenRequestAdapterVolunteer;
 import com.application.helpshake.databinding.ActivityVolunteerHomeBinding;
-import com.application.helpshake.util.DialogBuilder;
-import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.user.BaseUser;
-import com.application.helpshake.model.request.PublishedHelpRequest;
-import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.dialog.DialogRequestDetails;
+import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.Address;
+import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.user.ParsedAddress;
+import com.application.helpshake.model.user.UserClient;
+import com.application.helpshake.service.GeoFireService;
+import com.application.helpshake.service.LocationService;
+import com.application.helpshake.service.LocationService.LocationServiceListener;
+import com.application.helpshake.util.AddressParser;
+import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
+import com.application.helpshake.view.helpseeker.EditProfileHelpSeekerActivity;
 import com.application.helpshake.view.others.SettingsPopUp;
+import com.application.helpshake.adapter.volunteer.OpenRequestAdapterVolunteer.OpenRequestAdapterListener;
+import com.application.helpshake.dialog.DialogRequestDetails.RequestSubmittedListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.application.helpshake.service.GeoFireService.GeoFireListener;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class VolunteerHomeActivity extends AppCompatActivity
-        implements DialogRequestDetails.RequestSubmittedListener,
-        OpenRequestAdapterVolunteer.OpenRequestAdapterListener {
+import static com.application.helpshake.Constants.REQUEST_CODE_GPS_ENABLED;
+import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
-    FirebaseAuth mAuth;
-    FirebaseUser mFirebaseUser;
-    FirebaseFirestore mDb;
-    CollectionReference mPublishedRequestsCollection;
+public class VolunteerHomeActivity extends AppCompatActivity implements RequestSubmittedListener,
+        OpenRequestAdapterListener,
+        LocationServiceListener,
+        GeoFireListener {
 
-    ActivityVolunteerHomeBinding mBinding;
-    DialogRequestDetails mDialog;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mFirebaseUser;
+    private FirebaseFirestore mDb;
+    private CollectionReference mPublishedRequestsCollection;
 
-    SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
+    private ActivityVolunteerHomeBinding mBinding;
+    private DialogRequestDetails mDialog;
 
-    ArrayList<String> activeCategories;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
-    BaseUser mCurrentUser;
-    ArrayList<PublishedHelpRequest> mPublishedOpenRequests = new ArrayList<>();
-    ArrayList<PublishedHelpRequest> mPublishedWaitingRequests = new ArrayList<>();
-    PublishedHelpRequest mPublishedRequest;
-    OpenRequestAdapterVolunteer mAdapter;
+    private ArrayList<String> activeCategories;
+
+    private BaseUser mCurrentUser;
+    private ArrayList<PublishedHelpRequest> mPublishedOpenRequests = new ArrayList<>();
+    private ArrayList<PublishedHelpRequest> mPublishedWaitingRequests = new ArrayList<>();
+    private PublishedHelpRequest mPublishedRequest;
+    private OpenRequestAdapterVolunteer mAdapter;
+
+    private GeoFireService mGeoFireService;
+    private LocationService mLocationService;
+    private boolean mLocationAccessDenied;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +103,19 @@ public class VolunteerHomeActivity extends AppCompatActivity
         mFirebaseUser = mAuth.getCurrentUser();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
+        mGeoFireService = new GeoFireService(this);
+        mLocationService = new LocationService(VolunteerHomeActivity.this, this);
+        mLocationAccessDenied = false;
+
         setBindings();
         getCurrentUser();
         initHomeView();
+        fetchGeoFires(Constants.DEFAULT_SEARCH_RADIUS);
+    }
+
+    private void fetchGeoFires(float radius) {
+       // Address address = new Address()
+       // mGeoFireService.getGeoFireStoreKeysWithinRange(radius);
     }
 
     @Override
@@ -126,8 +166,6 @@ public class VolunteerHomeActivity extends AppCompatActivity
                 ));
             }
         });
-
-
     }
 
     private void getCurrentUser() {
@@ -160,9 +198,7 @@ public class VolunteerHomeActivity extends AppCompatActivity
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
                     mPublishedOpenRequests.add(ds.toObject(PublishedHelpRequest.class));
                 }
-
                 deleteRequestsIfHelpOfferWasSend();
-
                 initializeListAdapter();
             }
         });
@@ -287,6 +323,9 @@ public class VolunteerHomeActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
+            startLocationService();
+        }
         try {
             mAdapter.clear();
             setActiveCategories();
@@ -295,5 +334,67 @@ public class VolunteerHomeActivity extends AppCompatActivity
         } catch (NullPointerException e) {
             System.out.println("Don't know how to handle it :( But it works :)");
         }
+    }
+
+    private void startLocationService() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    VolunteerHomeActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_CODE_LOCATION_PERMISSION
+            );
+        } else {
+            mLocationService.startLocationService();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationService.startLocationService();
+            } else {
+                mLocationAccessDenied = true;
+                DialogBuilder.showMessageDialog(
+                        getSupportFragmentManager(),
+                        "Location access is denied",
+                        "We can't adjust the searching engine without your location. Please, enable in manually in the phone settings."
+                );
+            }
+        }
+    }
+
+    @Override
+    public void onGpsDisabled() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, REQUEST_CODE_GPS_ENABLED);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void onLocationFetched(GeoPoint geoPoint) {
+        ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
+        ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
+        Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
+        Log.d("LOCATION", address.getAddress());
+
+        mGeoFireService.getGeoFireStoreKeysWithinRange(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()), Constants.DEFAULT_SEARCH_RADIUS);
+    }
+
+    @Override
+    public void onKeysReceived(List<String> keys) {
+        for (String key: keys) {
+            Log.d("KEY", key);
+        }
+        //Toast.makeText(getApplicationContext(), keys.size(), Toast.LENGTH_LONG).show();
     }
 }

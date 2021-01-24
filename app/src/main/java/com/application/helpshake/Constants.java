@@ -8,5 +8,5 @@ public class Constants {
     public static final int PASSWORD_MIN_LENGTH = 6;
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 3;
     public static final int REQUEST_CODE_GPS_ENABLED = 4;
-
+    public static final float DEFAULT_SEARCH_RADIUS = 20;
 }

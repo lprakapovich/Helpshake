@@ -83,12 +83,11 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         mSelectedStatus = Status.Open;
         mGeoFireService = new GeoFireService(this);
 
-        //fetchGeoFireStores();
         fetchRequests();
     }
 
     private void fetchGeoFireStores() {
-        mGeoFireService.getGeoFireStoreKeysWithinRange(mCurrentBaseUser.getAddress(), 20d);
+        mGeoFireService.getGeoFireStoreKeysWithinRange(mCurrentBaseUser.getAddress(), 20);
     }
 
     private void setBindings() {
