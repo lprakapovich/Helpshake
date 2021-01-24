@@ -3,101 +3,102 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="170dp"
+    android:layout_marginHorizontal="4dp"
     android:background="@drawable/request_list_item"
-    android:maxHeight="160dp">
+    android:maxHeight="180dp">
+
 
     <TextView
-        android:id="@+id/categories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="@string/categories"
+        android:id="@+id/commentTextOpen"
+        android:layout_width="338dp"
+        android:layout_height="36dp"
+        android:fontFamily="@font/varela_round"
+        android:text="Your comment: ........."
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.559"
+        app:layout_constraintHorizontal_bias="0.656"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.61" />
+        app:layout_constraintVertical_bias="0.88" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <CheckBox
+            android:id="@+id/other"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/checkbox_others"
+            android:button="@null"
+            app:layout_constraintStart_toEndOf="@+id/drugstore"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/dogwalking"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/checkbox_dog"
+            android:button="@null"
+            app:layout_constraintStart_toEndOf="@+id/grocery"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/drugstore"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/checkbox_drugstore"
+            android:button="@null"
+            app:layout_constraintStart_toEndOf="@+id/dogwalking"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/grocery"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/checkbox_groceries"
+            android:button="@null"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/status_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="2dp"
+        android:layout_height="2dp"
         android:layout_marginStart="56dp"
         android:layout_marginLeft="56dp"
-        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/categories"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.681" />
-
-    <Button
-        android:id="@+id/details_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
-        android:background="@android:color/transparent"
-        android:text="Details"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.656" />
-
-    <Button
-        android:id="@+id/contactButton"
-        android:layout_width="121dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="40dp"
-        android:text="@string/contact"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/finishButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/categories" />
-
-    <Button
-        android:id="@+id/finishButton"
-        android:layout_width="148dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_marginBottom="40dp"
-        android:text="@string/mark_as_finished"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/contactButton"
-        app:layout_constraintTop_toBottomOf="@+id/details_button" />
+        app:layout_constraintVertical_bias="0.727" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginBottom="27dp"
-        android:text="Title"
-        app:layout_constraintBottom_toTopOf="@+id/status_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.182"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/varela_round"
+        android:text="Request title"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.076" />
-    app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

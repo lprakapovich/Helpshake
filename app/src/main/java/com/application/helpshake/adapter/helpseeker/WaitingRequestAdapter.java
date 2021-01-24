@@ -1,5 +1,6 @@
 package com.application.helpshake.adapter.helpseeker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         mListener = (OfferListAdapterListener) context;
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
@@ -57,9 +59,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_waiting_request, parent, false);
             viewHolder.fullName =  convertView.findViewById(R.id.nameAndSurnameText);
-            viewHolder.distance = convertView.findViewById(R.id.distanceText);
-            viewHolder.infoText =  convertView.findViewById(R.id.informationText);
-            viewHolder.mapPoint = convertView.findViewById(R.id.mapPoint);
+            viewHolder.infoText =  convertView.findViewById(R.id.commentText);
             viewHolder.acceptButton = convertView.findViewById(R.id.acceptBtn);
             viewHolder.rejectButton = convertView.findViewById(R.id.rejectBtn);
             viewHolder.title = convertView.findViewById(R.id.requestTitle);
@@ -83,7 +83,8 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         }
 
          viewHolder.fullName.setText(request.getVolunteer().getFullName());
-         viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
+         viewHolder.title.setText("Request: " + request.getRequest().getHelpRequest().getTitle());
+         viewHolder.infoText.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
 
         return convertView;
     }

@@ -1,82 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="270dp">
+    android:layout_height="250dp"
+    android:layout_marginHorizontal="4dp"
+    android:background="@drawable/request_list_item">
 
-    <Button
-        android:id="@+id/rejectBtn"
-        android:layout_width="114dp"
-        android:layout_height="38dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/reject"
-        app:layout_constraintBottom_toTopOf="@+id/informationText"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginRight="70dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.69"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/distanceText"
-        app:layout_constraintVertical_bias="0.962" />
+        app:layout_constraintTop_toBottomOf="@+id/commentText">
+
+        <Button
+            android:id="@+id/acceptBtn"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/varela_round"
+            android:padding="4dp"
+            android:text="@string/accept"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/rejectBtn"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/varela_round"
+            android:padding="4dp"
+            android:text="@string/reject"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/nameAndSurnameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/varela_round"
         android:text="@string/name_and_surname"
-        app:layout_constraintBottom_toTopOf="@+id/requestTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.394"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/requestTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/name_and_surname"
-        app:layout_constraintBottom_toTopOf="@+id/distanceText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.394"
+        android:layout_marginStart="37dp"
+        android:layout_marginLeft="37dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/varela_round"
+        android:text="Request title"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.73" />
+        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
 
     <TextView
-        android:id="@+id/distanceText"
-        android:layout_width="82dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="92dp"
-        android:text="@string/distance"
-        app:layout_constraintBottom_toTopOf="@+id/informationText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintStart_toEndOf="@+id/volunteerPhoto" />
-
-    <TextView
-        android:id="@+id/informationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/click_profile_information"
-        android:textSize="18sp"
+        android:id="@+id/commentText"
+        android:layout_width="339dp"
+        android:layout_height="26dp"
+        android:fontFamily="@font/varela_round"
+        android:text="Your comment: ........."
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.265"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.934" />
-
-    <Button
-        android:id="@+id/acceptBtn"
-        android:layout_width="109dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/accept"
-        app:layout_constraintBottom_toTopOf="@+id/informationText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.261"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/volunteerPhoto"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.669" />
 
     <ImageView
         android:id="@+id/volunteerPhoto"
@@ -90,13 +99,4 @@
         app:layout_constraintVertical_bias="0.177"
         app:srcCompat="@drawable/camera" />
 
-    <ImageView
-        android:id="@+id/mapPointImage"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="@+id/volunteerPhoto"
-        app:layout_constraintEnd_toStartOf="@+id/distanceText"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
-        app:srcCompat="@drawable/ic_baseline_location_on_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
