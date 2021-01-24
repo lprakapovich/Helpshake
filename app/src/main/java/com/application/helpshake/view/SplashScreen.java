@@ -74,7 +74,7 @@ public class SplashScreen extends AppCompatActivity {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
                     mCurrentUser = ds.toObject(BaseUser.class);
                     ((UserClient) (getApplicationContext())).setCurrentUser(mCurrentUser);
-                    startActivity(new Intent(SplashScreen.this, RedirectManager.redirectTo(mCurrentUser)));
+                    startActivity(new Intent(SplashScreen.this, RedirectManager.redirectToHome(mCurrentUser)));
                 }
             }
         });

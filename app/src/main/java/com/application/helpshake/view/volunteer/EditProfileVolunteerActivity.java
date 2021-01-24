@@ -1,12 +1,9 @@
 package com.application.helpshake.view.volunteer;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +18,6 @@ import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -117,8 +112,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
     }
 
     // save to Firebase storage
-    private void handleUpload(Uri uri) {
-
+    private void saveToFirebaseStorage(Uri uri) {
         String uid = mCurrentUser.getUid();
         String path = "profileImages/" + uid + ".jpeg";
         final StorageReference reference = FirebaseStorage.getInstance().getReference(path);
@@ -154,7 +148,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                 });
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
-        handleUpload(imageData);
+        saveToFirebaseStorage(imageData);
     }
 
     private void findRequestsToUpdatePhoneNum() {

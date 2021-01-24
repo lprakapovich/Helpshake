@@ -145,7 +145,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     }
 
     private void setBindings() {
-
         mBinding.floatingSetPreferencesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,12 +164,10 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         try {
             setActiveCategories();
             findWaitingRequestsForUser();
-            fetchHelpSeekerRequests(activeCategories);
         } catch (NullPointerException e) {
             setSharedPreferences();
             setActiveCategories();
             findWaitingRequestsForUser();
-            //fetchHelpSeekerRequests(activeCategories);
         }
     }
 
@@ -179,6 +176,8 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
                 .whereEqualTo("status", Status.Open.toString())
                 .whereEqualTo("volunteer", null)
                 .whereArrayContainsAny("request.helpRequest.categoryList", categories);
+
+        mPublishedOpenRequests.clear();
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -298,7 +297,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         editor.apply();
     }
 
-
     private void setActiveCategories() {
         activeCategories = new ArrayList<>(Arrays.asList(sharedPref.getString("cDog", "Do"),
                 sharedPref.getString("cDrug", "Dr"), sharedPref.getString("cGrocery", "Gr"),
@@ -312,7 +310,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     @Override
     protected void onResume() {
         super.onResume();
-        //mPublishedOpenRequests.clear();
 
         try {
             mAdapter.clear();
@@ -339,15 +336,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private boolean permissionNotGranted() {
         return !LocationService.permissionGranted(this);
     };
-
-    private void requestPermissions() {
-//        ActivityCompat.requestPermissions(
-//                VolunteerHomeActivity.this,
-//                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-//                        Manifest.permission.ACCESS_COARSE_LOCATION},
-//                REQUEST_CODE_LOCATION_PERMISSION
-//        );
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -399,7 +387,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     public void onShowOnMapClicked(PublishedHelpRequest request) {
         GeoPoint geoPoint = mGeoFireService.getAssociatedGeoPoint(request.getUid());
-        Log.d("ASSOCIATED GEPOINT", geoPoint.getLatitude() + ", " + geoPoint.getLongitude());
         MapService.showOnGoogleMap(geoPoint, this);
     }
 

@@ -42,7 +42,8 @@ import java.util.ArrayList;
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
 import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
-public class EditProfileHelpSeekerActivity extends AppCompatActivity implements LocationServiceListener, DialogResultListener {
+public class EditProfileHelpSeekerActivity extends AppCompatActivity
+        implements LocationServiceListener, DialogResultListener {
 
     private ActivityEditHelpseekerProfileBinding mBinding;
     private CollectionReference mUsersCollection;
@@ -109,7 +110,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
         });
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -119,9 +119,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
         }
     }
 
-    // save to Firebase storage
-    private void handleUpload(Uri uri) {
-
+    private void saveToFirebaseStorage(Uri uri) {
         String uid = mCurrentUser.getUid();
         String path = "profileImages/" + uid + ".jpeg";
         final StorageReference reference = FirebaseStorage.getInstance().getReference(path);
@@ -159,7 +157,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
 
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
-        handleUpload(imageData);
+        saveToFirebaseStorage(imageData);
     }
 
     private void findRequestsToUpdatePhoneNum() {
@@ -201,9 +199,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
         });
     }
 
-
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -238,7 +233,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity implements 
                 DialogBuilder.showMessageDialog(
                         getSupportFragmentManager(),
                         "Location should be enabled",
-                        "Denied. Please enable in manually in settings"
+                        "Location access is denied. Please enable in manually in the phone settings."
                 );
             }
         }
