@@ -64,19 +64,6 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder.rejectButton = convertView.findViewById(R.id.rejectBtn);
             viewHolder.title = convertView.findViewById(R.id.requestTitle);
 
-            viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onHelpAccepted(position, request);
-                }
-            });
-
-            viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onHelpDeclined(position, request);
-                }
-            });
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (WaitingRequestAdapter.ViewHolder) convertView.getTag();
@@ -84,7 +71,21 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
          viewHolder.fullName.setText(request.getVolunteer().getFullName());
          viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
+         viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onHelpAccepted(position, request);
+            }
+         });
 
+         viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onHelpDeclined(position, request);
+            }
+         });
         return convertView;
     }
+
+
 }

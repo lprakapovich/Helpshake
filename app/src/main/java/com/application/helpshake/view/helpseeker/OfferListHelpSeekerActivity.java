@@ -10,7 +10,7 @@ import com.application.helpshake.R;
 import com.application.helpshake.adapter.helpseeker.WaitingRequestAdapter;
 import com.application.helpshake.databinding.ActivityHelpOffersToAcceptBinding;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.notification.NotificationDeclinedRequest;
+import com.application.helpshake.model.notification.NotificationRequestVolunteer;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
@@ -74,16 +74,21 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         mBinding.list.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onHelpAccepted(int position, final PublishedHelpRequest request) {
-        mRequests.remove(position);
-        mAdapter.notifyDataSetChanged();
 
+    public void onHelpAccepted(int position, PublishedHelpRequest request) {
         updateRequestStatus(request.getUid(), Status.InProgress);
 
         String id = request.getRequest().getUid();
         deleteCorrespondingOpenRequest(id);
         declineOtherOffers(id);
+
+        createNotification(request, "Help offer was accepted",
+                "Great, the help seeker accepted your help offer.");
+
+        mRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetInvalidated();
+
     }
 
     private void deleteCorrespondingOpenRequest(String id) {
@@ -92,24 +97,15 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onHelpDeclined(int position, final PublishedHelpRequest request) {
-        mRequests.remove(position);
-        mAdapter.notifyDataSetChanged();
+    public void onHelpDeclined(int position, PublishedHelpRequest request) {
         updateRequestStatus(request.getUid(), Status.Declined);
 
-        String id = mNotificationsCollection.document().getId();
+        createNotification(request, "Help offer was rejected",
+                "Unfortunately, the help seeker rejected your help offer.");
 
-        NotificationDeclinedRequest notification = new NotificationDeclinedRequest(
-                id,
-                request.getRequest().getHelpSeeker(),
-                request.getVolunteer(),
-                "Help offer was rejected",
-                "Unfortunately, the help seeker rejected your help offer.",
-                false,
-                request.getUid()
-        );
-
-        mNotificationsCollection.document(id).set(notification);
+        mRequests.remove(position);
+        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetInvalidated();
     }
 
     private void updateRequestStatus(String id, Status status) {
@@ -142,8 +138,33 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
                     mPublishedRequestsCollection.document(ds.getId())
                             .update("status", Status.Declined);
+
+                    createNotification(ds.toObject(PublishedHelpRequest.class),
+                            "Help offer was rejected",
+                            "The help seeker chose another help offer.");
+
+                    mRequests.remove(ds.toObject(PublishedHelpRequest.class));
+                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
+    }
+
+    private void createNotification(PublishedHelpRequest helpRequest,
+                                    String notificationTitle, String notificationMessage) {
+
+        String uid = mNotificationsCollection.document().getId();
+
+        NotificationRequestVolunteer notification = new NotificationRequestVolunteer(
+                uid,
+                helpRequest.getRequest().getHelpSeeker(),
+                helpRequest.getVolunteer(),
+                notificationTitle,
+                notificationMessage,
+                false,
+                helpRequest.getUid()
+        );
+
+        mNotificationsCollection.document(uid).set(notification);
     }
 }
