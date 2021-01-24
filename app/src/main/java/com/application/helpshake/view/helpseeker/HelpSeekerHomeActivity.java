@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -43,6 +44,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
@@ -322,7 +324,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onKeysReceived(List<String> keys) {
+    public void onKeysReceived(HashMap<String, GeoPoint> keys) {
         // fetch requests
     }
 }

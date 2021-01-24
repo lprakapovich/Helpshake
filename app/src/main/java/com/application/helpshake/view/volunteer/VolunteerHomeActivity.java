@@ -37,12 +37,14 @@ import com.application.helpshake.service.LocationService;
 import com.application.helpshake.service.LocationService.LocationServiceListener;
 import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.util.DistanceEstimator;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.helpseeker.EditProfileHelpSeekerActivity;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.application.helpshake.adapter.volunteer.OpenRequestAdapterVolunteer.OpenRequestAdapterListener;
 import com.application.helpshake.dialog.DialogRequestDetails.RequestSubmittedListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -57,6 +59,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.application.helpshake.Constants.REQUEST_CODE_GPS_ENABLED;
@@ -395,12 +398,17 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     }
 
     @Override
-    public void onKeysReceived(List<String> keys) {
-        mFetchedIds = keys;
+    public void onKeysReceived(HashMap<String, GeoPoint> keys) {
+        mFetchedIds = Lists.newArrayList(keys.keySet());
         fetchHelpSeekerRequests(activeCategories);
 
-        for (String key: keys) {
+        for (String key: mFetchedIds) {
             Log.d("KEY", key);
+        }
+
+        GeoPoint me = new GeoPoint(mCurrentUser.getAddress().getLatitude(), mCurrentUser.getAddress().getLongitude());
+        for (GeoPoint geoPoint : keys.values()) {
+            Log.d("DISTANCE BETWEEN", DistanceEstimator.distanceBetween(me, geoPoint) + ".");
         }
     }
 }

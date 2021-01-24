@@ -11,23 +11,26 @@ import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GeoFireService {
 
     public interface GeoFireListener {
-        void onKeysReceived(List<String> keys);
+        void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints);
     }
 
     private GeoFireListener mListener;
     private GeoFirestore mGeoFireStore;
     private List<String> mGeoFireKeys;
+    private HashMap<String, GeoPoint> mKeyGeoPoints;
 
     public GeoFireService(Context context) {
         FirebaseFirestore mDb = FirebaseFirestore.getInstance();
         CollectionReference mGeoFireStoreReference = mDb.collection("GeoFireStores");
         mGeoFireStore = new GeoFirestore(mGeoFireStoreReference);
-        mGeoFireKeys = new ArrayList<>();
+        mKeyGeoPoints = new HashMap<>();
+        //mGeoFireKeys = new ArrayList<>();
         mListener = (GeoFireListener) context;
     }
 
@@ -36,7 +39,8 @@ public class GeoFireService {
                 .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoPoint geoPoint) {
-                        mGeoFireKeys.add(key);
+                        //mGeoFireKeys.add(key);
+                        mKeyGeoPoints.put(key, geoPoint);
                     }
                     @Override
                     public void onKeyExited(String key) {
@@ -49,7 +53,7 @@ public class GeoFireService {
 
                     @Override
                     public void onGeoQueryReady() {
-                        mListener.onKeysReceived(mGeoFireKeys);
+                        mListener.onKeysReceived(mKeyGeoPoints);
                     }
 
                     @Override
