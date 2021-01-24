@@ -3,7 +3,6 @@ package com.application.helpshake.view.helpseeker;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,34 +29,29 @@ import com.application.helpshake.model.request.HelpRequest;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.model.request.UserHelpRequest;
+import com.application.helpshake.service.GeoFireService;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
-import com.application.helpshake.view.volunteer.VolunteerProfilePage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.imperiumlabs.geofirestore.GeoFirestore;
-import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.val;
-
 public class HelpSeekerHomeActivity extends AppCompatActivity
         implements DialogNewHelpRequest.NewRequestListener,
-        InProgressRequestAdapter.InProcessRequestListAdapterListener {
+        InProgressRequestAdapter.InProcessRequestListAdapterListener,
+        GeoFireService.GeoFireListener {
 
     private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
-    private CollectionReference mGeoFireStoreReference;
     private BaseUser mCurrentBaseUser;
 
     private ActivityHelpSeekerHomeBinding mBinding;
@@ -68,8 +62,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     private ArrayAdapter<PublishedHelpRequest> mCurrentAdapter;
 
     private RadioGroup filterButtonsGroup;
-
-    GeoFirestore geoFirestore;
+    private GeoFireService mGeoFireService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,7 +76,22 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 this, R.layout.activity_help_seeker_home);
 
         setFilteringButtons();
+        setBindings();
 
+        mDb = FirebaseFirestore.getInstance();
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
+        mSelectedStatus = Status.Open;
+        mGeoFireService = new GeoFireService(this);
+
+        //fetchGeoFireStores();
+        fetchRequests();
+    }
+
+    private void fetchGeoFireStores() {
+        mGeoFireService.getGeoFireStoreKeysWithinRange(mCurrentBaseUser.getAddress(), 20d);
+    }
+
+    private void setBindings() {
         mBinding.floatingAddRequestButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -98,57 +106,14 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                                     getSupportFragmentManager(),
                                     "Missing address",
                                     "Please, go to your profile and update your current location"
-                                    );
+                            );
                         } else {
                             openNewRequestDialog();
                         }
                     }
+
                 }
         );
-
-        mDb = FirebaseFirestore.getInstance();
-        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
-        mGeoFireStoreReference = mDb.collection("GeoFireStores");
-        mSelectedStatus = Status.Open;
-
-        geoFirestore = new GeoFirestore(mGeoFireStoreReference);
-
-        fetchRequests();
-
-       // if (mCurrentBaseUser.getAddress() != null) {
-            queryGeoPoints();
-        //}
-    }
-
-    private void queryGeoPoints() {
-        val geoGuery = geoFirestore.queryAtLocation(new GeoPoint(19.449926, 51.7478161), 20);
-
-        geoGuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String s, GeoPoint geoPoint) {
-                Log.d("FETCHED KEY REQUEST ID", s);
-            }
-
-            @Override
-            public void onKeyExited(String s) {
-
-            }
-
-            @Override
-            public void onKeyMoved(String s, GeoPoint geoPoint) {
-
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(Exception e) {
-
-            }
-        });
     }
 
     private void setFilteringButtons() {
@@ -280,7 +245,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                     }
                 });
 
-        geoFirestore.setLocation(id, new GeoPoint(mCurrentBaseUser.getAddress().getLatitude(), mCurrentBaseUser.getAddress().getLongitude()));
+        mGeoFireService.addGeoStore(id,
+                mCurrentBaseUser.getAddress().getLatitude(),
+                mCurrentBaseUser.getAddress().getLongitude());
     }
 
     @Override
@@ -353,5 +320,10 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         intent.setData(Uri.parse("tel:" + request.getVolunteer().getPhoneNumber()));
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
+    }
+
+    @Override
+    public void onKeysReceived(List<String> keys) {
+        // fetch requests
     }
 }
