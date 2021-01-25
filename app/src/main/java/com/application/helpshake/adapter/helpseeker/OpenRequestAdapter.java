@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -31,6 +32,12 @@ import lombok.NonNull;
 public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
 
+    public interface OpenRequestListAdapterListener {
+        void onRequestDelete(int position, PublishedHelpRequest value);
+    }
+
+    OpenRequestAdapter.OpenRequestListAdapterListener listener;
+
     private ViewHolder viewHolder;
     private PublishedHelpRequest request;
 
@@ -42,11 +49,12 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         CheckBox dogwalking;
         CheckBox drugstore;
         CheckBox other;
-        Button deleteRequest;
+        ImageButton deleteRequest;
     }
 
     public OpenRequestAdapter(ArrayList<PublishedHelpRequest> requests, Context context) {
         super(context, R.layout.list_item_helpseeker_open_request, requests);
+        listener = (OpenRequestAdapter.OpenRequestListAdapterListener) context;
     }
 
     @SuppressLint("SetTextI18n")
@@ -66,6 +74,15 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder.other = convertView.findViewById(R.id.other);
             viewHolder.comment = convertView.findViewById(R.id.commentTextOpen);
             viewHolder.deleteRequest = convertView.findViewById(R.id.deleteRequestButton);
+
+            viewHolder.deleteRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onRequestDelete(position, request);
+                    }
+                }
+            });
 
             convertView.setTag(viewHolder);
         } else {
@@ -112,10 +129,6 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
                     break;
             }
         }
-
-        FirebaseFirestore mDb;
-        mDb = FirebaseFirestore.getInstance();
-        viewHolder.deleteRequest.setOnClickListener(v -> mDb.collection("PublishedHelpRequests").document(request.getUid()).delete()); //Uid is = to document id
 
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.comment.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());

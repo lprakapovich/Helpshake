@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,8 +34,8 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
 
 
     private static class ViewHolder {
-        Button callBtn;
-        Button finishBtn;
+        ImageButton callBtn;
+        ImageButton finishBtn;
         TextView title;
         TextView volunteerName;
         TextView comment;

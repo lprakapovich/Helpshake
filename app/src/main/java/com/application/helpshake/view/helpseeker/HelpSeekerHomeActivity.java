@@ -50,6 +50,7 @@ import java.util.List;
 public class HelpSeekerHomeActivity extends AppCompatActivity
         implements DialogNewHelpRequest.NewRequestListener,
         InProgressRequestAdapter.InProcessRequestListAdapterListener,
+        OpenRequestAdapter.OpenRequestListAdapterListener,
         GeoFireService.GeoFireListener {
 
     private FirebaseFirestore mDb;
@@ -300,6 +301,11 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         request.setStatus(Status.Completed);
         updateRequest(request);
+    }
+
+    @Override
+    public void onRequestDelete(int position, PublishedHelpRequest request) {
+        mDb.collection("PublishedHelpRequests").document(request.getUid()).delete();
     }
 
     private void updateRequest(PublishedHelpRequest request) {

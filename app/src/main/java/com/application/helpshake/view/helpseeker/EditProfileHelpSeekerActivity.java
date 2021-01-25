@@ -71,7 +71,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
 
         mLocationService = new LocationService(EditProfileHelpSeekerActivity.this, this);
 
-        //setImageProfile();
+        setImageProfile();
         setPhoneNumber();
         setBindings();
 
