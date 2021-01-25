@@ -111,6 +111,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="25dp"
+        android:fontFamily="@font/varela_round"
         android:text="@string/distance_new"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
