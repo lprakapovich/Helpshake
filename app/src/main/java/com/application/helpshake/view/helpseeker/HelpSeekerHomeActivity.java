@@ -69,27 +69,18 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_help_seeker_home);
 
         getCurrentUser();
 
-        //getSupportActionBar().setTitle("Have a nice day, " + mCurrentBaseUser.getName() + "!");
-
-        mBinding = DataBindingUtil.setContentView(
-                this, R.layout.activity_help_seeker_home);
+        mDb = FirebaseFirestore.getInstance();
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
+        mGeoFireService = new GeoFireService(this);
+        mSelectedStatus = Status.Open;
 
         setFilteringButtons();
         setBindings();
-
-        mDb = FirebaseFirestore.getInstance();
-        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
-        mSelectedStatus = Status.Open;
-        mGeoFireService = new GeoFireService(this);
-
         fetchRequests();
-    }
-
-    private void fetchGeoFireStores() {
-        mGeoFireService.getGeoFireStoreKeysWithinRange(mCurrentBaseUser.getAddress(), 20);
     }
 
     private void setBindings() {
@@ -118,7 +109,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void setFilteringButtons() {
-        filterButtonsGroup = (RadioGroup) findViewById(R.id.filterButtons);
+        filterButtonsGroup = findViewById(R.id.filterButtons);
         filterButtonsGroup.check(R.id.openButton); //initially checked
         filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -324,7 +315,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onKeysReceived(HashMap<String, GeoPoint> keys) {
-        // fetch requests
+    public void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints) {
+
     }
 }
