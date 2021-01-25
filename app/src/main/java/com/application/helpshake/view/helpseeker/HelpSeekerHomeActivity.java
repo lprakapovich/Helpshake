@@ -306,6 +306,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onRequestDelete(int position, PublishedHelpRequest request) {
         mDb.collection("PublishedHelpRequests").document(request.getUid()).delete();
+        fetchRequests();
     }
 
     private void updateRequest(PublishedHelpRequest request) {
