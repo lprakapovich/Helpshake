@@ -1,6 +1,7 @@
 package com.application.helpshake.service;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.application.helpshake.model.user.Address;
 import com.google.firebase.firestore.CollectionReference;
@@ -59,6 +60,7 @@ public class GeoFireService {
     }
 
     public void addGeoStore(String id, double latitude, double longitude) {
+        Log.d("ADD GEO STORE SERVICE", latitude + ", " + longitude);
         mGeoFireStore.setLocation(id, new GeoPoint(latitude, longitude));
     }
 
