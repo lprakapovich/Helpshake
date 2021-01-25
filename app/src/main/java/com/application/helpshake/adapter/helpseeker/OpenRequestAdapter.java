@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -20,13 +21,17 @@ import lombok.NonNull;
 
 public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
-    /**
-     * Need to add categories in a form of icons
-     */
+
+    private ViewHolder viewHolder;
+
     private static class ViewHolder {
         TextView title;
-        TextView category;
         Button status;
+        TextView comment;
+        CheckBox grocery;
+        CheckBox dogwalking;
+        CheckBox drugstore;
+        CheckBox other;
     }
 
     public OpenRequestAdapter(ArrayList<PublishedHelpRequest> requests, Context context) {
@@ -37,26 +42,32 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     @Override
     public View getView(final int position, @Nullable View convertView, @androidx.annotation.NonNull ViewGroup parent) {
         final PublishedHelpRequest request = getItem(position);
-        final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_open_request, parent, false);
             viewHolder.title = convertView.findViewById(R.id.title);
-            viewHolder.category = convertView.findViewById(R.id.categories);
             viewHolder.status = convertView.findViewById(R.id.status_button);
+            viewHolder.grocery = convertView.findViewById(R.id.grocery);
+            viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
+            viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
+            viewHolder.other = convertView.findViewById(R.id.other);
+            viewHolder.comment = convertView.findViewById(R.id.commentTextOpen);
+
+            //initially:
+            viewHolder.grocery.setAlpha((float) 0.5);
+            viewHolder.dogwalking.setAlpha((float) 0.5);
+            viewHolder.drugstore.setAlpha((float) 0.5);
+            viewHolder.other.setAlpha((float) 0.5);
+
             convertView.setTag(viewHolder);
-        }
-        else {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        StringBuilder builder = new StringBuilder();
-
         int resource;
 
-        switch(request.getStatus())
-        {
+        switch (request.getStatus()) {
             case Open:
                 resource = R.drawable.status_open;
                 break;
@@ -73,25 +84,25 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         viewHolder.status.setBackgroundResource(resource);
 
         for (HelpCategory category : request.getRequest().getHelpRequest().getCategoryList()) {
-            switch (category)
-            {
+            switch (category) {//ISSUE - when scrolling the list on helpseeker buttons highlighting changes in different ways
                 case DogWalking:
-                    builder.append("#dogwalking\n");
+                    viewHolder.dogwalking.setAlpha((float) 1.0);
                     break;
                 case Grocery:
-                    builder.append("#grocery\n");
+                    viewHolder.grocery.setAlpha((float) 1.0);
                     break;
                 case Drugstore:
-                    builder.append("#drugstore\n");
+                    viewHolder.drugstore.setAlpha((float) 1.0);
                     break;
-                default:
-                    builder.append("#other\n");
+                case Other:
+                    viewHolder.other.setAlpha((float) 1.0);
+                    break;
             }
-
-            viewHolder.category.setText(builder.toString());
         }
 
         viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
+        viewHolder.comment.setText(request.getRequest().getHelpRequest().getDescription());
         return convertView;
     }
+
 }

@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -228,14 +229,15 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private void initializeListAdapter() {
         mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, this);
         mBinding.listRequests.setAdapter(mAdapter);
-        mBinding.listRequests.setItemsCanFocus(false);
 
-//        mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//        });
+        mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mPublishedRequest = mPublishedOpenRequests.get(position);
+                mDialog = new DialogRequestDetails(mPublishedRequest);
+                mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
+            }
+        });
     }
 
 

@@ -16,17 +16,23 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp"
             android:clickable="true"
+            android:contentDescription="@string/settings"
             app:backgroundTint="#543073"
-            app:srcCompat="@drawable/settings" />
+            app:srcCompat="@drawable/settings"
+            android:focusable="true" />
 
         <ListView
             android:id="@+id/list_requests"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="70dp"
-            android:dividerHeight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:divider="@android:color/transparent"
-            android:layout_margin="15dp"/>
+            android:dividerHeight="10dp"/>
 
     </RelativeLayout>
 
