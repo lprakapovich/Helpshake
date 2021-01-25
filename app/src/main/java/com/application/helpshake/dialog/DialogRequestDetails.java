@@ -82,7 +82,7 @@ public class DialogRequestDetails extends DialogFragment {
             }
         });
 
-        mBinding.requestTitle.setText(helpRequest.getRequest().getHelpRequest().getTitle());
+        mBinding.requestTitle.setText(String.format("Request: %s", helpRequest.getRequest().getHelpRequest().getTitle()));
 
         mBinding.commentText.setText(helpRequest.getRequest().getHelpRequest().getDescription());
 

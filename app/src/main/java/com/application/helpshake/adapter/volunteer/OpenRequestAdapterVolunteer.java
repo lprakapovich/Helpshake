@@ -44,6 +44,7 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
         CheckBox drugstore;
         CheckBox other;
         TextView distance;
+        TextView request;
     }
 
     public OpenRequestAdapterVolunteer(ArrayList<PublishedHelpRequest> data, Context context) {
@@ -69,11 +70,13 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
             viewHolder.distance = convertView.findViewById(R.id.distance);
+            viewHolder.request = convertView.findViewById(R.id.requestTitle);
 
             convertView.setTag(viewHolder);
 
         } else {
             viewHolder = (OpenRequestAdapterVolunteer.ViewHolder) convertView.getTag();
+            viewHolder.photo.setImageResource(R.drawable.empty_profile);
         }
 
         //initially:
@@ -102,6 +105,7 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             }
         }
 
+        viewHolder.request.setText(userHelpRequest.getHelpRequest().getTitle());
         viewHolder.fullName.setText(userHelpRequest.getHelpSeeker().getFullName());
 
         StorageReference ref = FirebaseStorage.getInstance()
