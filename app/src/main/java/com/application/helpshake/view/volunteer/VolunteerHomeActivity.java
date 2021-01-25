@@ -240,7 +240,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         });
     }
 
-
     @Override
     public void onHelpOffered() {
         if (!StringUtils.isBlank(mCurrentUser.getPhoneNumber())) {

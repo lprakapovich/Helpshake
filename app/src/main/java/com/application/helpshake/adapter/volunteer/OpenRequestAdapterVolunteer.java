@@ -107,7 +107,6 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
 
         viewHolder.request.setText(userHelpRequest.getHelpRequest().getTitle());
         viewHolder.fullName.setText(userHelpRequest.getHelpSeeker().getFullName());
-
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + userHelpRequest.getHelpSeeker().getUid() + ".jpeg");
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

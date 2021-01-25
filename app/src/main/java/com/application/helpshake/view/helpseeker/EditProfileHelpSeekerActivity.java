@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,10 +72,9 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
 
         mLocationService = new LocationService(EditProfileHelpSeekerActivity.this, this);
 
-        //setImageProfile();
+        setImageProfile();
         setPhoneNumber();
         setBindings();
-
     }
 
     private void setBindings() {
@@ -100,14 +100,14 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
             }
         });
 
-        mBinding.fetchLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLocationService.checkLocationServices()) {
-                    startLocationService();
-                }
-            }
-        });
+//        mBinding.fetchLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mLocationService.checkLocationServices()) {
+//                    startLocationService();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -253,7 +253,7 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
         mFetchedGeoPoint = geoPoint;
         ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
-        mBinding.currentLocation.setText(address.getCountry() + "," + address.getCity() +  "," + address.getState() + ", full address: "+ address.getAddress());
+        Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
     }
 
     @Override
