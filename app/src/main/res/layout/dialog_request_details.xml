@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -13,181 +13,240 @@
         app:layout_constraintBottom_toTopOf="@id/commentText"
         app:layout_constraintTop_toTopOf="@id/commentText">
 
-        <TextView
-            android:id="@+id/nameAndSurnameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/name_and_surname"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/distanceText"
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginRight="56dp"
-        android:gravity="center"
-        android:text="@string/distance"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
+            <TextView
+                android:id="@+id/nameAndSurnameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/varela_round"
+                android:text="@string/name_and_surname"
+                android:textColor="@color/justText"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/needsText"
-        android:layout_width="54dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="19dp"
-        android:layout_marginRight="19dp"
-        android:text="@string/needs"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/dogImage"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-    <TextView
-        android:id="@+id/helpSeekerCommentText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="36dp"
-        android:text="@string/comments_from_help_seeker"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dogImage" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageView2"
+                android:layout_width="162dp"
+                android:layout_height="152dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/help_seeker_photo"
+                android:src="@drawable/empty_profile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
 
-    <ImageView
-        android:id="@+id/shopImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="106dp"
-        android:layout_marginLeft="106dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:contentDescription="@string/shop_image"
-        app:layout_constraintEnd_toStartOf="@+id/dogImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/needsText"
-        app:srcCompat="@drawable/shop" />
 
-    <ImageView
-        android:id="@+id/dogImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginEnd="49dp"
-        android:layout_marginRight="49dp"
-        android:contentDescription="@string/dog_image"
-        app:layout_constraintEnd_toStartOf="@+id/medicinesImage"
-        app:layout_constraintStart_toEndOf="@+id/shopImage"
-        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
-        app:srcCompat="@drawable/ic_dog" />
+            <TextView
+                android:id="@+id/distanceText"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginRight="50dp"
+                android:fontFamily="@font/varela_round"
+                android:gravity="center"
+                android:text="@string/distance"
+                android:textColor="@color/justText"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <ImageView
-        android:id="@+id/medicinesImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginRight="92dp"
-        android:contentDescription="@string/medicines_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dogImage"
-        app:layout_constraintTop_toBottomOf="@+id/distanceText"
-        app:srcCompat="@drawable/medicines" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="71dp"
+                android:layout_height="66dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginRight="50dp"
+                android:contentDescription="@string/map_point_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
+                app:srcCompat="@drawable/map" />
 
-    <TextView
-        android:id="@+id/commentText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:text="@string/comment"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/helpSeekerCommentText" />
 
-    <Button
-        android:id="@+id/offerHelpBtn"
-        android:layout_width="131dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/offer_help"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.913"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentText" />
+            <TextView
+                android:id="@+id/requestTitle"
+                android:layout_width="307dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/varela_round"
+                android:text="@string/request_title"
+                android:textColor="@color/justText"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="71dp"
-        android:layout_height="66dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/distanceText"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
-        app:srcCompat="@drawable/ic_baseline_location_on_24"
-        android:contentDescription="@string/map_point_image" />
+            <TextView
+                android:id="@+id/needsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="28dp"
+                android:fontFamily="@font/varela_round"
+                android:text="@string/needs"
+                android:textColor="@color/justText"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/requestTitle" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="134dp"
-        android:layout_height="119dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/help_seeker_photo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/camera" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="200dp"
+                android:layout_height="49dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginRight="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/needsText"
+                app:layout_constraintTop_toBottomOf="@+id/requestTitle">
 
-    <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="131dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="65dp"
-        android:layout_marginLeft="65dp"
-        android:layout_marginEnd="78dp"
-        android:layout_marginRight="78dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/cancel"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/offerHelpBtn"
-        app:layout_constraintStart_toStartOf="parent" />
+                <CheckBox
+                    android:id="@+id/other"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/checkbox_others"
+                    android:button="@null"
+                    app:layout_constraintStart_toEndOf="@+id/drugstore"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/dogwalking"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/checkbox_dog"
+                    android:button="@null"
+                    app:layout_constraintStart_toEndOf="@+id/grocery"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/drugstore"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/checkbox_drugstore"
+                    android:button="@null"
+                    app:layout_constraintStart_toEndOf="@+id/dogwalking"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/grocery"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/checkbox_groceries"
+                    android:button="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/helpSeekerCommentText"
+                android:layout_width="307dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/varela_round"
+                android:text="@string/comments_from_help_seeker"
+                android:textColor="@color/justText"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="307dp"
+                android:layout_height="51dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/varela_round"
+                android:text="@string/comment"
+                android:textColor="@color/justText"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/helpSeekerCommentText" />
+
+            <Button
+                android:id="@+id/offerHelpBtn"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:padding="12dp"
+                android:text="@string/offer_help"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cancelButton"
+                app:layout_constraintTop_toBottomOf="@+id/commentText"
+                app:layout_constraintVertical_bias="0.53" />
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/varela_round"
+                android:padding="12dp"
+                android:text="@string/cancel"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/offerHelpBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/commentText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

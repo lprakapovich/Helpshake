@@ -14,18 +14,17 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
-import com.application.helpshake.model.notification.NotificationDeclinedRequest;
-import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.notification.NotificationRequestVolunteer;
 
 import java.util.ArrayList;
 
-public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDeclinedRequest> {
+public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequestVolunteer> {
 
-    public interface DeclinedOfferListAdapterListener {
-        void onMarkAsRead(int position, NotificationDeclinedRequest notification);
+    public interface DeclinedOrAcceptedOfferListAdapterListener {
+        void onMarkAsRead(int position, NotificationRequestVolunteer notification);
     }
 
-    DeclinedOfferListAdapterListener mListener;
+    DeclinedOrAcceptedOfferListAdapterListener mListener;
 
     private static class ViewHolder {
         TextView notificationTitle;
@@ -35,9 +34,9 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
         Button markAsReadButton;
     }
 
-    public NotificationsVolunteerAdapter(ArrayList<NotificationDeclinedRequest> data, Context context) {
+    public NotificationsVolunteerAdapter(ArrayList<NotificationRequestVolunteer> data, Context context) {
         super(context, R.layout.list_item_volunteer_declined_help_offers, data);
-        mListener = (NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener) context;
+        mListener = (DeclinedOrAcceptedOfferListAdapterListener) context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -45,7 +44,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        final NotificationDeclinedRequest notification = getItem(position);
+        final NotificationRequestVolunteer notification = getItem(position);
 
         NotificationsVolunteerAdapter.ViewHolder viewHolder;
 
@@ -59,13 +58,6 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
             viewHolder.requestTitle = convertView.findViewById(R.id.requestTitleById);
             viewHolder.markAsReadButton = convertView.findViewById(R.id.markButton);
 
-            viewHolder.markAsReadButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onMarkAsRead(position, notification);
-                }
-            });
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = ( NotificationsVolunteerAdapter.ViewHolder) convertView.getTag();
@@ -74,7 +66,15 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationDecl
         viewHolder.notificationTitle.setText(notification.getTitle());
         viewHolder.notificationMessage.setText(notification.getMessage());
         viewHolder.fullName.setText(notification.getFrom().getFullName());
-        viewHolder.requestTitle.setText(notification.getTitle());
+        viewHolder.requestTitle.setText("REQUEST TITLE SHOULD BE DISPLAYED");
+
+        viewHolder.markAsReadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onMarkAsRead(position, notification);
+            }
+        });
+
         return convertView;
     }
 }

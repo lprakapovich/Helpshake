@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void openHomePage() {
-        startActivity(new Intent(LoginActivity.this, RedirectManager.redirectTo(mCurrentUser)));
+        startActivity(new Intent(LoginActivity.this, RedirectManager.redirectToHome(mCurrentUser)));
     }
 
     private boolean emptyInput() {

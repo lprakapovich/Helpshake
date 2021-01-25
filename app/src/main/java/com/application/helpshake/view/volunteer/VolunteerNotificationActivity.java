@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.NotificationsVolunteerAdapter;
 import com.application.helpshake.databinding.ActivityVolunteerNotificationBinding;
-import com.application.helpshake.model.notification.NotificationDeclinedRequest;
+import com.application.helpshake.model.notification.NotificationRequestVolunteer;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,10 +19,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class VolunteerNotificationActivity extends AppCompatActivity
-        implements NotificationsVolunteerAdapter.DeclinedOfferListAdapterListener{
+        implements NotificationsVolunteerAdapter.DeclinedOrAcceptedOfferListAdapterListener {
 
     private ActivityVolunteerNotificationBinding mBinding;
     private NotificationsVolunteerAdapter mAdapter;
@@ -32,7 +34,7 @@ public class VolunteerNotificationActivity extends AppCompatActivity
     private CollectionReference mNotificationsCollection;
 
     private BaseUser mUser;
-    private ArrayList<NotificationDeclinedRequest> mNotifications = new ArrayList<>();
+    private ArrayList<NotificationRequestVolunteer> mNotifications = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +46,21 @@ public class VolunteerNotificationActivity extends AppCompatActivity
         mNotificationsCollection = mDb.collection("Notifications");
 
         mUser = ((UserClient) (getApplicationContext())).getCurrentUser();
-        fetchNotificationAboutDeclinedRequests();
+        fetchNotificationAboutAcceptedAndDeclinedRequests();
     }
 
 
-    private void fetchNotificationAboutDeclinedRequests() {
+    private void fetchNotificationAboutAcceptedAndDeclinedRequests() {
         Query query = mNotificationsCollection
                 .whereEqualTo("to.uid", mUser.getUid())
                 .whereEqualTo("checked", false)
-                .whereEqualTo("title", "Help offer was rejected");
+                .whereIn("title", Arrays.asList("Help offer was rejected", "Help offer was accepted"));
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
-                    mNotifications.add(ds.toObject(NotificationDeclinedRequest.class));
+                    mNotifications.add(ds.toObject(NotificationRequestVolunteer.class));
                 }
                 initializeListAdapter();
             }
@@ -71,12 +73,15 @@ public class VolunteerNotificationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMarkAsRead(int position, final NotificationDeclinedRequest notification) {
+    public void onMarkAsRead(int position, final NotificationRequestVolunteer notification) {
         mNotifications.remove(position);
         mAdapter.notifyDataSetChanged();
 
         deleteMarkedAsReadNotification(notification.getUid());
-        deleteRelatedDeclinedRequests(notification.getDeclinedRequestId());
+        
+        if (notification.getTitle().equals("Help offer was rejected")) {
+            deleteRelatedDeclinedRequests(notification.getNotificationRequestId());
+        }
     }
 
     public void deleteMarkedAsReadNotification(String uid) {

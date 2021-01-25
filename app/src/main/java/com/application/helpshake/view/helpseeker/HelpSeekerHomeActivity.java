@@ -29,13 +29,14 @@ import com.application.helpshake.model.request.HelpRequest;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.model.request.UserHelpRequest;
+import com.application.helpshake.service.GeoFireService;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
-import com.application.helpshake.view.volunteer.VolunteerProfilePage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -43,11 +44,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HelpSeekerHomeActivity extends AppCompatActivity
         implements DialogNewHelpRequest.NewRequestListener,
-        InProgressRequestAdapter.InProcessRequestListAdapterListener {
+        InProgressRequestAdapter.InProcessRequestListAdapterListener,
+        GeoFireService.GeoFireListener {
 
     private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
@@ -61,46 +64,53 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     private ArrayAdapter<PublishedHelpRequest> mCurrentAdapter;
 
     private RadioGroup filterButtonsGroup;
+    private GeoFireService mGeoFireService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_help_seeker_home);
 
         getCurrentUser();
 
-        getSupportActionBar().setTitle("Have a nice day, " + mCurrentBaseUser.getName() + "!");
-
-        mBinding = DataBindingUtil.setContentView(
-                this, R.layout.activity_help_seeker_home);
+        mDb = FirebaseFirestore.getInstance();
+        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
+        mGeoFireService = new GeoFireService(this);
+        mSelectedStatus = Status.Open;
 
         setFilteringButtons();
+        setBindings();
+        fetchRequests();
+    }
 
+    private void setBindings() {
         mBinding.floatingAddRequestButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!StringUtils.isBlank(mCurrentBaseUser.getPhoneNumber())) {
-                            openNewRequestDialog();
+                        if (!isPhoneNumberProvided()) {
+                            DialogBuilder.showMessageDialog(
+                                    getSupportFragmentManager(),
+                                    getString(R.string.missing_phone_number),
+                                    getString(R.string.missing_phone_number_message));
+                        } else if (!isAddressProvided()) {
+                            DialogBuilder.showMessageDialog(
+                                    getSupportFragmentManager(),
+                                    "Missing address",
+                                    "Please, go to your profile and update your current location"
+                            );
                         } else {
-                            openPhoneNumInfo();
+                            openNewRequestDialog();
                         }
                     }
+
                 }
         );
-
-
-        mDb = FirebaseFirestore.getInstance();
-        mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
-        mSelectedStatus = Status.Open;
-
-        fetchRequests();
     }
 
-    public void setFilteringButtons() {
-
-        filterButtonsGroup = (RadioGroup) findViewById(R.id.filterButtons);
+    private void setFilteringButtons() {
+        filterButtonsGroup = findViewById(R.id.filterButtons);
         filterButtonsGroup.check(R.id.openButton); //initially checked
-
         filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -119,8 +129,14 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 fetchRequests();
             }
         });
+    }
 
+    private boolean isPhoneNumberProvided() {
+        return !StringUtils.isBlank(mCurrentBaseUser.getPhoneNumber());
+    }
 
+    private boolean isAddressProvided() {
+        return mCurrentBaseUser.getAddress() != null;
     }
 
     public void openPhoneNumInfo() {
@@ -220,6 +236,10 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                         );
                     }
                 });
+
+        mGeoFireService.addGeoStore(id,
+                mCurrentBaseUser.getAddress().getLatitude(),
+                mCurrentBaseUser.getAddress().getLongitude());
     }
 
     @Override
@@ -244,7 +264,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 getSupportActionBar().setTitle(getString(R.string.completed_requests));
                 mSelectedStatus = Status.Completed;
                 break;
-            //----filtering^^^^^-------
             case R.id.notifications:
                 startActivity(new Intent(
                         HelpSeekerHomeActivity.this,
@@ -283,7 +302,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         updateRequest(request);
     }
 
-
     private void updateRequest(PublishedHelpRequest request) {
         mPublishedRequestsCollection.document(request.getUid()).update("status", request.getStatus());
     }
@@ -296,4 +314,8 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
             startActivity(intent);
     }
 
+    @Override
+    public void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints) {
+
+    }
 }

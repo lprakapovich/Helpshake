@@ -1,11 +1,9 @@
 package com.application.helpshake.view.helpseeker;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,10 +12,14 @@ import androidx.databinding.DataBindingUtil;
 
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditHelpseekerProfileBinding;
-import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.application.helpshake.model.user.Address;
 import com.application.helpshake.model.user.BaseUser;
+import com.application.helpshake.model.user.ParsedAddress;
 import com.application.helpshake.model.user.UserClient;
+import com.application.helpshake.service.LocationService;
+import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,20 +28,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+import com.application.helpshake.service.LocationService.LocationServiceListener;
+import com.application.helpshake.dialog.DialogSingleResult.DialogResultListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
-import static com.application.helpshake.Constants.REQUEST_IMAGE_CAPTURE;
+import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
-public class EditProfileHelpSeekerActivity extends AppCompatActivity {
+public class EditProfileHelpSeekerActivity extends AppCompatActivity
+        implements LocationServiceListener, DialogResultListener {
 
     private ActivityEditHelpseekerProfileBinding mBinding;
     private CollectionReference mUsersCollection;
@@ -47,30 +51,35 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
     private BaseUser mCurrentUser;
     private String phoneNum;
 
-    ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
+    private ArrayList<PublishedHelpRequest> mPublishedRequests;
+    private Uri imageData;
 
-    Uri imageData;
+    private LocationService mLocationService;
+    private GeoPoint mFetchedGeoPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_edit_helpseeker_profile);
-
         FirebaseFirestore mDb = FirebaseFirestore.getInstance();
         mUsersCollection = mDb.collection("BaseUsers");
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
-        mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
-        mBinding.nameHelpSeeker.setText(mCurrentUser.getFullName());
+        mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
+        mPublishedRequests = new ArrayList<>();
 
-        setImageProfile();
+        mLocationService = new LocationService(EditProfileHelpSeekerActivity.this, this);
+
+        //setImageProfile();
         setPhoneNumber();
         setBindings();
+
     }
 
-
     private void setBindings() {
+        mBinding.nameHelpSeeker.setText(mCurrentUser.getFullName());
+
         mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,11 +91,20 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         mBinding.changeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent ();
+                Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(Intent.createChooser(intent, "Pick an image"), GALLERY_REQUEST_CODE);
+                }
+            }
+        });
+
+        mBinding.fetchLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLocationService.checkLocationServices()) {
+                    startLocationService();
                 }
             }
         });
@@ -98,13 +116,10 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             imageData = data.getData();
             mBinding.changeButton.setImageURI(imageData);
-
         }
     }
 
-    // save to Firebase storage
-    private void handleUpload(Uri uri) {
-
+    private void saveToFirebaseStorage(Uri uri) {
         String uid = mCurrentUser.getUid();
         String path = "profileImages/" + uid + ".jpeg";
         final StorageReference reference = FirebaseStorage.getInstance().getReference(path);
@@ -139,9 +154,10 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
                         );
                     }
                 });
+
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
-        handleUpload(imageData);
+        saveToFirebaseStorage(imageData);
     }
 
     private void findRequestsToUpdatePhoneNum() {
@@ -181,5 +197,67 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity {
                 //Picasso.get().load(uri).into(mBinding.changeButton);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        if (checkMapServices()) {
+//            if (mLocationPermissionGranted) {
+//                // everything is ok
+//            } else {
+//                startLocationService();
+//            }
+//        }
+    }
+
+    private void startLocationService() {
+        if (permissionNotGranted()) {
+            LocationService.requestPermissions(this);
+        } else {
+            mLocationService.startLocationService();
+        }
+    }
+
+    private boolean permissionNotGranted() {
+        return !LocationService.permissionGranted(this);
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationService.startLocationService();
+            } else {
+                DialogBuilder.showMessageDialog(
+                        getSupportFragmentManager(),
+                        "Location should be enabled",
+                        "Location access is denied. Please enable in manually in the phone settings."
+                );
+            }
+        }
+    }
+
+    @Override
+    public void onGpsDisabled() {
+        DialogSingleResult mDialogResult = new DialogSingleResult(
+                "No GPS detected",
+                "This application requires GPS to work properly, do you want to enable it?",
+                EditProfileHelpSeekerActivity.this);
+        mDialogResult.show(getSupportFragmentManager(), "tag");
+    }
+
+    @Override
+    public void onLocationFetched(GeoPoint geoPoint) {
+        mFetchedGeoPoint = geoPoint;
+        ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
+        ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
+        mBinding.currentLocation.setText(address.getCountry() + "," + address.getCity() +  "," + address.getState() + ", full address: "+ address.getAddress());
+    }
+
+    @Override
+    public void onResult() {
+        LocationService.openGpsSettings(this);
     }
 }

@@ -135,5 +135,7 @@
     <string name="street">Street</string>
     <string name="house_number">House number</string>
     <string name="photouser">photoUser</string>
+    <string name="settings">settings</string>
+    <string name="distance_new">Distance ....</string>
 
 </resources>
