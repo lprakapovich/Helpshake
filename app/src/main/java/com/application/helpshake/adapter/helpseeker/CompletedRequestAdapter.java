@@ -1,35 +1,40 @@
 package com.application.helpshake.adapter.helpseeker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.application.helpshake.R;
+import com.application.helpshake.model.enums.HelpCategory;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 
 import java.util.ArrayList;
 
 public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
-    /**
-     * Need to add categories in a form of icons
-     */
     private static class ViewHolder {
         TextView title;
         TextView volunteerName;
         TextView completionDate;
+        CheckBox grocery;
+        CheckBox dogwalking;
+        CheckBox drugstore;
+        CheckBox other;
     }
 
     public CompletedRequestAdapter(@NonNull ArrayList<PublishedHelpRequest> data, Context context){
         super(context, R.layout.list_item_helpseeker_completed_request, data);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -41,14 +46,42 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_completed_request, parent, false);
             viewHolder.title = convertView.findViewById(R.id.title);
-            viewHolder.volunteerName = convertView.findViewById(R.id.volunteerName);
+            viewHolder.volunteerName = convertView.findViewById(R.id.voluneerName);
+            viewHolder.grocery = convertView.findViewById(R.id.grocery);
+            viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
+            viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
+            viewHolder.other = convertView.findViewById(R.id.other);
+
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.title.setText(request.getRequest().getHelpRequest().getTitle());
-        viewHolder.volunteerName.setText(request.getVolunteer().getFullName());
+        //initially:
+        viewHolder.grocery.setAlpha((float) 0.5);
+        viewHolder.dogwalking.setAlpha((float) 0.5);
+        viewHolder.drugstore.setAlpha((float) 0.5);
+        viewHolder.other.setAlpha((float) 0.5);
+
+        for (HelpCategory category : request.getRequest().getHelpRequest().getCategoryList()) {
+            switch (category) {
+                case DogWalking:
+                    viewHolder.dogwalking.setAlpha((float) 1.0);
+                    break;
+                case Grocery:
+                    viewHolder.grocery.setAlpha((float) 1.0);
+                    break;
+                case Drugstore:
+                    viewHolder.drugstore.setAlpha((float) 1.0);
+                    break;
+                case Other:
+                    viewHolder.other.setAlpha((float) 1.0);
+                    break;
+            }
+        }
+
+        viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
+        viewHolder.volunteerName.setText("Volunteer: " + request.getVolunteer().getFullName());
         return convertView;
     }
 }

@@ -9,6 +9,19 @@
     android:maxHeight="180dp">
 
 
+    <ImageButton
+        android:id="@+id/deleteRequestButton"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:background="#00000000"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_sign" />
+
     <TextView
         android:id="@+id/commentTextOpen"
         android:layout_width="338dp"

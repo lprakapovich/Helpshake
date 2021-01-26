@@ -28,6 +28,7 @@ import java.util.Set;
 
 public class DialogNewHelpRequest extends DialogFragment {
 
+
     public interface NewRequestListener {
         void onRequestCreated(String title, String comment, List<HelpCategory> categories);
         void onRequestCancelled();

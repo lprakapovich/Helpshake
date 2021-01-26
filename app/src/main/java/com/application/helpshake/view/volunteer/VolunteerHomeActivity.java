@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Toast;
 import android.widget.AdapterView;
 
@@ -65,7 +66,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         OpenRequestAdapterListener,
         LocationServiceListener,
         GeoFireListener,
-        DialogResultListener{
+        DialogResultListener {
 
     private CollectionReference mPublishedRequestsCollection;
 
@@ -106,6 +107,37 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         setBindings();
         getCurrentUser();
         initHomeView();
+
+        handleFloatingButtonVisibility();
+    }
+
+    private void handleFloatingButtonVisibility() {
+
+        mBinding.listRequests.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+
+            }
+
+            int previousFirstVisibleItem = 0;
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //firstVisibleItem - first item in the list is 0, then 1, etc.
+
+                if (previousFirstVisibleItem == firstVisibleItem) {
+                    return;
+                }
+                if (firstVisibleItem > previousFirstVisibleItem) {
+                    mBinding.floatingSetPreferencesButton.hide();
+                } else {
+                    mBinding.floatingSetPreferencesButton.show();
+                }
+
+                previousFirstVisibleItem = firstVisibleItem;
+            }
+        });
     }
 
     @Override
@@ -129,7 +161,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
                         VolunteerHomeActivity.this,
                         VolunteerNotificationActivity.class
                 ));
-            case R.id.ratings:
                 break;
             case R.id.profile:
                 startActivity(new Intent(
@@ -307,7 +338,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -318,7 +348,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             findWaitingRequestsForUser();
             fetchHelpSeekerRequests(activeCategories);
         } catch (NullPointerException e) {
-            System.out.println("Don't know how to handle it :( But it works :)");
+            System.out.println("Nevermind");
         }
 
         if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
@@ -328,7 +358,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     private void startLocationService() {
         if (permissionNotGranted()) {
-           LocationService.requestPermissions(this);
+            LocationService.requestPermissions(this);
         } else {
             mLocationService.startLocationService();
         }
@@ -336,7 +366,9 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     private boolean permissionNotGranted() {
         return !LocationService.permissionGranted(this);
-    };
+    }
+
+    ;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -366,7 +398,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     @Override
     public void onLocationFetched(GeoPoint geoPoint) {
-        ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
+        ((UserClient) (getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
         mGeoFireService.getGeoFireStoreKeysWithinRange(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()), Constants.DEFAULT_SEARCH_RADIUS);
