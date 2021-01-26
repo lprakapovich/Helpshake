@@ -3,7 +3,7 @@
         <layer-list>
             <item android:bottom="2dp" android:right="2dp">
                 <shape>
-                    <solid android:color="#F5F5F5"/>
+                    <solid android:color="#FFFFFF"/>
                     <stroke android:width="2dp" android:color="#F65163"/>
                     <corners android:radius="7dp" />
                     <padding android:bottom="2dp" android:left="2dp"

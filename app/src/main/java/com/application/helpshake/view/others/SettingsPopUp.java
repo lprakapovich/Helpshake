@@ -1,23 +1,26 @@
 package com.application.helpshake.view.others;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+
+import com.application.helpshake.Constants;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.SettingsPopUpBinding;
 
+// TODO: change to dialog popup
 
 public class SettingsPopUp extends AppCompatActivity {
 
-    SettingsPopUpBinding mBinding;
-    SharedPreferences sharedPref;
+    private SettingsPopUpBinding mBinding;
+    private SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +39,8 @@ public class SettingsPopUp extends AppCompatActivity {
 
         getWindow().setLayout((int)(width*0.70), (int)(height*0.83));
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        final SharedPreferences.Editor editor = sharedPref.edit();
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences.Editor editor = mPreferences.edit();
 
         setButtonOpacity(mBinding.dogButton, "cDog");
         setButtonOpacity(mBinding.groceriesButton, "cGrocery");
@@ -47,7 +50,7 @@ public class SettingsPopUp extends AppCompatActivity {
         mBinding.dogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sharedPref.getString("cDog", "nothing").equals("nothing")){
+                if (mPreferences.getString("cDog", "nothing").equals("nothing")){
                     editor.putString("cDog", "DogWalking");
                     mBinding.dogButton.setAlpha((float) 1.0);
                 } else {
@@ -61,7 +64,7 @@ public class SettingsPopUp extends AppCompatActivity {
         mBinding.drugsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sharedPref.getString("cDrug", "nothing").equals("nothing")){
+                if (mPreferences.getString("cDrug", "nothing").equals("nothing")){
                     editor.putString("cDrug", "Drugstore");
                     mBinding.drugsButton.setAlpha((float) 1.0);
                 } else {
@@ -75,7 +78,7 @@ public class SettingsPopUp extends AppCompatActivity {
         mBinding.groceriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sharedPref.getString("cGrocery", "nothing").equals("nothing")){
+                if (mPreferences.getString("cGrocery", "nothing").equals("nothing")){
                     editor.putString("cGrocery", "Grocery");
                     mBinding.groceriesButton.setAlpha((float) 1.0);
                 } else {
@@ -89,7 +92,7 @@ public class SettingsPopUp extends AppCompatActivity {
         mBinding.othersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sharedPref.getString("cOther", "nothing").equals("nothing")){
+                if (mPreferences.getString("cOther", "nothing").equals("nothing")){
                     editor.putString("cOther", "Other");
                     mBinding.othersButton.setAlpha((float) 1.0);
                 } else {
@@ -100,11 +103,22 @@ public class SettingsPopUp extends AppCompatActivity {
             }
         });
 
+        mBinding.savePrefsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putFloat("radius", Float.parseFloat(mBinding.distanceInput.getText().toString()));
+                editor.apply();
+                finish();
+            }
+        });
+
+        mBinding.distanceInput.setText(
+                String.valueOf(mPreferences.getFloat("radius", Constants.DEFAULT_SEARCH_RADIUS)));
     }
 
     public void setButtonOpacity(Button button, String x){
         //red if inactive, else green if active
-        if (sharedPref.getString(x, "nothing").equals("nothing")){
+        if (mPreferences.getString(x, "nothing").equals("nothing")){
             button.setAlpha((float) 0.5);
         } else {
             button.setAlpha((float) 1.0);

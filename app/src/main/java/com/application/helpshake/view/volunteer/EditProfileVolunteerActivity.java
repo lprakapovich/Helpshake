@@ -63,9 +63,6 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         setImageProfile();
         setPhoneNumber();
         setBindings();
-
-
-
     }
 
     private void setBindings() {

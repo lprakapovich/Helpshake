@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,16 +72,15 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private ActivityVolunteerHomeBinding mBinding;
     private DialogRequestDetails mDialog;
 
-    private SharedPreferences sharedPref;
-
-    private ArrayList<String> activeCategories;
-    private List<String> mFetchedIds;
+    private SharedPreferences mPreferences;
+    private ArrayList<String> mActiveCategories;
 
     private BaseUser mCurrentUser;
     private ArrayList<PublishedHelpRequest> mPublishedOpenRequests = new ArrayList<>();
     private ArrayList<PublishedHelpRequest> mPublishedWaitingRequests = new ArrayList<>();
     private PublishedHelpRequest mPublishedRequest;
     private OpenRequestAdapterVolunteer mAdapter;
+    private List<String> mFetchedRequestIds;
 
     private GeoFireService mGeoFireService;
     private LocationService mLocationService;
@@ -97,7 +95,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
         FirebaseFirestore mDb = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser mFirebaseUser = mAuth.getCurrentUser();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
         mGeoFireService = new GeoFireService(this);
@@ -112,20 +109,14 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     }
 
     private void handleFloatingButtonVisibility() {
-
         mBinding.listRequests.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-
-            }
+            public void onScrollStateChanged(AbsListView view, int scrollState) { }
 
             int previousFirstVisibleItem = 0;
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                //firstVisibleItem - first item in the list is 0, then 1, etc.
-
                 if (previousFirstVisibleItem == firstVisibleItem) {
                     return;
                 }
@@ -134,7 +125,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
                 } else {
                     mBinding.floatingSetPreferencesButton.show();
                 }
-
                 previousFirstVisibleItem = firstVisibleItem;
             }
         });
@@ -215,7 +205,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
                 for (DocumentSnapshot ds : snapshots.getDocuments()) {
-                    if (mFetchedIds.contains(ds.getId())) {
+                    if (mFetchedRequestIds.contains(ds.getId())) {
                         mPublishedOpenRequests.add(ds.toObject(PublishedHelpRequest.class));
                     }
                 }
@@ -318,10 +308,10 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
     }
 
-
+    // TODO: refactor not to use strings but enums
     private void setSharedPreferences() {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = sharedPref.edit();
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString("cDog", "DogWalking");
         editor.putString("cDrug", "Drugstore");
         editor.putString("cOther", "Other");
@@ -330,10 +320,12 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     }
 
     private void setActiveCategories() {
-        activeCategories = new ArrayList<>(Arrays.asList(sharedPref.getString("cDog", "Do"),
-                sharedPref.getString("cDrug", "Dr"), sharedPref.getString("cGrocery", "Gr"),
-                sharedPref.getString("cOther", "Ot")));
-        for (String s : activeCategories) {
+        mActiveCategories = new ArrayList<>(
+                Arrays.asList(mPreferences.getString("cDog", "Do"),
+                        mPreferences.getString("cDrug", "Dr"),
+                        mPreferences.getString("cGrocery", "Gr"),
+                        mPreferences.getString("cOther", "Ot")));
+        for (String s : mActiveCategories) {
             System.out.println(s);
         }
     }
@@ -346,10 +338,8 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             mAdapter.clear();
             setActiveCategories();
             findWaitingRequestsForUser();
-            fetchHelpSeekerRequests(activeCategories);
-        } catch (NullPointerException e) {
-            System.out.println("Nevermind");
-        }
+            fetchHelpSeekerRequests(mActiveCategories);
+        } catch (NullPointerException ignored) { }
 
         if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
             startLocationService();
@@ -367,8 +357,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private boolean permissionNotGranted() {
         return !LocationService.permissionGranted(this);
     }
-
-    ;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -406,8 +394,8 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     @Override
     public void onKeysReceived(HashMap<String, GeoPoint> keys) {
-        mFetchedIds = Lists.newArrayList(keys.keySet());
-        fetchHelpSeekerRequests(activeCategories);
+        mFetchedRequestIds = Lists.newArrayList(keys.keySet());
+        fetchHelpSeekerRequests(mActiveCategories);
 
 //        for (String key: mFetchedIds) {
 //            Log.d("KEY", key);
