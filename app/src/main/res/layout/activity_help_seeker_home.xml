@@ -16,6 +16,7 @@
             android:layout_marginBottom="15dp"
             android:clickable="true"
             app:backgroundTint="#543073"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             app:srcCompat="@drawable/add" />
 
         <RadioGroup
@@ -37,35 +38,35 @@
                 android:id="@+id/openButton"
                 android:layout_width="125dp"
                 android:layout_height="35dp"
-                android:fontFamily="@font/varela_round"
-                android:text="Open"
-                android:gravity="center"
-                android:buttonTint="#FFFFFF"
                 android:background="@drawable/radio_flat_selector"
                 android:button="@android:color/transparent"
+                android:buttonTint="#FFFFFF"
+                android:fontFamily="@font/varela_round"
+                android:gravity="center"
+                android:text="Open"
                 android:textColor="@color/radio_flat_text_selector" />
 
             <RadioButton
                 android:id="@+id/inProgressButton"
                 android:layout_width="125dp"
                 android:layout_height="35dp"
-                android:fontFamily="@font/varela_round"
-                android:text="In progress"
-                android:gravity="center"
                 android:background="@drawable/radio_flat_selector"
                 android:button="@android:color/transparent"
+                android:fontFamily="@font/varela_round"
+                android:gravity="center"
+                android:text="In progress"
                 android:textColor="@color/radio_flat_text_selector" />
 
             <RadioButton
                 android:id="@+id/completedButton"
                 android:layout_width="125dp"
                 android:layout_height="35dp"
-                android:fontFamily="@font/varela_round"
-                android:text="Finished"
-                android:gravity="center"
-                android:buttonTint="#FFFFFF"
                 android:background="@drawable/radio_flat_selector"
                 android:button="@android:color/transparent"
+                android:buttonTint="#FFFFFF"
+                android:fontFamily="@font/varela_round"
+                android:gravity="center"
+                android:text="Finished"
                 android:textColor="@color/radio_flat_text_selector" />
         </RadioGroup>
 

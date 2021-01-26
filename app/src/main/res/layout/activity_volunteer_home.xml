@@ -19,6 +19,7 @@
             android:contentDescription="@string/settings"
             app:backgroundTint="#543073"
             app:srcCompat="@drawable/settings"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             android:focusable="true" />
 
         <ListView
@@ -27,12 +28,11 @@
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:divider="@android:color/transparent"
-            android:dividerHeight="10dp"/>
+            android:dividerHeight="10dp" />
 
     </RelativeLayout>
 

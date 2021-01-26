@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -82,9 +84,42 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         setFilteringButtons();
         setBindings();
         fetchRequests();
+
+        handleFloatingButtonVisibility();
     }
 
+    private void handleFloatingButtonVisibility() {
+
+        mBinding.list.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+
+            }
+
+            int previousFirstVisibleItem = 0;
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //firstVisibleItem - first item in the list is 0, then 1, etc.
+
+                if (previousFirstVisibleItem == firstVisibleItem) {
+                    return;
+                }
+                if (firstVisibleItem > previousFirstVisibleItem) {
+                    mBinding.floatingAddRequestButton.hide();
+                } else {
+                    mBinding.floatingAddRequestButton.show();
+                }
+
+                previousFirstVisibleItem = firstVisibleItem;
+            }
+        });
+    }
+
+
     private void setBindings() {
+
         mBinding.floatingAddRequestButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -253,24 +288,14 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.open_request:
-                getSupportActionBar().setTitle(getString(R.string.open_requests));
-                mSelectedStatus = Status.Open;
-                break;
-            case R.id.in_progress_request:
-                getSupportActionBar().setTitle(getString(R.string.in_progress_requests));
-                mSelectedStatus = Status.InProgress;
-                break;
-            case R.id.completed_request:
-                getSupportActionBar().setTitle(getString(R.string.completed_requests));
-                mSelectedStatus = Status.Completed;
-                break;
             case R.id.notifications:
                 startActivity(new Intent(
                         HelpSeekerHomeActivity.this,
                         OfferListHelpSeekerActivity.class
                 ));
-            case R.id.ratings:
+
+                fetchRequests();
+
                 break;
             case R.id.profile:
                 startActivity(new Intent(
@@ -286,7 +311,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         }
 
-        fetchRequests();
         return true;
     }
 
@@ -325,4 +349,5 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     public void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints) {
 
     }
+
 }

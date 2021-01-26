@@ -34,25 +34,25 @@ public class SettingsPopUp extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width*0.75), (int)(height*0.75));
+        getWindow().setLayout((int)(width*0.70), (int)(height*0.83));
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final SharedPreferences.Editor editor = sharedPref.edit();
 
-        setButtonColour(mBinding.dogButton, "cDog");
-        setButtonColour(mBinding.groceriesButton, "cGrocery");
-        setButtonColour(mBinding.drugsButton, "cDrug");
-        setButtonColour(mBinding.othersButton, "cOther");
+        setButtonOpacity(mBinding.dogButton, "cDog");
+        setButtonOpacity(mBinding.groceriesButton, "cGrocery");
+        setButtonOpacity(mBinding.drugsButton, "cDrug");
+        setButtonOpacity(mBinding.othersButton, "cOther");
 
         mBinding.dogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (sharedPref.getString("cDog", "nothing").equals("nothing")){
                     editor.putString("cDog", "DogWalking");
-                    mBinding.dogButton.setBackgroundColor(Color.parseColor("#0ac41d"));
+                    mBinding.dogButton.setAlpha((float) 1.0);
                 } else {
                     editor.putString("cDog", "nothing");
-                    mBinding.dogButton.setBackgroundColor(Color.parseColor("#d12121"));
+                    mBinding.dogButton.setAlpha((float) 0.5);
                 }
                 editor.apply();
             }
@@ -63,10 +63,10 @@ public class SettingsPopUp extends AppCompatActivity {
             public void onClick(View v) {
                 if (sharedPref.getString("cDrug", "nothing").equals("nothing")){
                     editor.putString("cDrug", "Drugstore");
-                    mBinding.drugsButton.setBackgroundColor(Color.parseColor("#0ac41d"));
+                    mBinding.drugsButton.setAlpha((float) 1.0);
                 } else {
                     editor.putString("cDrug", "nothing");
-                    mBinding.drugsButton.setBackgroundColor(Color.parseColor("#d12121"));
+                    mBinding.drugsButton.setAlpha((float) 0.5);
                 }
                 editor.apply();
             }
@@ -77,10 +77,10 @@ public class SettingsPopUp extends AppCompatActivity {
             public void onClick(View v) {
                 if (sharedPref.getString("cGrocery", "nothing").equals("nothing")){
                     editor.putString("cGrocery", "Grocery");
-                    mBinding.groceriesButton.setBackgroundColor(Color.parseColor("#0ac41d"));
+                    mBinding.groceriesButton.setAlpha((float) 1.0);
                 } else {
                     editor.putString("cGrocery", "nothing");
-                    mBinding.groceriesButton.setBackgroundColor(Color.parseColor("#d12121"));
+                    mBinding.groceriesButton.setAlpha((float) 0.5);
                 }
                 editor.apply();
             }
@@ -91,10 +91,10 @@ public class SettingsPopUp extends AppCompatActivity {
             public void onClick(View v) {
                 if (sharedPref.getString("cOther", "nothing").equals("nothing")){
                     editor.putString("cOther", "Other");
-                    mBinding.othersButton.setBackgroundColor(Color.parseColor("#0ac41d"));
+                    mBinding.othersButton.setAlpha((float) 1.0);
                 } else {
                     editor.putString("cOther", "nothing");
-                    mBinding.othersButton.setBackgroundColor(Color.parseColor("#d12121"));
+                    mBinding.othersButton.setAlpha((float) 0.5);
                 }
                 editor.apply();
             }
@@ -102,12 +102,12 @@ public class SettingsPopUp extends AppCompatActivity {
 
     }
 
-    public void setButtonColour(Button button, String x){
+    public void setButtonOpacity(Button button, String x){
         //red if inactive, else green if active
         if (sharedPref.getString(x, "nothing").equals("nothing")){
-            button.setBackgroundColor(Color.parseColor("#d12121"));
+            button.setAlpha((float) 0.5);
         } else {
-            button.setBackgroundColor(Color.parseColor("#0ac41d"));
+            button.setAlpha((float) 1.0);
         }
     }
 }
