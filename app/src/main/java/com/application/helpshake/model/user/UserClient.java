@@ -3,6 +3,7 @@ package com.application.helpshake.model.user;
 import android.app.Application;
 
 import com.application.helpshake.model.user.BaseUser;
+import com.google.firebase.firestore.GeoPoint;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,4 +20,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class UserClient extends Application {
     private BaseUser currentUser = null;
+    private GeoPoint currentLocation;
 }

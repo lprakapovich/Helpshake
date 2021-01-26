@@ -108,7 +108,6 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         }
     }
 
-    // save to Firebase storage
     private void saveToFirebaseStorage(Uri uri) {
         String uid = mCurrentUser.getUid();
         String path = "profileImages/" + uid + ".jpeg";

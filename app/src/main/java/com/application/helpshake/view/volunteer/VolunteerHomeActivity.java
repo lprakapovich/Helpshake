@@ -39,12 +39,12 @@ import com.application.helpshake.service.LocationService.LocationServiceListener
 import com.application.helpshake.service.MapService;
 import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.util.DistanceEstimator;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -81,6 +81,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private PublishedHelpRequest mPublishedRequest;
     private OpenRequestAdapterVolunteer mAdapter;
     private List<String> mFetchedRequestIds;
+    private HashMap<String, GeoPoint> mMappedGeoPoints;
 
     private GeoFireService mGeoFireService;
     private LocationService mLocationService;
@@ -102,7 +103,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         mLocationAccessDenied = false;
 
         setBindings();
-        getCurrentUser();
+        setCurrentUser();
         initHomeView();
 
         handleFloatingButtonVisibility();
@@ -178,8 +179,12 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         });
     }
 
-    private void getCurrentUser() {
-        mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
+    private void setCurrentUser() {
+        mCurrentUser = getSingletonUserClient().getCurrentUser();
+    }
+
+    private UserClient getSingletonUserClient() {
+        return ((UserClient) (getApplicationContext()));
     }
 
     private void initHomeView() {
@@ -248,9 +253,10 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     }
 
     private void initializeListAdapter() {
-        mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, this);
+        GeoPoint currentLocation = getSingletonUserClient().getCurrentLocation();
+        HashMap<String, Float> mappedDistances = calculateDistancesFrom(currentLocation);
+        mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, mappedDistances,this);
         mBinding.listRequests.setAdapter(mAdapter);
-
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -259,6 +265,17 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
                 mDialog.show(getSupportFragmentManager(), getString(R.string.tag));
             }
         });
+    }
+
+
+    private HashMap<String, Float> calculateDistancesFrom(GeoPoint currentLocation) {
+        HashMap<String, Float> mappedDistances = new HashMap<>();
+        for (String requestId: mFetchedRequestIds) {
+            GeoPoint targetLocation = mMappedGeoPoints.get(requestId);
+            assert targetLocation != null;
+            mappedDistances.put(requestId, DistanceEstimator.distanceBetween(currentLocation, targetLocation));
+        }
+        return mappedDistances;
     }
 
     @Override
@@ -390,11 +407,13 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
         mGeoFireService.getGeoFireStoreKeysWithinRange(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()), Constants.DEFAULT_SEARCH_RADIUS);
+        getSingletonUserClient().setCurrentLocation(geoPoint);
     }
 
     @Override
-    public void onKeysReceived(HashMap<String, GeoPoint> keys) {
-        mFetchedRequestIds = Lists.newArrayList(keys.keySet());
+    public void onKeysReceived(HashMap<String, GeoPoint> mappedGeoPoints) {
+        mFetchedRequestIds = Lists.newArrayList(mappedGeoPoints.keySet());
+        mMappedGeoPoints = mappedGeoPoints;
         fetchHelpSeekerRequests(mActiveCategories);
 
 //        for (String key: mFetchedIds) {

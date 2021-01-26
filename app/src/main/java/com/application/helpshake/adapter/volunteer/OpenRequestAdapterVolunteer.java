@@ -22,11 +22,13 @@ import com.application.helpshake.model.request.UserHelpRequest;
 import com.application.helpshake.model.enums.HelpCategory;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpRequest> {
 
@@ -34,7 +36,8 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
         void onDetails(PublishedHelpRequest request);
     }
 
-    OpenRequestAdapterListener mListener;
+    private OpenRequestAdapterListener mListener;
+    private HashMap<String, Float> mMappedDistances;
 
     private static class ViewHolder {
         ImageView photo;
@@ -47,9 +50,10 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
         TextView request;
     }
 
-    public OpenRequestAdapterVolunteer(ArrayList<PublishedHelpRequest> data, Context context) {
+    public OpenRequestAdapterVolunteer(ArrayList<PublishedHelpRequest> data, HashMap<String, Float> mappedDistances, Context context) {
         super(context, R.layout.list_item_volunteer_open_request, data);
         mListener = (OpenRequestAdapterListener) context;
+        mMappedDistances = mappedDistances;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -79,7 +83,6 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             viewHolder.photo.setImageResource(R.drawable.empty_profile);
         }
 
-        //initially:
         viewHolder.grocery.setAlpha((float) 0.25);
         viewHolder.dogWalking.setAlpha((float) 0.25);
         viewHolder.drugstore.setAlpha((float) 0.25);
@@ -117,9 +120,7 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             }
         });
 
-
-        // TO DO
-        //viewHolder.distance.setText("");
+        viewHolder.distance.setText(String.valueOf(mMappedDistances.get(request.getUid())));
 
         return convertView;
     }
