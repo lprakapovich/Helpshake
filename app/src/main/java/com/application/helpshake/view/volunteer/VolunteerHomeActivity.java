@@ -255,7 +255,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     private void initializeListAdapter() {
         GeoPoint currentLocation = getSingletonUserClient().getCurrentLocation();
         HashMap<String, Float> mappedDistances = calculateDistancesFrom(currentLocation);
-        mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, mappedDistances,this);
+        mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, mappedDistances, this);
         mBinding.listRequests.setAdapter(mAdapter);
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -266,7 +266,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             }
         });
     }
-
 
     private HashMap<String, Float> calculateDistancesFrom(GeoPoint currentLocation) {
         HashMap<String, Float> mappedDistances = new HashMap<>();
@@ -312,6 +311,13 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     @Override
     public void onDialogClosed() {
         mDialog.dismiss();
+    }
+
+    @Override
+    public void onMapOpened() {
+        GeoPoint geoPoint = mGeoFireService.getAssociatedGeoPoint(mPublishedRequest.getUid());
+
+        MapService.showOnGoogleMap(geoPoint, this);
     }
 
     private void showDialog(String title, String message) {

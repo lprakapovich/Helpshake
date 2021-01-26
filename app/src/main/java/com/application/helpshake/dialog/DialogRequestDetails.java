@@ -33,6 +33,7 @@ public class DialogRequestDetails extends DialogFragment {
     public interface RequestSubmittedListener {
         void onHelpOffered();
         void onDialogClosed();
+        void onMapOpened();
     }
 
     DialogRequestDetailsBinding mBinding;
@@ -74,15 +75,14 @@ public class DialogRequestDetails extends DialogFragment {
         // DISTANCE TO DO
         //mBinding.distanceText.setText("");
 
-        // map icon should move us to the Google Maps
         mBinding.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mListener.onMapOpened();
             }
         });
 
-        mBinding.requestTitle.setText(String.format("Request: %s", helpRequest.getRequest().getHelpRequest().getTitle()));
+        mBinding.requestTitle.setText(helpRequest.getRequest().getHelpRequest().getTitle());
 
         mBinding.commentText.setText(helpRequest.getRequest().getHelpRequest().getDescription());
 

@@ -43,8 +43,7 @@ import java.util.ArrayList;
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
 import static com.application.helpshake.Constants.REQUEST_CODE_LOCATION_PERMISSION;
 
-public class EditProfileHelpSeekerActivity extends AppCompatActivity
-        implements LocationServiceListener, DialogResultListener {
+public class EditProfileHelpSeekerActivity extends AppCompatActivity {
 
     private ActivityEditHelpseekerProfileBinding mBinding;
     private CollectionReference mUsersCollection;
@@ -54,9 +53,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
 
     private ArrayList<PublishedHelpRequest> mPublishedRequests;
     private Uri imageData;
-
-    private LocationService mLocationService;
-    private GeoPoint mFetchedGeoPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +65,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
 
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
         mPublishedRequests = new ArrayList<>();
-
-        mLocationService = new LocationService(EditProfileHelpSeekerActivity.this, this);
 
         setImageProfile();
         setPhoneNumber();
@@ -100,14 +94,6 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
             }
         });
 
-//        mBinding.fetchLocation.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mLocationService.checkLocationServices()) {
-//                    startLocationService();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -202,62 +188,5 @@ public class EditProfileHelpSeekerActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-//        if (checkMapServices()) {
-//            if (mLocationPermissionGranted) {
-//                // everything is ok
-//            } else {
-//                startLocationService();
-//            }
-//        }
-    }
-
-    private void startLocationService() {
-        if (permissionNotGranted()) {
-            LocationService.requestPermissions(this);
-        } else {
-            mLocationService.startLocationService();
-        }
-    }
-
-    private boolean permissionNotGranted() {
-        return !LocationService.permissionGranted(this);
-    };
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mLocationService.startLocationService();
-            } else {
-                DialogBuilder.showMessageDialog(
-                        getSupportFragmentManager(),
-                        "Location should be enabled",
-                        "Location access is denied. Please enable in manually in the phone settings."
-                );
-            }
-        }
-    }
-
-    @Override
-    public void onGpsDisabled() {
-        DialogSingleResult mDialogResult = new DialogSingleResult(
-                "No GPS detected",
-                "This application requires GPS to work properly, do you want to enable it?",
-                EditProfileHelpSeekerActivity.this);
-        mDialogResult.show(getSupportFragmentManager(), "tag");
-    }
-
-    @Override
-    public void onLocationFetched(GeoPoint geoPoint) {
-        mFetchedGeoPoint = geoPoint;
-        ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
-        ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
-        Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onResult() {
-        LocationService.openGpsSettings(this);
     }
 }

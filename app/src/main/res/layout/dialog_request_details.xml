@@ -81,43 +81,24 @@
 
             <TextView
                 android:id="@+id/requestTitle"
-                android:layout_width="307dp"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginStart="45dp"
-                android:layout_marginLeft="45dp"
                 android:layout_marginTop="36dp"
                 android:fontFamily="@font/varela_round"
                 android:text="@string/request_title"
                 android:textColor="@color/justText"
                 android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-            <TextView
-                android:id="@+id/needsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
-                android:layout_marginLeft="45dp"
-                android:layout_marginTop="28dp"
-                android:fontFamily="@font/varela_round"
-                android:text="@string/needs"
-                android:textColor="@color/justText"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/requestTitle" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="200dp"
                 android:layout_height="49dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="21dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginRight="50dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/needsText"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/requestTitle">
 
                 <CheckBox
@@ -164,18 +145,16 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <TextView
                 android:id="@+id/helpSeekerCommentText"
-                android:layout_width="307dp"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginStart="45dp"
-                android:layout_marginLeft="45dp"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/varela_round"
                 android:text="@string/comments_from_help_seeker"
                 android:textColor="@color/justText"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
@@ -183,15 +162,16 @@
                 android:id="@+id/commentText"
                 android:layout_width="307dp"
                 android:layout_height="51dp"
-                android:layout_marginStart="45dp"
-                android:layout_marginLeft="45dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/varela_round"
                 android:text="@string/comment"
+                android:textAlignment="center"
                 android:textColor="@color/justText"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/helpSeekerCommentText" />
+                app:layout_constraintTop_toBottomOf="@+id/helpSeekerCommentText"
+                android:gravity="center_horizontal" />
 
             <Button
                 android:id="@+id/offerHelpBtn"
@@ -200,7 +180,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="30dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/rounded_button"
@@ -219,11 +199,11 @@
                 android:id="@+id/cancelButton"
                 android:layout_width="140dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/rounded_button"
                 android:fontFamily="@font/varela_round"
@@ -234,8 +214,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/offerHelpBtn"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/commentText" />
+                app:layout_constraintTop_toBottomOf="@+id/commentText"
+                app:layout_constraintVertical_bias="0.0" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

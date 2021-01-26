@@ -3,11 +3,11 @@ package com.application.helpshake.adapter.volunteer;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,11 +20,10 @@ import com.application.helpshake.R;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.request.UserHelpRequest;
 import com.application.helpshake.model.enums.HelpCategory;
+import com.application.helpshake.util.DistanceEstimator;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -120,9 +119,10 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             }
         });
 
-        viewHolder.distance.setText(String.valueOf(mMappedDistances.get(request.getUid())));
-
+        Float distance = mMappedDistances.get(request.getUid());
+        assert distance != null;
+        Pair<Integer, String> parsedDistance = DistanceEstimator.parseDistance(distance);
+        viewHolder.distance.setText(parsedDistance.first + parsedDistance.second + " from you");
         return convertView;
     }
-
 }
