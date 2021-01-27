@@ -6,12 +6,16 @@ import android.net.Uri;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.Locale;
+
 public class MapService {
 
-    public static void showOnGoogleMap(GeoPoint geoPoint, Context context) {
-        Uri gmmIntentUri = Uri.parse("google.navigation:cbll=" + geoPoint.getLatitude() + "," + geoPoint.getLongitude());
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        context.startActivity(mapIntent);
+    public static void showOnGoogleMap(GeoPoint from, GeoPoint to, Context context) {
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f(%s)&daddr=%f,%f (%s)", from.getLatitude(),
+                from.getLongitude(), "You", to.getLatitude(), to.getLongitude(), "HelpSeeker");
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setPackage("com.google.android.apps.maps");
+        context.startActivity(intent);
     }
 }

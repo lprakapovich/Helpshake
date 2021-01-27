@@ -1,6 +1,7 @@
 package com.application.helpshake.util;
 
 import android.location.Location;
+import android.util.Log;
 import android.util.Pair;
 
 import com.google.firebase.firestore.GeoPoint;
@@ -13,6 +14,7 @@ public class DistanceEstimator {
     }
 
     public static Pair<Integer, String> parseDistance(Float distance) {
+        Log.d("PARSE DISTANCE", distance.toString());
         float parsed = distance.intValue() > 1000 ? distance / 1000 : distance;
         String unit = distance.intValue() > 1000 ? " kilometer(s)" : " meter(s)";
        return new Pair<>(Math.round(parsed), unit);

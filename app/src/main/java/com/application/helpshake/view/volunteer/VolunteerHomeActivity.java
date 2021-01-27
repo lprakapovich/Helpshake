@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -254,7 +255,17 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     private void initializeListAdapter() {
         GeoPoint currentLocation = getSingletonUserClient().getCurrentLocation();
+        Log.d("MY CURRENT LOCATION", currentLocation.getLongitude() + "," + currentLocation.getLongitude());
         HashMap<String, Float> mappedDistances = calculateDistancesFrom(currentLocation);
+
+        for (String id: mappedDistances.keySet()) {
+            Log.d("ID: ", id);
+        }
+
+        for (Float dist: mappedDistances.values()) {
+            Log.d("ID: ", dist.toString());
+        }
+
         mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, mappedDistances, this);
         mBinding.listRequests.setAdapter(mAdapter);
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -315,9 +326,9 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     @Override
     public void onMapOpened() {
-        GeoPoint geoPoint = mGeoFireService.getAssociatedGeoPoint(mPublishedRequest.getUid());
-
-        MapService.showOnGoogleMap(geoPoint, this);
+        GeoPoint to = mGeoFireService.getAssociatedGeoPoint(mPublishedRequest.getUid());
+        GeoPoint from = getSingletonUserClient().getCurrentLocation();
+        MapService.showOnGoogleMap (from, to, this);
     }
 
     private void showDialog(String title, String message) {
@@ -429,11 +440,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 //        for (GeoPoint geoPoint : keys.values()) {
 //            Log.d("DISTANCE BETWEEN", DistanceEstimator.distanceBetween(me, geoPoint) + ".");
 //        }
-    }
-
-    public void onShowOnMapClicked(PublishedHelpRequest request) {
-        GeoPoint geoPoint = mGeoFireService.getAssociatedGeoPoint(request.getUid());
-        MapService.showOnGoogleMap(geoPoint, this);
     }
 
     @Override
