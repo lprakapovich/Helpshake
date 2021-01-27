@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -72,9 +71,9 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             convertView = inflater.inflate(R.layout.list_item_helpseeker_in_progress_request, parent, false);
             viewHolder.title = convertView.findViewById(R.id.title);
 
-            viewHolder.finishBtn = convertView.findViewById(R.id.markAsFinishedButton);
+            viewHolder.finishBtn = convertView.findViewById(R.id.showOnMapBtn);
             viewHolder.callBtn = convertView.findViewById(R.id.callButton);
-            viewHolder.volunteerName = convertView.findViewById(R.id.voluneerName);
+            viewHolder.volunteerName = convertView.findViewById(R.id.helpSeekerName);
             viewHolder.callBtn.setEnabled(true);
             viewHolder.finishBtn.setEnabled(true);
             viewHolder.grocery = convertView.findViewById(R.id.grocery);
@@ -82,7 +81,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
             viewHolder.comment = convertView.findViewById(R.id.commentText);
-            viewHolder.volunteerPic = convertView.findViewById(R.id.volunteerPhoto);
+            viewHolder.volunteerPic = convertView.findViewById(R.id.helpSeekerPic);
 
             viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,5 +1,6 @@
 package com.application.helpshake.adapter.volunteer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
         mListener = (DeclinedOrAcceptedOfferListAdapterListener) context;
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
@@ -65,8 +67,8 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
 
         viewHolder.notificationTitle.setText(notification.getTitle());
         viewHolder.notificationMessage.setText(notification.getMessage());
-        viewHolder.fullName.setText(notification.getFrom().getFullName());
-        viewHolder.requestTitle.setText("REQUEST TITLE SHOULD BE DISPLAYED");
+        viewHolder.fullName.setText("Help seeker: " + notification.getFrom().getFullName());
+        viewHolder.requestTitle.setText("Title: " + "REQUEST TITLE SHOULD BE DISPLAYED");
 
         viewHolder.markAsReadButton.setOnClickListener(new View.OnClickListener() {
             @Override

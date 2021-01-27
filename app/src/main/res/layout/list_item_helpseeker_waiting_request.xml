@@ -15,7 +15,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/volunteerPhoto">
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerPic">
 
         <CheckBox
             android:id="@+id/other"
@@ -110,7 +110,7 @@
         android:fontFamily="@font/varela_round"
         android:text="@string/name_and_surname"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
+        app:layout_constraintStart_toEndOf="@+id/helpSeekerPic"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -123,7 +123,7 @@
         android:fontFamily="@font/varela_round"
         android:text="Request title"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/volunteerPhoto"
+        app:layout_constraintStart_toEndOf="@+id/helpSeekerPic"
         app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
 
     <TextView
@@ -141,7 +141,7 @@
         app:layout_constraintVertical_bias="0.73" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/volunteerPhoto"
+        android:id="@+id/helpSeekerPic"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:src="@drawable/empty_profile"

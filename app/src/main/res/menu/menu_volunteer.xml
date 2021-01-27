@@ -8,13 +8,10 @@
         <menu>
             <item
                 android:id="@+id/myRequests"
-                android:title="My requests" />
+                android:title="Current help" />
             <item
                 android:id="@+id/notifications"
                 android:title="Notifications" />
-            <item
-                android:id="@+id/ratings"
-                android:title="Ratings" />
             <item
                 android:id="@+id/profile"
                 android:title="Profile" />

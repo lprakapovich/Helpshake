@@ -49,7 +49,6 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
     Uri imageData;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

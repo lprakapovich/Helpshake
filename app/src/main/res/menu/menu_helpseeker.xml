@@ -13,9 +13,6 @@
                 android:fontFamily="@font/varela_round"
                 app:showAsAction="always" />
             <item
-                android:id="@+id/ratings"
-                android:title="Ratings" />
-            <item
                 android:id="@+id/profile"
                 android:title="Profile" />
             <item

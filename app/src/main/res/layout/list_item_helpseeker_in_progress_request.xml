@@ -10,7 +10,7 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/volunteerPhoto"
+        android:id="@+id/helpSeekerPic"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginStart="40dp"
@@ -18,10 +18,10 @@
         android:layout_marginTop="12dp"
         android:src="@drawable/empty_profile"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voluneerName" />
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerName" />
 
     <ImageButton
-        android:id="@+id/markAsFinishedButton"
+        android:id="@+id/showOnMapBtn"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_marginTop="9dp"
@@ -67,7 +67,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/volunteerPhoto">
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerPic">
 
         <CheckBox
             android:id="@+id/other"
@@ -137,7 +137,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/voluneerName"
+        android:id="@+id/helpSeekerName"
         android:layout_width="221dp"
         android:layout_height="23dp"
         android:layout_marginStart="40dp"

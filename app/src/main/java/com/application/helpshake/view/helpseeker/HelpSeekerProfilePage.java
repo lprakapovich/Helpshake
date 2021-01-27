@@ -54,7 +54,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_help_seeker_profile_page);
 
-        mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
+        mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
 
         mDb = FirebaseFirestore.getInstance();
         mUsersCollection = mDb.collection("BaseUsers");
