@@ -4,11 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,42 +21,40 @@ import androidx.annotation.RequiresApi;
 import com.application.helpshake.R;
 import com.application.helpshake.model.enums.HelpCategory;
 import com.application.helpshake.model.request.PublishedHelpRequest;
-import com.application.helpshake.service.MapService;
+import com.application.helpshake.util.DistanceEstimator;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest> {
+public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
-    public interface CurrentHelpOfferListener {
-        void onContact(PublishedHelpRequest request);
+    public interface WaitingHelpOfferListener {
+
     }
 
-    CurrentHelpOfferListener mListener;
+    WaitingHelpOffersAdapter.WaitingHelpOfferListener mListener;
     private PublishedHelpRequest request;
-    private ViewHolder viewHolder;
-
+    private WaitingHelpOffersAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
-        ImageButton callBtn;
-        ImageButton mapBtn;
-        TextView title;
+        ImageView helpSeekerPic;
         TextView helpSeekerName;
-        TextView comment;
+        ImageView mapBtn;
+        TextView distance;
+        TextView title;
         CheckBox grocery;
         CheckBox dogwalking;
         CheckBox drugstore;
         CheckBox other;
-        ImageView helpSeekerPic;
     }
 
-    public CurrentHelpOffersAdapter(ArrayList<PublishedHelpRequest> data, Context context) {
-        super(context, R.layout.list_item_volunteer_current_offer, data);
-        mListener = (CurrentHelpOfferListener) context;
+    public WaitingHelpOffersAdapter(ArrayList<PublishedHelpRequest> data, Context context) {
+        super(context, R.layout.list_item_volunteer_waiting_offer, data);
+        mListener = (WaitingHelpOffersAdapter.WaitingHelpOfferListener) context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -67,16 +65,15 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         request = getItem(position);
 
         if (convertView == null) {
-            viewHolder = new ViewHolder();
+            viewHolder = new WaitingHelpOffersAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.list_item_volunteer_current_offer, parent, false);
+            convertView = inflater.inflate(R.layout.list_item_volunteer_waiting_offer, parent, false);
 
-            viewHolder.callBtn = convertView.findViewById(R.id.callButton);
-            viewHolder.helpSeekerName = convertView.findViewById(R.id.helpSeekerName);
-            viewHolder.mapBtn = convertView.findViewById(R.id.showOnMapBtn);
-            viewHolder.title = convertView.findViewById((R.id.title));
-            viewHolder.comment = convertView.findViewById((R.id.commentText));
-            viewHolder.helpSeekerPic = convertView.findViewById((R.id.helpSeekerPic));
+            viewHolder.helpSeekerPic = convertView.findViewById((R.id.help_seeker_image));
+            viewHolder.helpSeekerName = convertView.findViewById(R.id.list_item_name);
+            viewHolder.mapBtn = convertView.findViewById(R.id.map);
+            viewHolder.distance = convertView.findViewById(R.id.distance);
+            viewHolder.title = convertView.findViewById((R.id.requestTitle));
             viewHolder.grocery = convertView.findViewById(R.id.grocery);
             viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
@@ -85,7 +82,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
             convertView.setTag(viewHolder);
 
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (WaitingHelpOffersAdapter.ViewHolder) convertView.getTag();
         }
 
         viewHolder.grocery.setAlpha((float) 0.25);
@@ -110,18 +107,13 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
             }
         }
 
-        viewHolder.helpSeekerName.setText("Help seeker: " + request.getRequest().getHelpSeeker().getFullName());
+        viewHolder.helpSeekerName.setText(request.getRequest().getHelpSeeker().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
-        viewHolder.comment.setText("Comment: " + request.getRequest().getHelpRequest().getDescription());
+
+
+        viewHolder.distance.setText("Distance ...." + " from you");
 
         setHelpSeekerImage();
-
-        viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onContact(request);
-            }
-        });
 
         viewHolder.mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override

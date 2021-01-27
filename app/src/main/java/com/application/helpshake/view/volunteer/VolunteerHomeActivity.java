@@ -136,7 +136,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_helpseeker, menu);
+        inflater.inflate(R.menu.menu_volunteer, menu);
         return true;
     }
 
@@ -145,6 +145,9 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         switch (item.getItemId()) {
             case R.id.myRequests:
                 RedirectManager.redirectTo(this, CurrentHelpOffersActivity.class);
+                break;
+            case R.id.waitingOffers:
+                RedirectManager.redirectTo(this, WaitingHelpOffersActivity.class);
                 break;
             case R.id.notifications:
                 RedirectManager.redirectTo(this, VolunteerNotificationActivity.class);
