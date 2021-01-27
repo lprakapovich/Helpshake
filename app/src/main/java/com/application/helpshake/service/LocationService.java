@@ -98,9 +98,7 @@ public class LocationService {
                         if (result != null && result.getLocations().size() > 0) {
                             int lastIndex = result.getLocations().size() - 1;
                             double lat = result.getLocations().get(lastIndex).getLatitude();
-                            lat =51.747149;
                             double lon = result.getLocations().get(lastIndex).getLongitude();
-                            lon =  19.450768;
                             GeoPoint geoPoint = new GeoPoint(lat, lon);
                             listener.onLocationFetched(geoPoint);
                         }
