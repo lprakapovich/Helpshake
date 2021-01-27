@@ -1,4 +1,4 @@
-package com.application.helpshake.adapter.helpseeker;
+package com.application.helpshake.adapter.volunteer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,66 +26,57 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
+public class CompletedHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
-    public interface OfferListAdapterListener {
-        void onHelpAccepted(int position, PublishedHelpRequest request);
-
-        void onHelpDeclined(int position, PublishedHelpRequest request);
+    public interface CompletedHelpOfferListener {
+        void onOfferClosed(int position, PublishedHelpRequest value);
     }
 
-    OfferListAdapterListener mListener;
+    CompletedHelpOffersAdapter.CompletedHelpOfferListener mListener;
     private PublishedHelpRequest request;
-    Uri imageData;
-    WaitingRequestAdapter.ViewHolder viewHolder;
+    private CompletedHelpOffersAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
-        TextView fullName;
-        TextView distance;
-        ImageView mapPoint;
-        Button acceptButton;
-        Button rejectButton;
-        TextView infoText;
+        ImageView helpSeekerPic;
+        TextView helpSeekerName;
         TextView title;
-        ImageView volunteerPhoto;
         CheckBox grocery;
         CheckBox dogwalking;
         CheckBox drugstore;
         CheckBox other;
+        ImageView close;
     }
 
-    public WaitingRequestAdapter(ArrayList<PublishedHelpRequest> data, Context context) {
-        super(context, R.layout.list_item_helpseeker_waiting_request, data);
-        mListener = (OfferListAdapterListener) context;
+    public CompletedHelpOffersAdapter(ArrayList<PublishedHelpRequest> data, Context context) {
+        super(context, R.layout.list_item_volunteer_waiting_offer, data);
+        mListener = (CompletedHelpOffersAdapter.CompletedHelpOfferListener) context;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
-    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         request = getItem(position);
 
         if (convertView == null) {
-            viewHolder = new WaitingRequestAdapter.ViewHolder();
+            viewHolder = new CompletedHelpOffersAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.list_item_helpseeker_waiting_request, parent, false);
-            viewHolder.fullName = convertView.findViewById(R.id.nameAndSurnameText);
-            viewHolder.infoText = convertView.findViewById(R.id.commentText);
-            viewHolder.acceptButton = convertView.findViewById(R.id.acceptBtn);
-            viewHolder.rejectButton = convertView.findViewById(R.id.rejectBtn);
-            viewHolder.title = convertView.findViewById(R.id.requestTitle);
-            viewHolder.volunteerPhoto = convertView.findViewById(R.id.helpSeekerPic);
+            convertView = inflater.inflate(R.layout.list_item_volunteer_completed_offers, parent, false);
+
+            viewHolder.helpSeekerPic = convertView.findViewById((R.id.help_seeker_image));
+            viewHolder.helpSeekerName = convertView.findViewById(R.id.list_item_name);
+            viewHolder.title = convertView.findViewById((R.id.requestTitle));
             viewHolder.grocery = convertView.findViewById(R.id.grocery);
             viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
-
+            viewHolder.close = convertView.findViewById(R.id.closeId);
 
             convertView.setTag(viewHolder);
+
         } else {
-            viewHolder = (WaitingRequestAdapter.ViewHolder) convertView.getTag();
+            viewHolder = (CompletedHelpOffersAdapter.ViewHolder) convertView.getTag();
         }
 
         viewHolder.grocery.setAlpha((float) 0.25);
@@ -111,38 +101,31 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             }
         }
 
-        viewHolder.fullName.setText("Volunteer: " + System.lineSeparator() + request.getVolunteer().getFullName());
+        viewHolder.helpSeekerName.setText(request.getRequest().getHelpSeeker().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
-        viewHolder.infoText.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
 
-        viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onHelpAccepted(position, request);
+                if (mListener != null) {
+                    mListener.onOfferClosed(position, request);
+                }
             }
         });
-
-        viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onHelpDeclined(position, request);
-            }
-        });
-
-        setVolunteerImage();
+        setHelpSeekerImage();
 
         return convertView;
     }
 
-    public void setVolunteerImage() {
+    public void setHelpSeekerImage() {
         StorageReference ref = FirebaseStorage.getInstance()
-                .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
-        imageData = Uri.parse(ref.getDownloadUrl().toString());
+                .getReference("profileImages/" + request.getRequest().getHelpSeeker().getUid() + ".jpeg");
+
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Glide.with(getContext()).load(uri)
-                        .fitCenter().into(viewHolder.volunteerPhoto);
+                        .fitCenter().into(viewHolder.helpSeekerPic);
             }
         });
     }

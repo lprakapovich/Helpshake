@@ -13,6 +13,9 @@
                 android:id="@+id/waitingOffers"
                 android:title="Waiting for approval" />
             <item
+                android:id="@+id/completedOffers"
+                android:title="Completed tasks" />
+            <item
                 android:id="@+id/notifications"
                 android:title="Notifications" />
             <item

@@ -83,23 +83,6 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             viewHolder.comment = convertView.findViewById(R.id.commentText);
             viewHolder.volunteerPic = convertView.findViewById(R.id.helpSeekerPic);
 
-            viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onContact(position, request);
-                    }
-                }
-            });
-
-            viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onMarkFinished(position, request);
-                    }
-                }
-            });
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -131,6 +114,25 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.volunteerName.setText("Voluneer: " + request.getVolunteer().getFullName());
         viewHolder.comment.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
+
+        viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onContact(position, request);
+                }
+            }
+        });
+
+        viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onMarkFinished(position, request);
+                }
+            }
+        });
+
         setVolunteerImage();
         return convertView;
     }
