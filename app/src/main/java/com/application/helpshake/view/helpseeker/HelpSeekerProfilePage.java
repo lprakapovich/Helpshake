@@ -36,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
 
@@ -116,7 +117,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
     private void becomeVolunteer() {
         Query query = mRequestsCollection
                 .whereEqualTo("request.helpSeeker.uid", mCurrentUser.getUid())
-                .whereEqualTo("status", Status.InProgress.toString());
+                .whereIn("status", Arrays.asList(Status.InProgress.toString(), Status.WaitingForApproval.toString()));
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -125,8 +126,9 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
                     DialogBuilder.showMessageDialog(
                             getSupportFragmentManager(),
                             "Error",
-                            "You change your role settings, " +
-                                    "unless all your help offers are completed. "
+                            "Before changing your role, make sure that " +
+                                    "requests in progress are marked completed " +
+                                    "and notifications are rejected. "
                     );
                 } else {
                     deleteAllOpenRequests();
