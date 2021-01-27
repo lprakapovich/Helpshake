@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
@@ -176,7 +175,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void setFilteringButtons() {
-        filterButtonsGroup = findViewById(R.id.filterButtons);
+        filterButtonsGroup = findViewById(R.id.tabButtons);
         filterButtonsGroup.check(R.id.openButton); //initially checked
         filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

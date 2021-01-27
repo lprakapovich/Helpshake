@@ -1,12 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <RadioGroup
+            android:id="@+id/tabButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RadioButton
+                android:id="@+id/openButton"
+                android:layout_width="125dp"
+                android:layout_height="35dp"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:buttonTint="#FFFFFF"
+                android:fontFamily="@font/varela_round"
+                android:gravity="center"
+                android:text="Open"
+                android:textColor="@color/radio_flat_text_selector" />
+
+            <RadioButton
+                android:id="@+id/inProgressButton"
+                android:layout_width="125dp"
+                android:layout_height="35dp"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:fontFamily="@font/varela_round"
+                android:gravity="center"
+                android:text="In progress"
+                android:textColor="@color/radio_flat_text_selector" />
+
+            <RadioButton
+                android:id="@+id/completedButton"
+                android:layout_width="125dp"
+                android:layout_height="35dp"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:buttonTint="#FFFFFF"
+                android:fontFamily="@font/varela_round"
+                android:gravity="center"
+                android:text="Finished"
+                android:textColor="@color/radio_flat_text_selector" />
+        </RadioGroup>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingSetPreferencesButton"
@@ -17,20 +68,21 @@
             android:layout_marginBottom="15dp"
             android:clickable="true"
             android:contentDescription="@string/settings"
+            android:focusable="true"
             app:backgroundTint="#543073"
-            app:srcCompat="@drawable/settings"
             app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-            android:focusable="true" />
+            app:srcCompat="@drawable/settings" />
 
         <ListView
             android:id="@+id/list_requests"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/tabButtons"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="10dp" />
 

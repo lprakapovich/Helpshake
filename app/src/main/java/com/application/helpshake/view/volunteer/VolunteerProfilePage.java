@@ -1,6 +1,7 @@
 package com.application.helpshake.view.volunteer;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -20,6 +21,7 @@ import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.auth.RegisterActivity;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -28,6 +30,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class VolunteerProfilePage extends AppCompatActivity implements DialogSingleResult.DialogResultListener,
         DialogInfoRoleUpdate.RoleUpdateListener {
@@ -42,6 +46,8 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
 
     CollectionReference mUsersCollection;
     BaseUser mCurrentUser;
+    Uri imageData;
+
 
 
     @Override
@@ -57,7 +63,10 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mNotificationsCollection = mDb.collection("Notifications");
         mUsersCollection = mDb.collection("BaseUsers");
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
+
+        getSupportActionBar().setTitle(mCurrentUser.getName());
         setBindings();
+        setProfilePic();
     }
 
     private void setBindings() {
@@ -66,7 +75,7 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mBinding.editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(VolunteerProfilePage.this, EditProfileVolunteerActivity.class));
+                startActivity(new Intent(VolunteerProfilePage.this, CurrentHelpOffersActivity.class));
             }
         });
 
@@ -84,13 +93,6 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
             }
         });
 
-        mBinding.logOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(VolunteerProfilePage.this, LoginActivity.class));
-            }
-        });
     }
 
     private void becomeHelpSeeker() {
@@ -160,6 +162,19 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
                         mDialogResult.show(getSupportFragmentManager(), "tag");
                     }
                 });
+    }
+
+    public void setProfilePic() {
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + mCurrentUser.getUid() + ".jpeg");
+        imageData = Uri.parse(ref.getDownloadUrl().toString());
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(getApplicationContext()).load(uri)
+                        .fitCenter().into(mBinding.volProfilePic);
+            }
+        });
     }
 
     public void openDialogToGetConfirmation() {

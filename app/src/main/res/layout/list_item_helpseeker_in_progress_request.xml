@@ -9,16 +9,16 @@
     android:maxHeight="400dp">
 
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/volunteerPhoto"
         android:layout_width="120dp"
-        android:layout_height="118dp"
+        android:layout_height="120dp"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="12dp"
+        android:src="@drawable/empty_profile"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voluneerName"
-        app:srcCompat="@drawable/camera" />
+        app:layout_constraintTop_toBottomOf="@+id/voluneerName" />
 
     <ImageButton
         android:id="@+id/markAsFinishedButton"
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/volunteerPhoto">
 
