@@ -162,7 +162,8 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 notificationTitle,
                 notificationMessage,
                 false,
-                helpRequest.getUid()
+                helpRequest.getUid(),
+                helpRequest.getRequest().getHelpRequest().getTitle()
         );
 
         mNotificationsCollection.document(uid).set(notification);
