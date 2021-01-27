@@ -136,7 +136,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_helpseeker, menu);
+        inflater.inflate(R.menu.menu_volunteer, menu);
         return true;
     }
 

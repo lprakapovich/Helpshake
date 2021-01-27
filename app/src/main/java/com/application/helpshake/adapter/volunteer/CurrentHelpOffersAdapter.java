@@ -82,7 +82,6 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
 
-
             convertView.setTag(viewHolder);
 
         } else {
@@ -111,7 +110,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
             }
         }
 
-        viewHolder.helpSeekerName.setText("Help seeker: " + System.lineSeparator() + request.getRequest().getHelpSeeker().getFullName());
+        viewHolder.helpSeekerName.setText("Help seeker: " + request.getRequest().getHelpSeeker().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.comment.setText("Comment: " + request.getRequest().getHelpRequest().getDescription());
 

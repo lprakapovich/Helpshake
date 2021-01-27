@@ -8,7 +8,7 @@
         <menu>
             <item
                 android:id="@+id/myRequests"
-                android:title="Current help" />
+                android:title="Current help offers" />
             <item
                 android:id="@+id/notifications"
                 android:title="Notifications" />
