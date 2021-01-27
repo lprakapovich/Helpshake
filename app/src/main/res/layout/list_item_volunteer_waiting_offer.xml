@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="180dp"
     android:background="@drawable/request_list_item"
     android:maxHeight="200dp"
     android:layout_marginHorizontal="4dp"
@@ -38,12 +38,12 @@
 
     <TextView
         android:id="@+id/list_item_name"
-        android:layout_width="241dp"
-        android:layout_height="43dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/name_and_surname"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -55,9 +55,9 @@
         android:id="@+id/constraintLayout"
         android:layout_width="200dp"
         android:layout_height="49dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_name">
 
@@ -105,27 +105,17 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/varela_round"
-        android:text="@string/distance_new"
-        app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
     <ImageView
         android:id="@+id/map"
         android:layout_width="67dp"
         android:layout_height="42dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:contentDescription="@string/map_point_image"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/requestTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/map" />
 

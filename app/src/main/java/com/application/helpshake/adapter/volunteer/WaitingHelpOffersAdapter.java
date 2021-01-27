@@ -110,9 +110,6 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.helpSeekerName.setText(request.getRequest().getHelpSeeker().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
 
-
-        viewHolder.distance.setText("Distance ...." + " from you");
-
         setHelpSeekerImage();
 
         viewHolder.mapBtn.setOnClickListener(new View.OnClickListener() {

@@ -77,5 +77,4 @@ public class WaitingHelpOffersActivity extends AppCompatActivity
         mAdapter = new WaitingHelpOffersAdapter(mOffers, this);
         mBinding.list.setAdapter(mAdapter);
     }
-
 }
