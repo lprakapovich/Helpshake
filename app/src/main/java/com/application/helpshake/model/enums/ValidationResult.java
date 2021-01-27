@@ -8,5 +8,6 @@ public enum ValidationResult {
     PASSWORDS_NOT_MATCH,
     TOO_SHORT_PASSWORD,
     INVALID_PHONE,
-    INVALID_NULL
+    INVALID_NULL,
+    INVALID_NON_POSITIVE
 }

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import io.opencensus.common.Function;
 
 import static com.application.helpshake.model.enums.ValidationResult.EMPTY_INPUT;
+import static com.application.helpshake.model.enums.ValidationResult.INVALID_NON_POSITIVE;
 import static com.application.helpshake.model.enums.ValidationResult.INVALID_PHONE;
 import static com.application.helpshake.model.enums.ValidationResult.SUCCESS;
 
@@ -31,6 +32,10 @@ public interface UserInputValidator extends Function<String, ValidationResult> {
 
     static UserInputValidator isNotEmpty() {
         return input -> StringUtils.isNotBlank(input) ? SUCCESS : EMPTY_INPUT;
+    }
+
+    static UserInputValidator isPositiveNumber() {
+        return input -> Float.parseFloat(input) > 0 ? SUCCESS : INVALID_NON_POSITIVE;
     }
 
     default UserInputValidator and (UserInputValidator other) {

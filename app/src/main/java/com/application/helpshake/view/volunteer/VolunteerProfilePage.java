@@ -108,15 +108,14 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
 
                 switch (result) {
                     case EMPTY_INPUT:
-                        Log.d("invalid phone", "noo");
-                        // dialog
+                       DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                               "Invalid input", "Phone number cannot be empty");
                         break;
                     case INVALID_PHONE:
-                        // dialog
-                        Log.d("invalid phone", "noo");
+                        DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                "Invalid input", "Provided number doesn't meet the common standards");
                         break;
                     case SUCCESS:
-                        Log.d("its ok", "yeaahh");
                         saveInformationToDatabase();
                         break;
                 }

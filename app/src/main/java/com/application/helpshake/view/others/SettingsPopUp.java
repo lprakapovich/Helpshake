@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,6 +13,9 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.Constants;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.SettingsPopUpBinding;
+import com.application.helpshake.model.enums.ValidationResult;
+import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.validator.UserInputValidator;
 
 // TODO: change to dialog popup
 
@@ -106,9 +108,23 @@ public class SettingsPopUp extends AppCompatActivity {
         mBinding.savePrefsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.putFloat("radius", Float.parseFloat(mBinding.distanceInput.getText().toString()));
-                editor.apply();
-                finish();
+
+                String radius = mBinding.distanceInput.getText().toString();
+                ValidationResult result = UserInputValidator.isNotEmpty()
+                        .and(UserInputValidator.isPositiveNumber())
+                        .apply(radius);
+
+                switch (result) {
+                    case INVALID_NON_POSITIVE:
+                        DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                "Invalid distance",
+                                "Please, provide a positive number");
+                        break;
+                    case SUCCESS:
+                        editor.putFloat("radius", Float.parseFloat(mBinding.distanceInput.getText().toString()));
+                        editor.apply();
+                        finish();
+                }
             }
         });
 
