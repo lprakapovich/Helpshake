@@ -6,7 +6,7 @@ import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.Constants;
 import com.application.helpshake.model.dto.RegistrationDto;
-import com.application.helpshake.validator.UserRegistrationValidator.ValidationResult;
+import com.application.helpshake.model.enums.ValidationResult;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,11 +14,12 @@ import java.util.regex.Pattern;
 
 import io.opencensus.common.Function;
 
-import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.EMPTY_INPUT;
-import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.INVALID_EMAIL;
-import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.PASSWORDS_NOT_MATCH;
-import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.SUCCESS;
-import static com.application.helpshake.validator.UserRegistrationValidator.ValidationResult.TOO_SHORT_PASSWORD;
+import static com.application.helpshake.model.enums.ValidationResult.EMPTY_INPUT;
+import static com.application.helpshake.model.enums.ValidationResult.INVALID_EMAIL;
+import static com.application.helpshake.model.enums.ValidationResult.PASSWORDS_NOT_MATCH;
+import static com.application.helpshake.model.enums.ValidationResult.SUCCESS;
+import static com.application.helpshake.model.enums.ValidationResult.TOO_SHORT_PASSWORD;
+
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public interface UserRegistrationValidator extends Function<RegistrationDto, ValidationResult> {
@@ -54,14 +55,5 @@ public interface UserRegistrationValidator extends Function<RegistrationDto, Val
             ValidationResult result = this.apply(registrationData);
             return result.equals(SUCCESS) ? other.apply(registrationData) : result;
         };
-    }
-
-    enum ValidationResult {
-        SUCCESS,
-        EMPTY_INPUT,
-        INVALID_NAME,
-        INVALID_EMAIL,
-        PASSWORDS_NOT_MATCH,
-        TOO_SHORT_PASSWORD
     }
 }

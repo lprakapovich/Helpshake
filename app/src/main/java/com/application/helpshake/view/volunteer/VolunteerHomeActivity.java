@@ -41,6 +41,7 @@ import com.application.helpshake.service.MapService;
 import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.util.DistanceEstimator;
+import com.application.helpshake.util.RedirectManager;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -143,26 +144,18 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.myRequests:
-                startActivity(new Intent(
-                        VolunteerHomeActivity.this,
-                        CurrentHelpOffersActivity.class
-                ));
+                RedirectManager.redirectTo(this, CurrentHelpOffersActivity.class);
                 break;
             case R.id.notifications:
-                startActivity(new Intent(
-                        VolunteerHomeActivity.this,
-                        VolunteerNotificationActivity.class
-                ));
+                RedirectManager.redirectTo(this, VolunteerNotificationActivity.class);
                 break;
             case R.id.profile:
-                startActivity(new Intent(
-                        VolunteerHomeActivity.this,
-                        VolunteerProfilePage.class
-                ));
+                RedirectManager.redirectTo(this, VolunteerProfilePage.class);
                 break;
             case R.id.logOut:
-                startActivity(new Intent(VolunteerHomeActivity.this, LoginActivity.class
-                ));
+                FirebaseAuth.getInstance().signOut();
+                RedirectManager.redirectTo(this, LoginActivity.class);
+                finish();
                 break;
         }
         return true;
@@ -241,7 +234,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
         for (int i = 0; i < mPublishedOpenRequests.size(); i++) {
             for (int j = 0; j < mPublishedWaitingRequests.size(); j++) {
-
                 if (mPublishedOpenRequests.get(i).getRequest().getUid().equals(
                         mPublishedWaitingRequests.get(j).getRequest().getUid())) {
                     requestsToDelete.add(mPublishedOpenRequests.get(i));
@@ -255,17 +247,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 
     private void initializeListAdapter() {
         GeoPoint currentLocation = getSingletonUserClient().getCurrentLocation();
-        Log.d("MY CURRENT LOCATION", currentLocation.getLongitude() + "," + currentLocation.getLongitude());
         HashMap<String, Float> mappedDistances = calculateDistancesFrom(currentLocation);
-
-        for (String id: mappedDistances.keySet()) {
-            Log.d("ID: ", id);
-        }
-
-        for (Float dist: mappedDistances.values()) {
-            Log.d("ID: ", dist.toString());
-        }
-
         mAdapter = new OpenRequestAdapterVolunteer(mPublishedOpenRequests, mappedDistances, this);
         mBinding.listRequests.setAdapter(mAdapter);
         mBinding.listRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -3,6 +3,7 @@ package com.application.helpshake.view.volunteer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -15,11 +16,13 @@ import com.application.helpshake.dialog.DialogInfoRoleUpdate;
 import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.enums.ValidationResult;
 import com.application.helpshake.model.notification.NotificationClosedRequest;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.validator.UserInputValidator;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.auth.RegisterActivity;
 import com.bumptech.glide.Glide;
@@ -74,7 +77,6 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mUsersCollection = mDb.collection("BaseUsers");
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
 
-      //  getSupportActionBar().setTitle(mCurrentUser.getName());
         setBindings();
         setProfilePic();
     }
@@ -85,7 +87,7 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mBinding.deleteAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteAccount();
+                //deleteAccount();
             }
         });
 
@@ -100,7 +102,24 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
             @Override
             public void onClick(View v) {
                 readUserInput();
-                saveInformationToDatabase();
+                ValidationResult result = UserInputValidator.isNotEmpty()
+                        .and(UserInputValidator.isNumberValid())
+                        .apply(mBinding.phoneInput.getText().toString());
+
+                switch (result) {
+                    case EMPTY_INPUT:
+                        Log.d("invalid phone", "noo");
+                        // dialog
+                        break;
+                    case INVALID_PHONE:
+                        // dialog
+                        Log.d("invalid phone", "noo");
+                        break;
+                    case SUCCESS:
+                        Log.d("its ok", "yeaahh");
+                        saveInformationToDatabase();
+                        break;
+                }
             }
         });
 
@@ -118,7 +137,6 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         });
 
     }
-
 
     private void becomeHelpSeeker() {
         Query query = mRequestsCollection
@@ -248,8 +266,6 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mDialog.dismiss();
     }
 
-    //---------------------------------------------from edit-------------------
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -296,6 +312,7 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
                 });
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
+        if (imageData != null)
         saveToFirebaseStorage(imageData);
     }
 

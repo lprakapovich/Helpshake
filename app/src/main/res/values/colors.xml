@@ -6,4 +6,5 @@
 
     <color name="textOnButton">#FFFFFF</color>
     <color name="justText">#000000</color>
+    <color name="gray">#636363</color>
 </resources>

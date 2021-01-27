@@ -33,9 +33,7 @@ public class DialogRequestDetails extends DialogFragment {
 
     public interface RequestSubmittedListener {
         void onHelpOffered();
-
         void onDialogClosed();
-
         void onMapOpened();
     }
 
@@ -71,13 +69,12 @@ public class DialogRequestDetails extends DialogFragment {
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(getContext()).load(uri)
-                        .fitCenter().into(mBinding.imageView2);
+                if (uri != null) {
+                    Glide.with(getContext()).load(uri)
+                            .fitCenter().into(mBinding.imageView2);
+                }
             }
         });
-
-        // DISTANCE TO DO
-        //mBinding.distanceText.setText("");
 
         mBinding.mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,10 +83,11 @@ public class DialogRequestDetails extends DialogFragment {
             }
         });
 
-        mBinding.requestTitle.setText("Title: " + helpRequest.getRequest().getHelpRequest().getTitle());
+        mBinding.requestTitle.setText(helpRequest.getRequest().getHelpRequest().getTitle());
 
         mBinding.commentText.setText(helpRequest.getRequest().getHelpRequest().getDescription());
 
+        // TODO: refactor
         if (!helpRequest.getRequest().getHelpRequest().getCategoryList().contains(Grocery))
             mBinding.grocery.setAlpha((float) 0.25);
         if (!helpRequest.getRequest().getHelpRequest().getCategoryList().contains(DogWalking))
@@ -115,6 +113,7 @@ public class DialogRequestDetails extends DialogFragment {
 
         return builder.create();
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override

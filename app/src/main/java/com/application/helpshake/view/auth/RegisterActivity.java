@@ -1,8 +1,8 @@
 package com.application.helpshake.view.auth;
 
 import android.content.Intent;
-import android.os.Build;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -17,10 +17,10 @@ import com.application.helpshake.databinding.ActivityRegisterBinding;
 import com.application.helpshake.dialog.DialogSelect;
 import com.application.helpshake.model.dto.RegistrationDto;
 import com.application.helpshake.model.enums.Role;
+import com.application.helpshake.model.enums.ValidationResult;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.validator.UserRegistrationValidator;
-import com.application.helpshake.validator.UserRegistrationValidator.ValidationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

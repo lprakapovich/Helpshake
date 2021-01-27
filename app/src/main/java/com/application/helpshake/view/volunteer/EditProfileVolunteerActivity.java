@@ -3,6 +3,7 @@ package com.application.helpshake.view.volunteer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,10 +13,12 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.R;
 import com.application.helpshake.databinding.ActivityEditVolunteerProfileBinding;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.enums.ValidationResult;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.validator.UserInputValidator;
 import com.application.helpshake.view.others.SettingsPopUp;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,7 +73,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 readUserInput();
-                saveInformationToDatabase();
+
             }
         });
 
@@ -144,7 +147,9 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                 });
         mCurrentUser.setPhoneNumber(phoneNum);
         findRequestsToUpdatePhoneNum();
-        saveToFirebaseStorage(imageData);
+        if (imageData != null) {
+            saveToFirebaseStorage(imageData);
+        }
     }
 
     private void findRequestsToUpdatePhoneNum() {

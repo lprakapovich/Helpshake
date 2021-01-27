@@ -15,6 +15,7 @@
 
 
             <TextView
+                android:visibility="visible"
                 android:id="@+id/nameAndSurnameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,39 +46,22 @@
                 app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
 
 
-            <TextView
-                android:id="@+id/distanceText"
-                android:layout_width="100dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginRight="50dp"
-                android:fontFamily="@font/varela_round"
-                android:gravity="center"
-                android:text="@string/distance"
-                android:textColor="@color/justText"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/mapButton" />
-
             <ImageView
                 android:id="@+id/mapButton"
                 android:layout_width="71dp"
                 android:layout_height="66dp"
                 android:layout_marginStart="50dp"
                 android:layout_marginLeft="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="56dp"
                 android:layout_marginEnd="50dp"
                 android:layout_marginRight="50dp"
                 android:contentDescription="@string/map_point_image"
+                app:layout_constraintBottom_toTopOf="@+id/requestTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
+                app:layout_constraintVertical_bias="0.126"
                 app:srcCompat="@drawable/map" />
-
 
             <TextView
                 android:id="@+id/requestTitle"
