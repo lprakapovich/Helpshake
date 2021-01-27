@@ -3,6 +3,7 @@ package com.application.helpshake.adapter.volunteer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
 import com.application.helpshake.model.enums.HelpCategory;
@@ -57,6 +59,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         mListener = (CurrentHelpOfferListener) context;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     @NonNull
     @Override
@@ -108,7 +111,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
             }
         }
 
-        viewHolder.helpSeekerName.setText("Help seeker: " + request.getRequest().getHelpSeeker().getFullName());
+        viewHolder.helpSeekerName.setText("Help seeker: " + System.lineSeparator() + request.getRequest().getHelpSeeker().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.comment.setText("Comment: " + request.getRequest().getHelpRequest().getDescription());
 

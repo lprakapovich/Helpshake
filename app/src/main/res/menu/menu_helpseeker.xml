@@ -8,10 +8,7 @@
         <menu>
             <item
                 android:id="@+id/notifications"
-                android:icon="@drawable/settings"
-                android:title="Notifications"
-                android:fontFamily="@font/varela_round"
-                app:showAsAction="always" />
+                android:title="Notifications" />
             <item
                 android:id="@+id/profile"
                 android:title="Profile" />

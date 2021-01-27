@@ -57,7 +57,7 @@
         android:layout_height="49dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toBottomOf="@+id/list_item_name">
 
@@ -111,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/distance_new"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
