@@ -146,6 +146,9 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             case R.id.myRequests:
                 RedirectManager.redirectTo(this, CurrentHelpOffersActivity.class);
                 break;
+            case R.id.waitingOffers:
+                RedirectManager.redirectTo(this, WaitingHelpOffersActivity.class);
+                break;
             case R.id.notifications:
                 RedirectManager.redirectTo(this, VolunteerNotificationActivity.class);
                 break;

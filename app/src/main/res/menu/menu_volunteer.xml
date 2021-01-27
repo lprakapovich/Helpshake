@@ -10,6 +10,9 @@
                 android:id="@+id/myRequests"
                 android:title="Current help offers" />
             <item
+                android:id="@+id/waitingOffers"
+                android:title="Waiting help offers" />
+            <item
                 android:id="@+id/notifications"
                 android:title="Notifications" />
             <item
