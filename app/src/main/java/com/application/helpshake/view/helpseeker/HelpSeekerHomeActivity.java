@@ -29,8 +29,10 @@ import com.application.helpshake.dialog.DialogNewHelpRequest;
 import com.application.helpshake.dialog.DialogNewHelpRequest.NewRequestListener;
 import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.dialog.DialogSingleResult.DialogResultListener;
+import com.application.helpshake.dialog.DialogVolunteerFeedback;
 import com.application.helpshake.model.enums.HelpCategory;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.request.CompletedRequest;
 import com.application.helpshake.model.request.HelpRequest;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.request.UserHelpRequest;
@@ -347,14 +349,17 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onMarkFinished(int position, PublishedHelpRequest request) {
 
-        DialogBuilder.showMessageDialog(
-                getSupportFragmentManager(),
-                getString(R.string.request_finished),
-                getString(R.string.request_finished_msg)
-        );
+        DialogVolunteerFeedback dialog = new DialogVolunteerFeedback();
+        dialog.show(getSupportFragmentManager(), "TAG");
 
-        request.setStatus(Status.Completed);
-        updateRequest(request);
+//        DialogBuilder.showMessageDialog(
+//                getSupportFragmentManager(),
+//                getString(R.string.request_finished),
+//                getString(R.string.request_finished_msg)
+//        );
+//
+//        request.setStatus(Status.Completed);
+//        updateRequest(request);
     }
 
     @Override
