@@ -379,6 +379,11 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     public void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints) {
     }
 
+    @Override
+    public void onLocationReceived(GeoPoint geoPoint) {
+
+    }
+
     private void startLocationService() {
         if (permissionNotGranted()) {
             LocationService.requestPermissions(this);
@@ -425,7 +430,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
         mBinding.floatingAddRequestButton.setEnabled(true);
-
     }
 
     @Override

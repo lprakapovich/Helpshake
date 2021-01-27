@@ -33,10 +33,10 @@ import java.util.HashMap;
 public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
     public interface WaitingHelpOfferListener {
-
+        void onMapClicked(PublishedHelpRequest request);
     }
 
-    WaitingHelpOffersAdapter.WaitingHelpOfferListener mListener;
+    WaitingHelpOfferListener mListener;
     private PublishedHelpRequest request;
     private WaitingHelpOffersAdapter.ViewHolder viewHolder;
 
@@ -115,7 +115,7 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //        TODO: Add map opening
+                mListener.onMapClicked(request);
             }
         });
 

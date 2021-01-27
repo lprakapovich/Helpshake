@@ -148,6 +148,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
                 break;
             case R.id.waitingOffers:
                 RedirectManager.redirectTo(this, WaitingHelpOffersActivity.class);
+                finish();
                 break;
             case R.id.notifications:
                 RedirectManager.redirectTo(this, VolunteerNotificationActivity.class);
@@ -191,6 +192,7 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         } catch (NullPointerException e) {
             setSharedPreferences();
             setActiveCategories();
+            Log.d("CURRENT USER", mCurrentUser.getUid());
             findWaitingRequestsForUser();
         }
     }
@@ -425,6 +427,11 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 //        for (GeoPoint geoPoint : keys.values()) {
 //            Log.d("DISTANCE BETWEEN", DistanceEstimator.distanceBetween(me, geoPoint) + ".");
 //        }
+    }
+
+    @Override
+    public void onLocationReceived(GeoPoint geoPoint) {
+        //
     }
 
     @Override

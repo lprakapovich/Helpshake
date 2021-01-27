@@ -1,6 +1,7 @@
 package com.application.helpshake.service;
 
 import android.content.Context;
+import android.telecom.Call;
 import android.util.Log;
 
 import com.application.helpshake.model.user.Address;
@@ -13,10 +14,13 @@ import org.imperiumlabs.geofirestore.listeners.GeoQueryEventListener;
 
 import java.util.HashMap;
 
+import javax.security.auth.callback.Callback;
+
 public class GeoFireService {
 
     public interface GeoFireListener {
         void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints);
+        void onLocationReceived(GeoPoint geoPoint);
     }
 
     private GeoFireListener mListener;
@@ -60,11 +64,20 @@ public class GeoFireService {
     }
 
     public void addGeoStore(String id, double latitude, double longitude) {
-        Log.d("ADD GEO STORE SERVICE", latitude + ", " + longitude);
         mGeoFireStore.setLocation(id, new GeoPoint(latitude, longitude));
     }
 
     public GeoPoint getAssociatedGeoPoint(String requestId) {
         return mKeyGeoPoints.get(requestId);
+    }
+
+    public void getLocation(String geoPointId) {
+        mGeoFireStore.getLocation(geoPointId, new GeoFirestore.LocationCallback() {
+            @Override
+            public void onComplete(GeoPoint geoPoint, Exception e) {
+
+                mListener.onLocationReceived(geoPoint);
+            }
+        });
     }
 }
