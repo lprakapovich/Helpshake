@@ -3,6 +3,7 @@ package com.application.helpshake.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,14 +21,27 @@ import com.application.helpshake.R;
 import com.application.helpshake.databinding.DialogNewHelpRequestBinding;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.model.enums.HelpCategory;
+import com.application.helpshake.view.helpseeker.HelpSeekerHomeActivity;
+import com.application.helpshake.view.helpseeker.HelpSeekerProfilePage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DialogNewHelpRequest extends DialogFragment {
+public class DialogNewHelpRequest extends DialogFragment implements DialogTwoOptions.DialogResultListener {
 
+
+    @Override
+    public void onResult() {
+        mDialog.dismiss();
+        submitRequest();
+    }
+
+    @Override
+    public void onCancel() {
+        mDialog.dismiss();
+    }
 
     public interface NewRequestListener {
         void onRequestCreated(String title, String comment, List<HelpCategory> categories);
@@ -38,6 +52,7 @@ public class DialogNewHelpRequest extends DialogFragment {
     DialogNewHelpRequestBinding mBinding;
     NewRequestListener mListener;
     Set<HelpCategory> mCategories = new HashSet<>();
+    DialogTwoOptions mDialog;
 
     @NonNull
     @Override
@@ -57,13 +72,26 @@ public class DialogNewHelpRequest extends DialogFragment {
         mBinding.addRequestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isCategoryChosen() && isTitleProvided()) {
-                    submitRequest();
-                } else {
+                if (!isCategoryChosen()) {
+
                     DialogBuilder.showMessageDialog(
                             getParentFragmentManager(),
                             getString(R.string.not_allowed),
                             getString(R.string.add_request_error));
+
+                } else if (!isTitleProvided()) {
+
+                    DialogBuilder.showMessageDialog(
+                            getParentFragmentManager(),
+                            getString(R.string.not_allowed),
+                            getString(R.string.missing_request_title));
+
+                } else if (!isCommentProvided()) {
+
+                    showDialogWithDecision();
+
+                } else {
+                    submitRequest();
                 }
             }
         });
@@ -86,6 +114,10 @@ public class DialogNewHelpRequest extends DialogFragment {
 
     private boolean isTitleProvided() {
         return !mBinding.title.getText().toString().isEmpty();
+    }
+
+    private boolean isCommentProvided() {
+        return !mBinding.comment.getText().toString().isEmpty();
     }
 
     private void submitRequest() {
@@ -123,6 +155,24 @@ public class DialogNewHelpRequest extends DialogFragment {
         mBinding.dogwalking.setAlpha((float) 0.5);
         mBinding.drugstore.setAlpha((float) 0.5);
         mBinding.other.setAlpha((float) 0.5);
+    }
+
+    private void showDialogWithDecision() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle(R.string.missing_request_comment);
+        alert.setMessage(R.string.missing_request_comment_message);
+        alert.setPositiveButton("SEND MY REQUEST", new DialogInterface.OnClickListener() {
+            public void onClick (DialogInterface dialog,int which){
+                submitRequest();
+            }
+        });
+
+        alert.setNegativeButton("ADD COMMENT", new DialogInterface.OnClickListener() {
+            public void onClick (DialogInterface dialog,int which){
+                dialog.cancel();
+            }
+        });
+        alert.show();
     }
 
     // sets calling activity as a listener

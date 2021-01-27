@@ -137,5 +137,8 @@
     <string name="photouser">photoUser</string>
     <string name="settings">settings</string>
     <string name="distance_new">Distance ....</string>
+    <string name="missing_request_title">Request must contain a title</string>
+    <string name="missing_request_comment">Are you sure you don\'t want to add a comment?</string>
+    <string name="missing_request_comment_message">It would allow volunteers to get familiarized with your request.</string>
 
 </resources>
