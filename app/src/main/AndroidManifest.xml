@@ -27,7 +27,6 @@
             <!-- </intent-filter> -->
         </activity>
         <activity android:name=".view.volunteer.VolunteerNotificationActivity" />
-        <activity android:name=".view.helpseeker.EditProfileHelpSeekerActivity" />
         <activity android:name=".view.helpseeker.OfferListHelpSeekerActivity" />
         <activity android:name=".view.helpseeker.HelpSeekerHomeActivity" />
         <activity
@@ -36,7 +35,6 @@
         <activity android:name=".view.volunteer.VolunteerHomeActivity" />
         <activity android:name=".view.volunteer.VolunteerProfilePage" />
         <activity android:name=".view.volunteer.CurrentHelpOffersActivity" />
-        <activity android:name=".view.volunteer.EditProfileVolunteerActivity" />
         <activity
             android:name=".view.auth.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">

@@ -8,13 +8,16 @@
         <menu>
             <item
                 android:id="@+id/myRequests"
-                android:title="Current help offers" />
+                android:title="My current tasks" />
             <item
                 android:id="@+id/waitingOffers"
-                android:title="Waiting help offers" />
+                android:title="Waiting for approval" />
             <item
                 android:id="@+id/notifications"
                 android:title="Notifications" />
+            <item
+                android:id="@+id/completedTasks"
+                android:title="Completed tasks"/>
             <item
                 android:id="@+id/profile"
                 android:title="Profile" />
