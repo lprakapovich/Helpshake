@@ -379,10 +379,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     public void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints) {
     }
 
-    @Override
-    public void onLocationReceived(GeoPoint geoPoint) {
-
-    }
 
     private void startLocationService() {
         if (permissionNotGranted()) {

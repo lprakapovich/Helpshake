@@ -91,12 +91,6 @@ public class WaitingHelpOffersActivity extends AppCompatActivity
 
     @Override
     public void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints) {
-        // nothing
-    }
-
-    @Override
-    public void onLocationReceived(GeoPoint to) {
-        GeoPoint from = ((UserClient)(getApplicationContext())).getCurrentLocation();
-        MapService.showOnGoogleMap(from, to, this);
+        // nothing :c bad practice
     }
 }

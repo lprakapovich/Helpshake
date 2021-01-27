@@ -24,5 +24,4 @@ public class NotificationRequestVolunteer extends Notification {
         super(uid, from, to, title, message, isChecked);
         notificationRequestId = id;
     }
-
 }

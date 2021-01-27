@@ -20,7 +20,6 @@ public class GeoFireService {
 
     public interface GeoFireListener {
         void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints);
-        void onLocationReceived(GeoPoint geoPoint);
     }
 
     private GeoFireListener mListener;
@@ -69,15 +68,5 @@ public class GeoFireService {
 
     public GeoPoint getAssociatedGeoPoint(String requestId) {
         return mKeyGeoPoints.get(requestId);
-    }
-
-    public void getLocation(String geoPointId) {
-        mGeoFireStore.getLocation(geoPointId, new GeoFirestore.LocationCallback() {
-            @Override
-            public void onComplete(GeoPoint geoPoint, Exception e) {
-
-                mListener.onLocationReceived(geoPoint);
-            }
-        });
     }
 }

@@ -24,7 +24,6 @@ public class DialogInfoRoleUpdate extends DialogFragment {
 
     public interface RoleUpdateListener {
         void onConfirm();
-
         void onCancel();
     }
 

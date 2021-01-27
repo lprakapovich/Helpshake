@@ -148,7 +148,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
                 break;
             case R.id.waitingOffers:
                 RedirectManager.redirectTo(this, WaitingHelpOffersActivity.class);
-                finish();
                 break;
             case R.id.notifications:
                 RedirectManager.redirectTo(this, VolunteerNotificationActivity.class);
@@ -429,10 +428,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
 //        }
     }
 
-    @Override
-    public void onLocationReceived(GeoPoint geoPoint) {
-        //
-    }
 
     @Override
     public void onResult() {
