@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +26,6 @@ public class DialogVolunteerFeedback extends DialogFragment {
     DialogVolunteerFeedbackBinding mBinding;
 
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -36,14 +37,21 @@ public class DialogVolunteerFeedback extends DialogFragment {
         builder.setView(mBinding.getRoot())
                 .setTitle(R.string.request_details)
                 .setCancelable(false);
-
-        mBinding.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-
-            }
-        });
-
+        addListenerOnButtonClick();
         return builder.create();
     }
+
+    public void addListenerOnButtonClick() {
+
+        mBinding.button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                String rating = String.valueOf(mBinding.ratingBar.getRating());
+                Toast.makeText(getContext(), rating, Toast.LENGTH_LONG).show();
+            }
+
+        });
+    }
+
 }
