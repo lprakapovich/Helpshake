@@ -111,7 +111,7 @@
     <string name="sign_in">Sign in</string>
     <string name="username">Username</string>
     <string name="request_title">Request title</string>
-    <string name="mark_as_read">mark as read</string>
+    <string name="mark_as_read">Mark as read</string>
     <string name="notification_title">Notification title</string>
     <string name="notification_message">notification message</string>
     <string name="missing_phone_number">Phone number not entered</string>
@@ -130,8 +130,8 @@
     <string name="name_and_surname_2">name and surname</string>
     <string name="change_preferences">Change preferences</string>
     <string name="save">Save</string>
-    <string name="phone_number">phone number</string>
-    <string name="phone_number_h">Phone number</string>
+    <string name="phone_number">Phone number</string>
+    <string name="phone_number_h">phone number</string>
     <string name="street">Street</string>
     <string name="house_number">House number</string>
     <string name="photouser">photoUser</string>

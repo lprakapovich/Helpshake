@@ -21,7 +21,7 @@
             app:srcCompat="@drawable/add" />
 
         <RadioGroup
-            android:id="@+id/filterButtons"
+            android:id="@+id/tabButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -75,7 +75,7 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/filterButtons"
+            android:layout_below="@id/tabButtons"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"

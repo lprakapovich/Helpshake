@@ -1,5 +1,6 @@
 package com.application.helpshake.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -32,7 +33,9 @@ public class DialogRequestDetails extends DialogFragment {
 
     public interface RequestSubmittedListener {
         void onHelpOffered();
+
         void onDialogClosed();
+
         void onMapOpened();
     }
 
@@ -40,10 +43,11 @@ public class DialogRequestDetails extends DialogFragment {
     RequestSubmittedListener mListener;
     PublishedHelpRequest helpRequest;
 
-    public DialogRequestDetails (PublishedHelpRequest helpRequest) {
+    public DialogRequestDetails(PublishedHelpRequest helpRequest) {
         this.helpRequest = helpRequest;
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
@@ -75,14 +79,14 @@ public class DialogRequestDetails extends DialogFragment {
         // DISTANCE TO DO
         //mBinding.distanceText.setText("");
 
-        mBinding.imageView.setOnClickListener(new View.OnClickListener() {
+        mBinding.mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onMapOpened();
             }
         });
 
-        mBinding.requestTitle.setText(helpRequest.getRequest().getHelpRequest().getTitle());
+        mBinding.requestTitle.setText("Title: " + helpRequest.getRequest().getHelpRequest().getTitle());
 
         mBinding.commentText.setText(helpRequest.getRequest().getHelpRequest().getDescription());
 

@@ -57,7 +57,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         mUsersCollection = mDb.collection("BaseUsers");
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
 
-        mCurrentUser = ((UserClient)(getApplicationContext())).getCurrentUser();
+        mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
         mBinding.nameText.setText(mCurrentUser.getFullName());
 
         setImageProfile();
@@ -77,7 +77,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
         mBinding.changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent ();
+                Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 if (intent.resolveActivity(getPackageManager()) != null) {
@@ -119,7 +119,7 @@ public class EditProfileVolunteerActivity extends AppCompatActivity {
                 reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-                       // Picasso.get().load(task.getResult()).into(mBinding.changeImage);
+                        // Picasso.get().load(task.getResult()).into(mBinding.changeImage);
                     }
                 });
             }

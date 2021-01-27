@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:layout_height="250dp"
+    android:layout_marginHorizontal="4dp"
+    android:background="@drawable/request_list_item">
 
     <TextView
         android:id="@+id/notificationTitle"
@@ -13,6 +15,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="10dp"
+        android:fontFamily="@font/varela_round"
         android:layout_marginRight="10dp"
         android:gravity="center"
         android:text="@string/notification_title"
@@ -30,6 +33,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
+        android:fontFamily="@font/varela_round"
         android:gravity="center"
         android:text="@string/notification_message"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +48,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="10dp"
+        android:fontFamily="@font/varela_round"
         android:layout_marginRight="10dp"
         android:gravity="center"
         android:text="@string/name_and_surname"
@@ -61,6 +66,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:fontFamily="@font/varela_round"
         android:gravity="center"
         android:text="@string/request_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,23 +80,26 @@
         android:layout_marginEnd="68dp"
         android:layout_marginRight="68dp"
         android:layout_marginBottom="4dp"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="@font/varela_round"
+        android:padding="6dp"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
         android:text="@string/mark_as_read"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/helpseekerPhoto"
-        android:layout_width="113dp"
-        android:layout_height="123dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginTop="30dp"
         android:contentDescription="@string/help_seeker_photo"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/empty_profile"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.903"
-        app:srcCompat="@drawable/camera" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@ package com.application.helpshake.adapter.helpseeker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -78,7 +77,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder.acceptButton = convertView.findViewById(R.id.acceptBtn);
             viewHolder.rejectButton = convertView.findViewById(R.id.rejectBtn);
             viewHolder.title = convertView.findViewById(R.id.requestTitle);
-            viewHolder.volunteerPhoto = convertView.findViewById(R.id.volunteerPhoto);
+            viewHolder.volunteerPhoto = convertView.findViewById(R.id.helpSeekerPic);
             viewHolder.grocery = convertView.findViewById(R.id.grocery);
             viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
@@ -102,10 +101,10 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder = (WaitingRequestAdapter.ViewHolder) convertView.getTag();
         }
 
-        viewHolder.grocery.setAlpha((float) 0.5);
-        viewHolder.dogwalking.setAlpha((float) 0.5);
-        viewHolder.drugstore.setAlpha((float) 0.5);
-        viewHolder.other.setAlpha((float) 0.5);
+        viewHolder.grocery.setAlpha((float) 0.25);
+        viewHolder.dogwalking.setAlpha((float) 0.25);
+        viewHolder.drugstore.setAlpha((float) 0.25);
+        viewHolder.other.setAlpha((float) 0.25);
 
         for (HelpCategory category : request.getRequest().getHelpRequest().getCategoryList()) {
             switch (category) {

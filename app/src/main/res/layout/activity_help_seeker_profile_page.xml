@@ -17,6 +17,29 @@
         app:layout_constraintStart_toStartOf="@+id/nameAndSurnameText"
         tools:context=".view.helpseeker.HelpSeekerProfilePage">
 
+        <EditText
+            android:id="@+id/phoneInputH"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:autofillHints=""
+            android:background="@drawable/text_box_shape"
+            android:ems="10"
+            android:fontFamily="@font/varela_round"
+            android:gravity="center_horizontal"
+            android:hint="@string/phone_number"
+            android:inputType="text|phone"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/helpRequestsNo" />
+
         <TextView
             android:id="@+id/nameAndSurnameText"
             android:layout_width="wrap_content"
@@ -40,85 +63,68 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profilePhoto" />
+            app:layout_constraintTop_toBottomOf="@+id/profilePic" />
 
-        <ImageView
-            android:id="@+id/profilePhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profilePic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="12dp"
             android:contentDescription="@string/help_seeker_photo"
+            android:src="@drawable/empty_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
 
         <Button
-            android:id="@+id/logOutButton"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:id="@+id/savePhoneButtonH"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
-            android:text="@string/log_out"
+            android:text="Set new phone number"
             android:textAllCaps="false"
             android:textColor="@color/textOnButton"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/helpRequestsNo" />
-
-        <Button
-            android:id="@+id/editProfileButton"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/rounded_button"
-            android:fontFamily="@font/varela_round"
-            android:padding="12dp"
-            android:text="@string/edit_profile"
-            android:textAllCaps="false"
-            android:textColor="@color/textOnButton"
-            android:textSize="20sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logOutButton" />
+            app:layout_constraintTop_toBottomOf="@+id/phoneInputH" />
 
         <Button
             android:id="@+id/deleteAccountButton"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
             android:text="@string/delete_account"
             android:textAllCaps="false"
             android:textColor="@color/textOnButton"
-            android:textSize="20sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editProfileButton" />
+            app:layout_constraintTop_toBottomOf="@+id/savePhoneButtonH" />
 
 
         <Button
             android:id="@+id/becomeVolunteerButton"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="537dp"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
             android:text="Become a volunteer"
             android:textAllCaps="false"
             android:textColor="@color/textOnButton"
-            android:textSize="20sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/deleteAccountButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

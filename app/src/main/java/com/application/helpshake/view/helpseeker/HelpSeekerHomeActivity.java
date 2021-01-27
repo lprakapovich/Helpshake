@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
@@ -68,7 +67,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         GeoFireListener,
         LocationServiceListener,
         DialogResultListener,
-    OpenRequestAdapter.OpenRequestListAdapterListener{
+        OpenRequestAdapter.OpenRequestListAdapterListener {
 
     private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
@@ -176,7 +175,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void setFilteringButtons() {
-        filterButtonsGroup = findViewById(R.id.filterButtons);
+        filterButtonsGroup = findViewById(R.id.tabButtons);
         filterButtonsGroup.check(R.id.openButton); //initially checked
         filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -390,7 +389,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     private boolean permissionNotGranted() {
         return !LocationService.permissionGranted(this);
-    };
+    }
+
+    ;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -420,7 +421,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onLocationFetched(GeoPoint geoPoint) {
         mFetchedGeoPoint = geoPoint;
-        ((UserClient)(getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
+        ((UserClient) (getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
         mBinding.floatingAddRequestButton.setEnabled(true);

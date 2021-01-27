@@ -31,6 +31,7 @@ public class DialogNewHelpRequest extends DialogFragment {
 
     public interface NewRequestListener {
         void onRequestCreated(String title, String comment, List<HelpCategory> categories);
+
         void onRequestCancelled();
     }
 
@@ -83,7 +84,9 @@ public class DialogNewHelpRequest extends DialogFragment {
         return !mCategories.isEmpty();
     }
 
-    private boolean isTitleProvided() { return !mBinding.title.getText().toString().isEmpty();}
+    private boolean isTitleProvided() {
+        return !mBinding.title.getText().toString().isEmpty();
+    }
 
     private void submitRequest() {
         mListener.onRequestCreated(
@@ -115,7 +118,7 @@ public class DialogNewHelpRequest extends DialogFragment {
         });
     }
 
-    void setInitialInactiveCheckBoxButtonsOpacity(){
+    void setInitialInactiveCheckBoxButtonsOpacity() {
         mBinding.grocery.setAlpha((float) 0.5);
         mBinding.dogwalking.setAlpha((float) 0.5);
         mBinding.drugstore.setAlpha((float) 0.5);

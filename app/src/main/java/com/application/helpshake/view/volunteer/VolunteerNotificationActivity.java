@@ -68,7 +68,7 @@ public class VolunteerNotificationActivity extends AppCompatActivity
     }
 
     private void initializeListAdapter() {
-        mAdapter = new NotificationsVolunteerAdapter(mNotifications,this);
+        mAdapter = new NotificationsVolunteerAdapter(mNotifications, this);
         mBinding.listRequests.setAdapter(mAdapter);
     }
 
@@ -78,7 +78,7 @@ public class VolunteerNotificationActivity extends AppCompatActivity
         mAdapter.notifyDataSetChanged();
 
         deleteMarkedAsReadNotification(notification.getUid());
-        
+
         if (notification.getTitle().equals("Help offer was rejected")) {
             deleteRelatedDeclinedRequests(notification.getNotificationRequestId());
         }

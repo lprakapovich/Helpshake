@@ -24,6 +24,7 @@ public class DialogInfoRoleUpdate extends DialogFragment {
 
     public interface RoleUpdateListener {
         void onConfirm();
+
         void onCancel();
     }
 
@@ -49,7 +50,7 @@ public class DialogInfoRoleUpdate extends DialogFragment {
                 .setCancelable(false);
 
 
-        if(mCurrentBaseUser.getRole() == Role.HelpSeeker) {
+        if (mCurrentBaseUser.getRole() == Role.HelpSeeker) {
             mBinding.infoText.setText(getString(R.string.change_role_on_volunteer));
             mBinding.questionText.setText(getString(R.string.confirmation_question));
         } else {
@@ -59,7 +60,7 @@ public class DialogInfoRoleUpdate extends DialogFragment {
         mBinding.yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               mListener.onConfirm();
+                mListener.onConfirm();
             }
         });
 

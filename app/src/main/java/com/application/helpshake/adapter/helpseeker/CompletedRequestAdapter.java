@@ -30,7 +30,7 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
         CheckBox other;
     }
 
-    public CompletedRequestAdapter(@NonNull ArrayList<PublishedHelpRequest> data, Context context){
+    public CompletedRequestAdapter(@NonNull ArrayList<PublishedHelpRequest> data, Context context) {
         super(context, R.layout.list_item_helpseeker_completed_request, data);
     }
 
@@ -46,7 +46,7 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_completed_request, parent, false);
             viewHolder.title = convertView.findViewById(R.id.title);
-            viewHolder.volunteerName = convertView.findViewById(R.id.voluneerName);
+            viewHolder.volunteerName = convertView.findViewById(R.id.helpSeekerName);
             viewHolder.grocery = convertView.findViewById(R.id.grocery);
             viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
@@ -58,10 +58,10 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
         }
 
         //initially:
-        viewHolder.grocery.setAlpha((float) 0.5);
-        viewHolder.dogwalking.setAlpha((float) 0.5);
-        viewHolder.drugstore.setAlpha((float) 0.5);
-        viewHolder.other.setAlpha((float) 0.5);
+        viewHolder.grocery.setAlpha((float) 0.25);
+        viewHolder.dogwalking.setAlpha((float) 0.25);
+        viewHolder.drugstore.setAlpha((float) 0.25);
+        viewHolder.other.setAlpha((float) 0.25);
 
         for (HelpCategory category : request.getRequest().getHelpRequest().getCategoryList()) {
             switch (category) {

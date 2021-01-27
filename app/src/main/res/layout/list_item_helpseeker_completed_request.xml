@@ -17,7 +17,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voluneerName">
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerName">
 
         <CheckBox
             android:id="@+id/other"
@@ -87,7 +87,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/voluneerName"
+        android:id="@+id/helpSeekerName"
         android:layout_width="221dp"
         android:layout_height="23dp"
         android:layout_marginStart="40dp"

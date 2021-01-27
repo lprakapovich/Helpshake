@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="nameAndSurname"
             type="String" />
@@ -13,6 +14,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.volunteer.VolunteerProfilePage">
+
+        <EditText
+            android:id="@+id/phoneInput"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:autofillHints=""
+            android:background="@drawable/text_box_shape"
+            android:ems="10"
+            android:fontFamily="@font/varela_round"
+            android:gravity="center_horizontal"
+            android:hint="@string/phone_number"
+            android:inputType="text|phone"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/helpingStats" />
 
         <TextView
             android:id="@+id/nameAndSurnameText"
@@ -35,88 +59,48 @@
             android:text="Helping stats: 3"
             android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profilePhoto" />
+            app:layout_constraintTop_toBottomOf="@+id/volProfilePic" />
 
-        <TextView
-            android:id="@+id/avgRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/volProfilePic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/empty_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText" />
+
+        <Button
+            android:id="@+id/savePhoneButton"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/varela_round"
-            android:text="Rating: 4/5"
-            android:textColor="#000000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/helpingStats" />
-
-        <ImageView
-            android:id="@+id/profilePhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameAndSurnameText"
-            tools:src="@tools:sample/avatars" />
-
-        <Button
-            android:id="@+id/viewRatingsButton"
-            android:layout_width="180dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
-            android:text="View my ratings"
+            android:text="Set new phone number"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/avgRating" />
-
-        <Button
-            android:id="@+id/logOutButton"
-            android:layout_width="180dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_button"
-            android:fontFamily="@font/varela_round"
-            android:padding="12dp"
-            android:text="Log out"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewRatingsButton" />
-
-        <Button
-            android:id="@+id/editProfileButton"
-            android:layout_width="180dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_button"
-            android:fontFamily="@font/varela_round"
-            android:padding="12dp"
-            android:text="Edit profile"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logOutButton" />
+            app:layout_constraintTop_toBottomOf="@+id/phoneInput" />
 
         <Button
             android:id="@+id/deleteAccountButton"
-            android:layout_width="180dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
             android:text="Delete account"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
@@ -124,18 +108,19 @@
 
         <Button
             android:id="@+id/becomeHelpSeeker"
-            android:layout_width="180dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
             android:text="Become a Help Seeker"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editProfileButton" />
+            app:layout_constraintTop_toBottomOf="@+id/savePhoneButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

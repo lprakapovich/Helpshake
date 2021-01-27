@@ -1,5 +1,6 @@
 package com.application.helpshake.adapter.volunteer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
@@ -46,7 +47,7 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
         CheckBox drugstore;
         CheckBox other;
         TextView distance;
-        TextView request;
+        TextView title;
     }
 
     public OpenRequestAdapterVolunteer(ArrayList<PublishedHelpRequest> data, HashMap<String, Float> mappedDistances, Context context) {
@@ -55,6 +56,7 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
         mMappedDistances = mappedDistances;
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
@@ -67,13 +69,13 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_volunteer_open_request, parent, false);
             viewHolder.photo = convertView.findViewById(R.id.help_seeker_image);
-            viewHolder.fullName =  convertView.findViewById(R.id.list_item_name);
+            viewHolder.fullName = convertView.findViewById(R.id.list_item_name);
             viewHolder.grocery = convertView.findViewById(R.id.grocery);
             viewHolder.dogWalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
             viewHolder.distance = convertView.findViewById(R.id.distance);
-            viewHolder.request = convertView.findViewById(R.id.requestTitle);
+            viewHolder.title = convertView.findViewById(R.id.requestTitle);
 
             convertView.setTag(viewHolder);
 
@@ -107,8 +109,8 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
             }
         }
 
-        viewHolder.request.setText(userHelpRequest.getHelpRequest().getTitle());
-        viewHolder.fullName.setText(userHelpRequest.getHelpSeeker().getFullName());
+        viewHolder.title.setText("Title: " + userHelpRequest.getHelpRequest().getTitle());
+        viewHolder.fullName.setText("Help seeker: " + System.lineSeparator() + userHelpRequest.getHelpSeeker().getFullName());
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + userHelpRequest.getHelpSeeker().getUid() + ".jpeg");
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
