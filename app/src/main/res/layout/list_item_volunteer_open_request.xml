@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:background="@drawable/request_list_item"
-    android:maxHeight="200dp"
+    android:layout_height="205dp"
     android:layout_marginHorizontal="4dp"
-    android:descendantFocusability="blocksDescendants">
+    android:background="@drawable/request_list_item"
+    android:descendantFocusability="blocksDescendants"
+    android:maxHeight="250dp">
 
     <TextView
         android:id="@+id/requestTitle"
@@ -44,11 +44,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:textColor="@color/justText"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/name_and_surname"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/justText"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toBottomOf="@+id/requestTitle" />
@@ -112,11 +112,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textColor="@color/justText"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/distance_new"
+        android:textColor="@color/justText"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 

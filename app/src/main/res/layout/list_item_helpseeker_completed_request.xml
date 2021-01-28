@@ -83,6 +83,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="13dp"
+        android:textColor="@color/justText"
         android:layout_marginBottom="14dp"
         android:fontFamily="@font/varela_round"
         android:text="Request title"
@@ -95,15 +96,15 @@
         android:id="@+id/helpSeekerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginBottom="14dp"
         android:fontFamily="@font/varela_round"
         android:text="Voluneer:"
         android:textColor="@color/justText"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <RatingBar
