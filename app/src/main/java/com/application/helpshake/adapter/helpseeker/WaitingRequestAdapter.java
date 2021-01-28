@@ -112,6 +112,8 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.infoText.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
 
+        setVolunteerImage(request);
+
         viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +134,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     public void setVolunteerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
-
+        imageData = Uri.parse(ref.getDownloadUrl().toString());
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -141,5 +143,4 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             }
         });
     }
-
 }
