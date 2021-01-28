@@ -140,8 +140,6 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
                         .fitCenter().into(viewHolder.volunteerPhoto);
             }
         });
-  
-        return convertView;
     }
 
 }
