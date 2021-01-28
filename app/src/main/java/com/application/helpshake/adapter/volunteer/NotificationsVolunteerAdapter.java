@@ -29,8 +29,6 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
 
     private static class ViewHolder {
         TextView notificationTitle;
-        TextView notificationMessage;
-        TextView fullName;
         TextView requestTitle;
         Button markAsReadButton;
     }
@@ -55,8 +53,6 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_volunteer_declined_help_offers, parent, false);
             viewHolder.notificationTitle =  convertView.findViewById(R.id.notificationTitle);
-            viewHolder.notificationMessage = convertView.findViewById(R.id.notificationMessage);
-            viewHolder.fullName =  convertView.findViewById(R.id.nameAndSurnameText);
             viewHolder.requestTitle = convertView.findViewById(R.id.requestTitleById);
             viewHolder.markAsReadButton = convertView.findViewById(R.id.markButton);
 
@@ -66,9 +62,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
         }
 
         viewHolder.notificationTitle.setText(notification.getTitle());
-        viewHolder.notificationMessage.setText(notification.getMessage());
-        viewHolder.fullName.setText("Help seeker: " + notification.getFrom().getFullName());
-        viewHolder.requestTitle.setText("Title: " + "REQUEST TITLE SHOULD BE DISPLAYED");
+        viewHolder.requestTitle.setText("Request title: " + notification.getRequestTitle());
 
         viewHolder.markAsReadButton.setOnClickListener(new View.OnClickListener() {
             @Override

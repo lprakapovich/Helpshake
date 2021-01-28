@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NotificationRequestVolunteer extends Notification {
     String notificationRequestId;
+    String requestTitle;
 
     public NotificationRequestVolunteer(String uid,
                                         BaseUser from,
@@ -20,8 +21,10 @@ public class NotificationRequestVolunteer extends Notification {
                                         String title,
                                         String message,
                                         Boolean isChecked,
-                                        String id) {
+                                        String id,
+                                        String requestTitle) {
         super(uid, from, to, title, message, isChecked);
-        notificationRequestId = id;
+        this.notificationRequestId = id;
+        this.requestTitle = requestTitle;
     }
 }
