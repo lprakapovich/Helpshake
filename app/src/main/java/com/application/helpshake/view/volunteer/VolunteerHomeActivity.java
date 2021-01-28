@@ -198,7 +198,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         } catch (NullPointerException e) {
             setSharedPreferences();
             setActiveCategories();
-            Log.d("CURRENT USER", mCurrentUser.getUid());
             findWaitingRequestsForUser();
         }
     }
@@ -367,7 +366,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             findWaitingRequestsForUser();
             fetchHelpSeekerRequests(mActiveCategories);
         } catch (NullPointerException ignored) { }
-
     }
 
     private void startLocationService() {
