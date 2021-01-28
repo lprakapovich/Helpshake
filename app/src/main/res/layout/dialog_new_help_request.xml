@@ -128,8 +128,6 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:layout_marginEnd="60dp"
-                android:layout_marginRight="60dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/rounded_button"
                 android:fontFamily="@font/varela_round"
@@ -138,8 +136,10 @@
                 android:textColor="@color/textOnButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.782"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/comment"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/cancelBtn"
@@ -155,8 +155,10 @@
                 android:textColor="@color/textOnButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addRequestBtn"
-                app:layout_constraintHorizontal_bias="0.395"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.464"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/comment"
+                app:layout_constraintVertical_bias="0.866" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
