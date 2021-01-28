@@ -32,7 +32,7 @@ public class CompletedHelpOffersAdapter extends ArrayAdapter<PublishedHelpReques
         void onOfferClosed(int position, PublishedHelpRequest value);
     }
 
-    CompletedHelpOffersAdapter.CompletedHelpOfferListener mListener;
+    CompletedHelpOfferListener mListener;
     private CompletedHelpOffersAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {

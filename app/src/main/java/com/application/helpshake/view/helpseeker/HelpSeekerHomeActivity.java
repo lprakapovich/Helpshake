@@ -292,7 +292,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         String id = mPublishedRequestsCollection.document().getId();
 
         PublishedHelpRequest publishedHelpRequest = new PublishedHelpRequest(
-                new UserHelpRequest(mCurrentBaseUser, helpRequest, id), null, Status.Open, id);
+                new UserHelpRequest(mCurrentBaseUser, helpRequest, id), null, Status.Open, id, 0);
 
         mPublishedRequestsCollection.document(id).set(publishedHelpRequest)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -350,18 +350,11 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onMarkFinished(int position, PublishedHelpRequest request) {
         mSelectedRequest = request;
-        DialogVolunteerFeedback dialog = new DialogVolunteerFeedback(this);
-        Log.d("mark as finished", request.getUid());
-        dialog.show(getSupportFragmentManager(), "TAG");
 
-//        DialogBuilder.showMessageDialog(
-//                getSupportFragmentManager(),
-//                getString(R.string.request_finished),
-//                getString(R.string.request_finished_msg)
-//        );
-//
-//        request.setStatus(Status.Completed);
-//        updateRequest(request);
+        mPublishedRequests.remove(position);
+        mCurrentAdapter.notifyDataSetChanged();
+        DialogVolunteerFeedback dialog = new DialogVolunteerFeedback(this);
+        dialog.show(getSupportFragmentManager(), "TAG");
     }
 
     @Override
@@ -371,7 +364,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void updateRequest(PublishedHelpRequest request) {
-        mPublishedRequestsCollection.document(request.getUid()).update("status", request.getStatus());
+        mPublishedRequestsCollection.document(request.getUid()).
+                update("status", request.getStatus(),
+                "ratings", request.getRatings());
     }
 
     @Override
@@ -443,9 +438,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onFeedbackSubmitted(float rating) {
         mSelectedRequest.setStatus(Status.Completed);
-        Log.d("on feedback submitted", mSelectedRequest.getUid());
-        mPublishedRequestsCollection.document(mSelectedRequest.getUid()).delete();
-        CompletedRequest completedRequest = new CompletedRequest(mSelectedRequest, rating);
-        mCompletedRequestsCollection.document(mSelectedRequest.getUid()).set(completedRequest);
+        mSelectedRequest.setRatings(rating);
+        updateRequest(mSelectedRequest);
     }
 }
