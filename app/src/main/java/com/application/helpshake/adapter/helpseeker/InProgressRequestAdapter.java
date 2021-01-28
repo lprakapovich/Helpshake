@@ -78,7 +78,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
-            viewHolder.comment = convertView.findViewById(R.id.commentText);
+            viewHolder.comment = convertView.findViewById(R.id.commentTextH);
             viewHolder.volunteerPic = convertView.findViewById(R.id.helpSeekerPic);
 
             convertView.setTag(viewHolder);
