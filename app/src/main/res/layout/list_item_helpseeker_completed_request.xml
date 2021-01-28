@@ -13,13 +13,10 @@
         android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/helpSeekerName"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_marginBottom="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/status_button"
+        app:layout_constraintStart_toStartOf="@+id/rating_bar"
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerName">
 
         <CheckBox
             android:id="@+id/other"
@@ -68,61 +65,58 @@
     <Button
         android:id="@+id/status_button"
         android:layout_width="2dp"
-        android:layout_height="2dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginLeft="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginRight="52dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/rating_bar"
+        app:layout_constraintEnd_toEndOf="@+id/rating_bar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.727" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="14dp"
         android:fontFamily="@font/varela_round"
         android:text="Request title"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/helpSeekerName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.476" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/helpSeekerName"
-        android:layout_width="221dp"
-        android:layout_height="23dp"
-        android:textColor="@color/justText"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="49dp"
-        android:layout_marginBottom="53dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginBottom="14dp"
         android:fontFamily="@font/varela_round"
         android:text="Voluneer:"
+        android:textColor="@color/justText"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/rating_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.09"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <RatingBar
         android:id="@+id/rating_bar"
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginBottom="29dp"
         android:isIndicator="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.092"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/helpSeekerName" />
+        app:layout_constraintTop_toBottomOf="@+id/status_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
