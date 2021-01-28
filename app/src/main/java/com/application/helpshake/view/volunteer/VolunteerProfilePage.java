@@ -367,8 +367,8 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot snapshots) {
-                int counter = snapshots.getDocuments().size();
-                int summary = 0;
+                int counter = snapshots.getDocuments().size() > 0 ? snapshots.getDocuments().size() : 1 ;
+                int summary = 1;
                 for (DocumentSnapshot ds: snapshots.getDocuments()) {
                     PublishedHelpRequest request = ds.toObject(PublishedHelpRequest.class);
 

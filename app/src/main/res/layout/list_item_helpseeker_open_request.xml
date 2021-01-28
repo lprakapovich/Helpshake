@@ -11,8 +11,8 @@
 
     <ImageButton
         android:id="@+id/deleteRequestButton"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="9dp"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
