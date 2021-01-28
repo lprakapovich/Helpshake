@@ -65,9 +65,9 @@
 
             <TextView
                 android:id="@+id/requestTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginTop="36dp"
+                android:layout_width="300dp"
+                android:layout_height="26dp"
+                android:layout_marginTop="50dp"
                 android:fontFamily="@font/varela_round"
                 android:text="@string/request_title"
                 android:textColor="@color/justText"
@@ -131,7 +131,7 @@
 
             <TextView
                 android:id="@+id/helpSeekerCommentText"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/varela_round"
@@ -144,18 +144,18 @@
 
             <TextView
                 android:id="@+id/commentText"
-                android:layout_width="307dp"
+                android:layout_width="300dp"
                 android:layout_height="51dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/varela_round"
+                android:gravity="center_horizontal"
                 android:text="@string/comment"
                 android:textAlignment="center"
                 android:textColor="@color/justText"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/helpSeekerCommentText"
-                android:gravity="center_horizontal" />
+                app:layout_constraintTop_toBottomOf="@+id/helpSeekerCommentText" />
 
             <Button
                 android:id="@+id/offerHelpBtn"
@@ -200,6 +200,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/commentText"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toTopOf="@+id/requestTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

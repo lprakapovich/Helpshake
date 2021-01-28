@@ -2,12 +2,14 @@ package com.application.helpshake.adapter.volunteer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,11 @@ import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
 import com.application.helpshake.model.notification.NotificationRequestVolunteer;
+import com.application.helpshake.model.request.PublishedHelpRequest;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -26,8 +33,10 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
     }
 
     DeclinedOrAcceptedOfferListAdapterListener mListener;
+    NotificationsVolunteerAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
+        ImageView helpSeekerPhoto;
         TextView notificationTitle;
         TextView requestTitle;
         Button markAsReadButton;
@@ -46,8 +55,6 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
 
         final NotificationRequestVolunteer notification = getItem(position);
 
-        NotificationsVolunteerAdapter.ViewHolder viewHolder;
-
         if (convertView == null) {
             viewHolder = new  NotificationsVolunteerAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -55,6 +62,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
             viewHolder.notificationTitle =  convertView.findViewById(R.id.notificationTitle);
             viewHolder.requestTitle = convertView.findViewById(R.id.requestTitleById);
             viewHolder.markAsReadButton = convertView.findViewById(R.id.markButton);
+            viewHolder.helpSeekerPhoto = convertView.findViewById(R.id.helpseekerPhoto);
 
             convertView.setTag(viewHolder);
         } else {
@@ -71,7 +79,21 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
             }
         });
 
+        setHelpSeekerImage(notification);
         return convertView;
+    }
+
+    public void setHelpSeekerImage(NotificationRequestVolunteer notification) {
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + notification.getTo().getUid() + ".jpeg");
+
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(getContext()).load(uri)
+                        .fitCenter().into(viewHolder.helpSeekerPhoto);
+            }
+        });
     }
 }
 
