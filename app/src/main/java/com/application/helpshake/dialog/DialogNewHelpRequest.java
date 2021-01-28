@@ -144,17 +144,17 @@ public class DialogNewHelpRequest extends DialogFragment implements DialogTwoOpt
                     buttonView.setAlpha((float) 1.0);
                 } else {
                     mCategories.remove(category);
-                    buttonView.setAlpha((float) 0.5);
+                    buttonView.setAlpha((float) 0.25);
                 }
             }
         });
     }
 
     void setInitialInactiveCheckBoxButtonsOpacity() {
-        mBinding.grocery.setAlpha((float) 0.5);
-        mBinding.dogwalking.setAlpha((float) 0.5);
-        mBinding.drugstore.setAlpha((float) 0.5);
-        mBinding.other.setAlpha((float) 0.5);
+        mBinding.grocery.setAlpha((float) 0.25);
+        mBinding.dogwalking.setAlpha((float) 0.25);
+        mBinding.drugstore.setAlpha((float) 0.25);
+        mBinding.other.setAlpha((float) 0.25);
     }
 
     private void showDialogWithDecision() {

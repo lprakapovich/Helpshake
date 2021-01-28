@@ -16,6 +16,7 @@ import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.service.GeoFireService;
 import com.application.helpshake.service.MapService;
 import com.application.helpshake.view.helpseeker.HelpSeekerHomeActivity;
 import com.application.helpshake.view.helpseeker.HelpSeekerProfilePage;
@@ -28,8 +29,11 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class CurrentHelpOffersActivity extends AppCompatActivity implements CurrentHelpOffersAdapter.CurrentHelpOfferListener {
+public class CurrentHelpOffersActivity extends AppCompatActivity
+        implements CurrentHelpOffersAdapter.CurrentHelpOfferListener,
+        GeoFireService.GeoFireListener {
 
     ActivityCurrentHelpOffersBinding mBinding;
     CurrentHelpOffersAdapter mAdapter;
@@ -37,6 +41,7 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
     FirebaseFirestore mDb;
     CollectionReference mPublishedRequestsCollection;
     BaseUser mCurrentUser;
+    private GeoFireService mGeoFireService;
 
     ArrayList<PublishedHelpRequest> mOffers = new ArrayList<>();
 
@@ -53,7 +58,7 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
 
         getSupportActionBar().setTitle("Currently helping");
-
+        mGeoFireService = new GeoFireService(this);
         fetchHelpOffers();
     }
 
@@ -87,6 +92,21 @@ public class CurrentHelpOffersActivity extends AppCompatActivity implements Curr
         intent.setData(Uri.parse("tel:" + request.getRequest().getHelpSeeker().getPhoneNumber()));
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
+    }
+
+    @Override
+    public void onMapClicked(PublishedHelpRequest request) {
+        GeoPoint from = ((UserClient)(getApplicationContext())).getCurrentLocation();
+        GeoPoint to = new GeoPoint(
+                request.getRequest().getHelpSeeker().getAddress().getLatitude(),
+                request.getRequest().getHelpSeeker().getAddress().getLongitude()
+        );
+        MapService.showOnGoogleMap(from, to, this);
+    }
+
+    @Override
+    public void onKeysReceived(HashMap<String, GeoPoint> keyGeoPoints) {
+        // nothing :c bad practice
     }
 
 }

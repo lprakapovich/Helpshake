@@ -1,6 +1,8 @@
 package com.application.helpshake.view.volunteer;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -8,6 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import com.application.helpshake.R;
 import com.application.helpshake.adapter.volunteer.NotificationsVolunteerAdapter;
 import com.application.helpshake.databinding.ActivityVolunteerNotificationBinding;
+import com.application.helpshake.dialog.DialogRequestDetails;
 import com.application.helpshake.model.notification.NotificationRequestVolunteer;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
@@ -70,6 +73,8 @@ public class VolunteerNotificationActivity extends AppCompatActivity
     private void initializeListAdapter() {
         mAdapter = new NotificationsVolunteerAdapter(mNotifications, this);
         mBinding.listRequests.setAdapter(mAdapter);
+
+        
     }
 
     @Override

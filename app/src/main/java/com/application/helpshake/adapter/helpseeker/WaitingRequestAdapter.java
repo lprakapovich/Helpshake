@@ -36,7 +36,6 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     }
 
     OfferListAdapterListener mListener;
-    Uri imageData;
     WaitingRequestAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
@@ -109,26 +108,11 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             }
         }
 
-        viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onHelpAccepted(position, request);
-            }
-        });
-
-        viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onHelpDeclined(position, request);
-            }
-        });
-
         viewHolder.fullName.setText("Volunteer: " + System.lineSeparator() + request.getVolunteer().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.infoText.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
 
         setVolunteerImage(request);
-
 
         viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +134,6 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     public void setVolunteerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
-        imageData = Uri.parse(ref.getDownloadUrl().toString());
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

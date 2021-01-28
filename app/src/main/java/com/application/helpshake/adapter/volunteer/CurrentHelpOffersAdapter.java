@@ -34,6 +34,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
 
     public interface CurrentHelpOfferListener {
         void onContact(PublishedHelpRequest request);
+        void onMapClicked(PublishedHelpRequest request);
     }
 
     CurrentHelpOfferListener mListener;
@@ -125,7 +126,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //        TODO: Add map opening
+                mListener.onMapClicked(request);
             }
         });
 

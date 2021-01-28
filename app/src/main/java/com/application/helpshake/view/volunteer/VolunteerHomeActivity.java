@@ -108,6 +108,10 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
         setCurrentUser();
         initHomeView();
 
+        if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
+            startLocationService();
+        }
+
         handleFloatingButtonVisibility();
     }
 
@@ -364,9 +368,6 @@ public class VolunteerHomeActivity extends AppCompatActivity implements RequestS
             fetchHelpSeekerRequests(mActiveCategories);
         } catch (NullPointerException ignored) { }
 
-        if (mLocationService.checkLocationServices() && !mLocationAccessDenied) {
-            startLocationService();
-        }
     }
 
     private void startLocationService() {
