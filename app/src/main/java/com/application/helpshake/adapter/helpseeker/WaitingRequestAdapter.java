@@ -109,20 +109,6 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             }
         }
 
-        viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onHelpAccepted(position, request);
-            }
-        });
-
-        viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onHelpDeclined(position, request);
-            }
-        });
-
         viewHolder.fullName.setText("Volunteer: " + System.lineSeparator() + request.getVolunteer().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.infoText.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());

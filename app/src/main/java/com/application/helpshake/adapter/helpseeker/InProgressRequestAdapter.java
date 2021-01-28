@@ -87,23 +87,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onContact(position, request);
-                }
-            }
-        });
 
-        viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onMarkFinished(position, request);
-                }
-            }
-        });
 
         //initially:
         viewHolder.grocery.setAlpha((float) 0.5);

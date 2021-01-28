@@ -79,14 +79,6 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.deleteRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onRequestDelete(position, request);
-                }
-            }
-        });
 
         //initially:
         viewHolder.grocery.setAlpha((float) 0.25);
