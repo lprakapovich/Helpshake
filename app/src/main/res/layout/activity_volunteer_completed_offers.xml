@@ -5,7 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.volunteer.CurrentHelpOffersActivity">
+        tools:context=".view.volunteer.CompletedOffersActivity">
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
@@ -14,16 +14,15 @@
 
             <ListView
                 android:id="@+id/list"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="10dp">
-            </ListView>
+                android:dividerHeight="10dp"/>
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

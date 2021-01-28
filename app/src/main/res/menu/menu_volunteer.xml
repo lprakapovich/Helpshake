@@ -19,9 +19,6 @@
                 android:id="@+id/notifications"
                 android:title="Notifications" />
             <item
-                android:id="@+id/completedTasks"
-                android:title="Completed tasks"/>
-            <item
                 android:id="@+id/profile"
                 android:title="Profile" />
             <item
