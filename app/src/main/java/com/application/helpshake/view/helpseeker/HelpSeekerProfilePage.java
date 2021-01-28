@@ -109,7 +109,6 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
                 }
             }
         });
-
     }
 
     private void becomeVolunteer() {

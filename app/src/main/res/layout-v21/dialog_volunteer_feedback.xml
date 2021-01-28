@@ -5,7 +5,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <RatingBar
             android:id="@+id/rating_bar"
@@ -21,21 +22,43 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
-            android:text="Set"
+            android:text="Rate"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="24sp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.699"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
+            app:layout_constraintTop_toBottomOf="@+id/rating_bar"
+            app:layout_constraintVertical_bias="0.065" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/varela_round"
+            android:padding="12dp"
+            android:layout_marginLeft="50dp"
+            android:text="Back"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rate"
+            app:layout_constraintHorizontal_bias="0.634"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rating_bar"
+            app:layout_constraintVertical_bias="0.065" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

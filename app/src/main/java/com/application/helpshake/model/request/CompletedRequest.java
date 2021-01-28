@@ -1,15 +1,24 @@
 package com.application.helpshake.model.request;
 
-import com.google.type.DateTime;
+import android.os.Build;
 
-import lombok.AllArgsConstructor;
+import androidx.annotation.RequiresApi;
+
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class CompletedRequest extends PublishedHelpRequest{
+public class CompletedRequest {
 
-    private DateTime completionDate;
-    private int ratings;
-    private String feedback;
+    private PublishedHelpRequest publishedHelpRequest;
+    private Date completionDate;
+    private float ratings;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public CompletedRequest(PublishedHelpRequest request, float ratings) {
+        this.ratings = ratings;
+        this.completionDate = new Date();
+        this.publishedHelpRequest = request;
+    }
 }

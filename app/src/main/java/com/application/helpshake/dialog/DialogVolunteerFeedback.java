@@ -2,12 +2,10 @@ package com.application.helpshake.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RatingBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,12 +18,15 @@ import com.application.helpshake.databinding.DialogVolunteerFeedbackBinding;
 public class DialogVolunteerFeedback extends DialogFragment {
 
     public interface VolunteerFeedbackListener {
-        void onFeedbackSubmitted();
+        void onFeedbackSubmitted(float rating);
     }
 
-    DialogVolunteerFeedbackBinding mBinding;
+    private DialogVolunteerFeedbackBinding mBinding;
+    private VolunteerFeedbackListener mListener;
 
-
+    public DialogVolunteerFeedback(Context context) {
+        mListener = (VolunteerFeedbackListener) context;
+    }
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class DialogVolunteerFeedback extends DialogFragment {
                 R.layout.dialog_volunteer_feedback, null, false);
 
         builder.setView(mBinding.getRoot())
-                .setTitle(R.string.request_details)
+                .setTitle("Rate a volunteer")
                 .setCancelable(false);
         addListenerOnButtonClick();
         return builder.create();
@@ -43,14 +44,19 @@ public class DialogVolunteerFeedback extends DialogFragment {
 
     public void addListenerOnButtonClick() {
 
-        mBinding.button.setOnClickListener(new View.OnClickListener() {
-
+        mBinding.rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                String rating = String.valueOf(mBinding.ratingBar.getRating());
-                Toast.makeText(getContext(), rating, Toast.LENGTH_LONG).show();
+                mListener.onFeedbackSubmitted(mBinding.ratingBar.getRating());
+                dismiss();
             }
+        });
 
+        mBinding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
         });
     }
 
