@@ -350,6 +350,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onMarkFinished(int position, PublishedHelpRequest request) {
         mSelectedRequest = request;
+
+        mPublishedRequests.remove(position);
+        mCurrentAdapter.notifyDataSetChanged();
         DialogVolunteerFeedback dialog = new DialogVolunteerFeedback(this);
         dialog.show(getSupportFragmentManager(), "TAG");
     }
