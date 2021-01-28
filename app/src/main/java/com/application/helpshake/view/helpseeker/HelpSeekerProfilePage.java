@@ -68,7 +68,6 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
         mUsersCollection = mDb.collection("BaseUsers");
         mRequestsCollection = mDb.collection("PublishedHelpRequests");
 
-        //getSupportActionBar().setTitle(mCurrentUser.getName());
         setBindings();
         setPhoneNumber();
         setProfilePic();
@@ -110,7 +109,6 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
                 }
             }
         });
-
     }
 
     private void becomeVolunteer() {

@@ -87,7 +87,6 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
-        mAdapter.notifyDataSetInvalidated();
 
     }
 
@@ -105,7 +104,6 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
 
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
-        mAdapter.notifyDataSetInvalidated();
     }
 
     private void updateRequestStatus(String id, Status status) {
@@ -162,7 +160,8 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
                 notificationTitle,
                 notificationMessage,
                 false,
-                helpRequest.getUid()
+                helpRequest.getUid(),
+                helpRequest.getRequest().getHelpRequest().getTitle()
         );
 
         mNotificationsCollection.document(uid).set(notification);

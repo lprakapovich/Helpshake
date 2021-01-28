@@ -37,7 +37,6 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
     }
 
     WaitingHelpOfferListener mListener;
-    private PublishedHelpRequest request;
     private WaitingHelpOffersAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
@@ -62,7 +61,7 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        request = getItem(position);
+        final PublishedHelpRequest request = getItem(position);
 
         if (convertView == null) {
             viewHolder = new WaitingHelpOffersAdapter.ViewHolder();
@@ -110,7 +109,7 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.helpSeekerName.setText(request.getRequest().getHelpSeeker().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
 
-        setHelpSeekerImage();
+        setHelpSeekerImage(request);
 
         viewHolder.mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +121,7 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         return convertView;
     }
 
-    public void setHelpSeekerImage() {
+    public void setHelpSeekerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getRequest().getHelpSeeker().getUid() + ".jpeg");
         Uri imageData = Uri.parse(ref.getDownloadUrl().toString());

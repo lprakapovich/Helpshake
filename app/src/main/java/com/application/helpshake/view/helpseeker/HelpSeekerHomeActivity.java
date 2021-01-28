@@ -3,7 +3,9 @@ package com.application.helpshake.view.helpseeker;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -24,13 +27,17 @@ import com.application.helpshake.adapter.helpseeker.CompletedRequestAdapter;
 import com.application.helpshake.adapter.helpseeker.InProgressRequestAdapter;
 import com.application.helpshake.adapter.helpseeker.InProgressRequestAdapter.InProcessRequestListAdapterListener;
 import com.application.helpshake.adapter.helpseeker.OpenRequestAdapter;
+import com.application.helpshake.adapter.helpseeker.OpenRequestAdapter.OpenRequestListAdapterListener;
 import com.application.helpshake.databinding.ActivityHelpSeekerHomeBinding;
 import com.application.helpshake.dialog.DialogNewHelpRequest;
 import com.application.helpshake.dialog.DialogNewHelpRequest.NewRequestListener;
 import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.dialog.DialogSingleResult.DialogResultListener;
+import com.application.helpshake.dialog.DialogVolunteerFeedback;
+import com.application.helpshake.dialog.DialogVolunteerFeedback.VolunteerFeedbackListener;
 import com.application.helpshake.model.enums.HelpCategory;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.request.CompletedRequest;
 import com.application.helpshake.model.request.HelpRequest;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.request.UserHelpRequest;
@@ -45,7 +52,9 @@ import com.application.helpshake.service.LocationService.LocationServiceListener
 import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -67,10 +76,12 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         GeoFireListener,
         LocationServiceListener,
         DialogResultListener,
-        OpenRequestAdapter.OpenRequestListAdapterListener {
+        OpenRequestListAdapterListener,
+        VolunteerFeedbackListener {
 
     private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
+    private CollectionReference mCompletedRequestsCollection;
     private BaseUser mCurrentBaseUser;
 
     private ActivityHelpSeekerHomeBinding mBinding;
@@ -80,11 +91,11 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     private ArrayList<PublishedHelpRequest> mPublishedRequests = new ArrayList<>();
     private ArrayAdapter<PublishedHelpRequest> mCurrentAdapter;
 
-    private RadioGroup filterButtonsGroup;
     private GeoFireService mGeoFireService;
 
     private LocationService mLocationService;
-    private GeoPoint mFetchedGeoPoint;
+
+    private PublishedHelpRequest mSelectedRequest;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,32 +106,27 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
+        mCompletedRequestsCollection = mDb.collection("CompletedRequests");
+
         mGeoFireService = new GeoFireService(this);
+        mLocationService = new LocationService(HelpSeekerHomeActivity.this, this);
+
         mSelectedStatus = Status.Open;
 
-        mLocationService = new LocationService(HelpSeekerHomeActivity.this, this);
         setFilteringButtons();
         setBindings();
         fetchRequests();
-
         handleFloatingButtonVisibility();
     }
 
     private void handleFloatingButtonVisibility() {
-
         mBinding.list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-
-            }
-
+            public void onScrollStateChanged(AbsListView view, int scrollState) { }
             int previousFirstVisibleItem = 0;
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                //firstVisibleItem - first item in the list is 0, then 1, etc.
-
                 if (previousFirstVisibleItem == firstVisibleItem) {
                     return;
                 }
@@ -129,12 +135,10 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 } else {
                     mBinding.floatingAddRequestButton.show();
                 }
-
                 previousFirstVisibleItem = firstVisibleItem;
             }
         });
     }
-
 
     @Override
     protected void onResume() {
@@ -142,11 +146,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         if (mLocationService.checkLocationServices()) {
             startLocationService();
         }
-        fetchRequests();
     }
 
     private void setBindings() {
-        //mBinding.floatingAddRequestButton.setVisibility(View.INVISIBLE);
         mBinding.floatingAddRequestButton.setEnabled(false);
         mBinding.floatingAddRequestButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -176,12 +178,12 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     }
 
     private void setFilteringButtons() {
-        filterButtonsGroup = findViewById(R.id.tabButtons);
-        filterButtonsGroup.check(R.id.openButton); //initially checked
+        RadioGroup filterButtonsGroup = findViewById(R.id.tabButtons);
+        filterButtonsGroup.check(R.id.openButton);
         filterButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                RadioButton rb = group.findViewById(checkedId);
                 switch (rb.getId()) {
                     case R.id.openButton:
                         mSelectedStatus = Status.Open;
@@ -347,15 +349,19 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     @Override
     public void onMarkFinished(int position, PublishedHelpRequest request) {
+        mSelectedRequest = request;
+        DialogVolunteerFeedback dialog = new DialogVolunteerFeedback(this);
+        Log.d("mark as finished", request.getUid());
+        dialog.show(getSupportFragmentManager(), "TAG");
 
-        DialogBuilder.showMessageDialog(
-                getSupportFragmentManager(),
-                getString(R.string.request_finished),
-                getString(R.string.request_finished_msg)
-        );
-        request.setStatus(Status.Completed);
-        updateRequest(request);
-        fetchRequests();
+//        DialogBuilder.showMessageDialog(
+//                getSupportFragmentManager(),
+//                getString(R.string.request_finished),
+//                getString(R.string.request_finished_msg)
+//        );
+//
+//        request.setStatus(Status.Completed);
+//        updateRequest(request);
     }
 
     @Override
@@ -422,7 +428,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     @Override
     public void onLocationFetched(GeoPoint geoPoint) {
-        mFetchedGeoPoint = geoPoint;
         ((UserClient) (getApplicationContext())).getCurrentUser().setAddress(new Address(geoPoint.getLatitude(), geoPoint.getLongitude()));
         ParsedAddress address = AddressParser.getParsedAddress(getApplicationContext(), geoPoint);
         Toast.makeText(getApplicationContext(), address.getAddress(), Toast.LENGTH_LONG).show();
@@ -432,5 +437,15 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
     @Override
     public void onResult() {
         LocationService.openGpsSettings(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onFeedbackSubmitted(float rating) {
+        mSelectedRequest.setStatus(Status.Completed);
+        Log.d("on feedback submitted", mSelectedRequest.getUid());
+        mPublishedRequestsCollection.document(mSelectedRequest.getUid()).delete();
+        CompletedRequest completedRequest = new CompletedRequest(mSelectedRequest, rating);
+        mCompletedRequestsCollection.document(mSelectedRequest.getUid()).set(completedRequest);
     }
 }

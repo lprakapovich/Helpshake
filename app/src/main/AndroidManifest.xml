@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".view.volunteer.WaitingHelpOffersActivity"></activity>
+
         <activity android:name=".view.SplashScreen">
 
             <!-- <intent-filter> -->
@@ -35,6 +35,8 @@
         <activity android:name=".view.volunteer.VolunteerHomeActivity" />
         <activity android:name=".view.volunteer.VolunteerProfilePage" />
         <activity android:name=".view.volunteer.CurrentHelpOffersActivity" />
+        <activity android:name=".view.volunteer.WaitingHelpOffersActivity"/>
+        <activity android:name=".view.volunteer.CompletedOffersActivity"/>
         <activity
             android:name=".view.auth.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
