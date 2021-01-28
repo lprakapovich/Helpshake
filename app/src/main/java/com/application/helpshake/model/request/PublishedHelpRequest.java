@@ -45,4 +45,5 @@ public class PublishedHelpRequest {
     BaseUser volunteer;
     Status status;
     String uid;
+    float ratings;
 }
