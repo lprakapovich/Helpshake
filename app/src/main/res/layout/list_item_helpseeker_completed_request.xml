@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="160dp"
     android:layout_marginHorizontal="4dp"
     android:background="@drawable/request_list_item"
     android:maxHeight="240dp">
@@ -13,18 +13,20 @@
         android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/helpSeekerName">
+        app:layout_constraintTop_toBottomOf="@+id/helpSeekerName"
+        app:layout_constraintVertical_bias="0.0">
 
         <CheckBox
             android:id="@+id/other"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:background="@drawable/checkbox_others"
             android:button="@null"
             app:layout_constraintStart_toEndOf="@+id/drugstore"
@@ -60,6 +62,7 @@
             android:button="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
@@ -77,9 +80,9 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/varela_round"
         android:text="Request title"
         android:textSize="16sp"
@@ -90,14 +93,22 @@
         android:id="@+id/helpSeekerName"
         android:layout_width="221dp"
         android:layout_height="23dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:fontFamily="@font/varela_round"
         android:text="Voluneer:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        tools:layout_editor_absoluteY="47dp" />
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="183dp"
+        android:layout_height="39dp"
+        android:isIndicator="false"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="116dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

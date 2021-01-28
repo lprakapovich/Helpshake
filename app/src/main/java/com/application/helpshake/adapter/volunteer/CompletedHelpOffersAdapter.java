@@ -33,7 +33,7 @@ public class CompletedHelpOffersAdapter extends ArrayAdapter<PublishedHelpReques
     }
 
     CompletedHelpOffersAdapter.CompletedHelpOfferListener mListener;
-    private     	   CompletedHelpOffersAdapter.ViewHolder viewHolder;
+    private CompletedHelpOffersAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
         ImageView helpSeekerPic;

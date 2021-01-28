@@ -3,6 +3,7 @@ package com.application.helpshake.view.volunteer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -78,6 +79,8 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
 
         setBindings();
         setProfilePic();
+        setPhoneNumber();
+        calculateRatings();
     }
 
     private void setBindings() {
@@ -133,7 +136,6 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
 
             }
         });
-
     }
 
     private void becomeHelpSeeker() {
@@ -358,4 +360,23 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         });
     }
 
+    private void calculateRatings() {
+        Query query = mRequestsCollection.whereEqualTo("volunteer.uid", mCurrentUser.getUid())
+                .whereEqualTo("status", Status.Completed.toString());
+
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                int counter = snapshots.getDocuments().size();
+                int summary = 0;
+                for (DocumentSnapshot ds: snapshots.getDocuments()) {
+                    PublishedHelpRequest request = ds.toObject(PublishedHelpRequest.class);
+
+                    Log.d("DOC", request.getUid() + ", and the ratings were " + request.getRatings());
+                    summary += request.getRatings();
+                }
+                mBinding.ratingBar.setRating(summary / counter);
+            }
+        });
+    }
 }

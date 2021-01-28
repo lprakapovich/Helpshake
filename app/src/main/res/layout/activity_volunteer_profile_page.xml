@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="nameAndSurname"
             type="String" />
@@ -13,7 +12,22 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintEnd_toStartOf="@+id/nameAndSurnameText"
+        app:layout_constraintStart_toStartOf="@+id/nameAndSurnameText"
         tools:context=".view.volunteer.VolunteerProfilePage">
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:isIndicator="false"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/phoneInput"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="@+id/phoneInput"
+            app:layout_constraintTop_toBottomOf="@+id/volProfilePic"
+            app:layout_constraintVertical_bias="0.063" />
 
         <EditText
             android:id="@+id/phoneInput"
@@ -21,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="50dp"
             android:layout_marginRight="50dp"
             android:autofillHints=""
@@ -35,8 +49,9 @@
             android:textAlignment="center"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/helpingStats" />
+            app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
 
         <TextView
             android:id="@+id/nameAndSurnameText"
@@ -49,19 +64,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/helpingStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/varela_round"
-            android:text="Helping stats: 3"
-            android:textColor="#000000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/volProfilePic" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/volProfilePic"

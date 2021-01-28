@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,7 +36,6 @@ import com.application.helpshake.dialog.DialogVolunteerFeedback;
 import com.application.helpshake.dialog.DialogVolunteerFeedback.VolunteerFeedbackListener;
 import com.application.helpshake.model.enums.HelpCategory;
 import com.application.helpshake.model.enums.Status;
-import com.application.helpshake.model.request.CompletedRequest;
 import com.application.helpshake.model.request.HelpRequest;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.request.UserHelpRequest;
@@ -52,9 +50,7 @@ import com.application.helpshake.service.LocationService.LocationServiceListener
 import com.application.helpshake.util.AddressParser;
 import com.application.helpshake.util.DialogBuilder;
 import com.application.helpshake.view.auth.LoginActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -81,7 +77,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
     private FirebaseFirestore mDb;
     private CollectionReference mPublishedRequestsCollection;
-    private CollectionReference mCompletedRequestsCollection;
     private BaseUser mCurrentBaseUser;
 
     private ActivityHelpSeekerHomeBinding mBinding;
@@ -106,7 +101,6 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
 
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
-        mCompletedRequestsCollection = mDb.collection("CompletedRequests");
 
         mGeoFireService = new GeoFireService(this);
         mLocationService = new LocationService(HelpSeekerHomeActivity.this, this);
