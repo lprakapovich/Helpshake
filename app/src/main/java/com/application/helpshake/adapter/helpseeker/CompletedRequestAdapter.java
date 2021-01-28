@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
         CheckBox dogwalking;
         CheckBox drugstore;
         CheckBox other;
+        RatingBar ratingBar;
     }
 
     public CompletedRequestAdapter(@NonNull ArrayList<PublishedHelpRequest> data, Context context) {
@@ -51,6 +53,7 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
             viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
+            viewHolder.ratingBar = convertView.findViewById(R.id.rating_bar);
 
             convertView.setTag(viewHolder);
         } else {
@@ -82,6 +85,7 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
 
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.volunteerName.setText("Volunteer: " + request.getVolunteer().getFullName());
+        viewHolder.ratingBar.setRating(request.getRatings());
         return convertView;
     }
 }
