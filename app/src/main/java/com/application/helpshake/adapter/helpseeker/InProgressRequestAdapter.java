@@ -150,7 +150,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             }
         });
 
-        setVolunteerImage();
+        setVolunteerImage(request);
 
         return convertView;
     }
