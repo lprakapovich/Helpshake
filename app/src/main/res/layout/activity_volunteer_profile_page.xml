@@ -79,7 +79,7 @@
             android:id="@+id/savePhoneButton"
             android:layout_width="220dp"
             android:layout_height="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
@@ -87,9 +87,12 @@
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phoneInput" />
+            app:layout_constraintTop_toBottomOf="@+id/phoneInput"
+            app:layout_constraintVertical_bias="0.089" />
 
         <Button
             android:id="@+id/deleteAccountButton"
@@ -112,7 +115,7 @@
             android:id="@+id/becomeHelpSeeker"
             android:layout_width="220dp"
             android:layout_height="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="14dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/varela_round"
             android:padding="12dp"
@@ -120,9 +123,12 @@
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/savePhoneButton" />
+            app:layout_constraintTop_toBottomOf="@+id/savePhoneButton"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
