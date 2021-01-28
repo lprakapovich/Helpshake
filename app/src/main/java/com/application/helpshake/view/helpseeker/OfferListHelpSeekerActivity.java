@@ -83,7 +83,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         declineOtherOffers(id);
 
         createNotification(request, "Help offer was accepted",
-                "Great, the help seeker accepted your help offer.");
+                "Great, the help seeker accepted your offer.");
 
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();
@@ -101,7 +101,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         updateRequestStatus(request.getUid(), Status.Declined);
 
         createNotification(request, "Help offer was rejected",
-                "Unfortunately, the help seeker rejected your help offer.");
+                "Unfortunately, the help seeker rejected your offer.");
 
         mRequests.remove(position);
         mAdapter.notifyDataSetChanged();

@@ -142,6 +142,7 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
         if (mLocationService.checkLocationServices()) {
             startLocationService();
         }
+        fetchRequests();
     }
 
     private void setBindings() {
@@ -352,9 +353,9 @@ public class HelpSeekerHomeActivity extends AppCompatActivity
                 getString(R.string.request_finished),
                 getString(R.string.request_finished_msg)
         );
-
         request.setStatus(Status.Completed);
         updateRequest(request);
+        fetchRequests();
     }
 
     @Override
