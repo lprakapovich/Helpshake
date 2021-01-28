@@ -36,9 +36,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     }
 
     OfferListAdapterListener mListener;
-    private PublishedHelpRequest request;
-    Uri imageData;
-    WaitingRequestAdapter.ViewHolder viewHolder;
+
 
     private static class ViewHolder {
         TextView fullName;
@@ -66,7 +64,9 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        request = getItem(position);
+        final PublishedHelpRequest request = getItem(position);
+
+        WaitingRequestAdapter.ViewHolder viewHolder;
 
         if (convertView == null) {
             viewHolder = new WaitingRequestAdapter.ViewHolder();
@@ -83,19 +83,6 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
             viewHolder.other = convertView.findViewById(R.id.other);
 
-            viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onHelpAccepted(position, request);
-                }
-            });
-
-            viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onHelpDeclined(position, request);
-                }
-            });
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (WaitingRequestAdapter.ViewHolder) convertView.getTag();
@@ -126,15 +113,9 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         viewHolder.fullName.setText("Volunteer: " + System.lineSeparator() + request.getVolunteer().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.infoText.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
-        setVolunteerImage();
-
-        return convertView;
-    }
-
-    public void setVolunteerImage() {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
-        imageData = Uri.parse(ref.getDownloadUrl().toString());
+
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -142,5 +123,21 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
                         .fitCenter().into(viewHolder.volunteerPhoto);
             }
         });
+        viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onHelpAccepted(position, request);
+            }
+        });
+
+        viewHolder.rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onHelpDeclined(position, request);
+            }
+        });
+
+        return convertView;
     }
+
 }
