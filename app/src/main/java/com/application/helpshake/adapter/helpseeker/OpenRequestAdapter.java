@@ -131,6 +131,16 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.comment.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
+
+        viewHolder.deleteRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onRequestDelete(position, request);
+                }
+            }
+        });
+
         return convertView;
     }
 

@@ -131,7 +131,27 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.volunteerName.setText("Voluneer: " + request.getVolunteer().getFullName());
         viewHolder.comment.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
-        setVolunteerImage(request);
+
+        viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onContact(position, request);
+                }
+            }
+        });
+
+        viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onMarkFinished(position, request);
+                }
+            }
+        });
+
+        setVolunteerImage();
+
         return convertView;
     }
 
