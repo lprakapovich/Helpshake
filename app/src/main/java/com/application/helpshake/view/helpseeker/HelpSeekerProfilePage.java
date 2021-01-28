@@ -15,10 +15,12 @@ import com.application.helpshake.dialog.DialogInfoRoleUpdate;
 import com.application.helpshake.dialog.DialogSingleResult;
 import com.application.helpshake.model.enums.Role;
 import com.application.helpshake.model.enums.Status;
+import com.application.helpshake.model.enums.ValidationResult;
 import com.application.helpshake.model.request.PublishedHelpRequest;
 import com.application.helpshake.model.user.BaseUser;
 import com.application.helpshake.model.user.UserClient;
 import com.application.helpshake.util.DialogBuilder;
+import com.application.helpshake.validator.UserInputValidator;
 import com.application.helpshake.view.auth.LoginActivity;
 import com.application.helpshake.view.auth.RegisterActivity;
 import com.bumptech.glide.Glide;
@@ -95,7 +97,24 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
             @Override
             public void onClick(View v) {
                 readUserInput();
-                saveInformationToDatabase();
+
+                ValidationResult result = UserInputValidator.isNotEmpty()
+                        .and(UserInputValidator.isNumberValid())
+                        .apply(mBinding.phoneInputH.getText().toString());
+
+                switch (result) {
+                    case EMPTY_INPUT:
+                        DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                "Invalid input", "Phone number cannot be empty");
+                        break;
+                    case INVALID_PHONE:
+                        DialogBuilder.showMessageDialog(getSupportFragmentManager(),
+                                "Invalid input", "Provided number doesn't meet the common standards");
+                        break;
+                    case SUCCESS:
+                        saveInformationToDatabase();
+                        break;
+                }
             }
         });
 
