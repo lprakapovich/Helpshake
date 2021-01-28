@@ -18,6 +18,7 @@
         android:layout_marginTop="30dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/request_title"
+        android:textColor="@color/justText"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,12 +42,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/name_and_surname"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/justText"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toBottomOf="@+id/requestTitle" />
@@ -109,11 +111,12 @@
         android:id="@+id/map"
         android:layout_width="67dp"
         android:layout_height="42dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:contentDescription="@string/map_point_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/map"
-        tools:layout_editor_absoluteY="21dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/map" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

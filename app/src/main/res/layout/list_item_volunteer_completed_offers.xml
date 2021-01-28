@@ -12,6 +12,7 @@
     <TextView
         android:id="@+id/requestTitle"
         android:layout_width="wrap_content"
+        android:textColor="@color/justText"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
@@ -40,6 +41,7 @@
         android:id="@+id/list_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/justText"
         android:layout_alignParentTop="true"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"

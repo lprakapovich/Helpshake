@@ -16,6 +16,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:textColor="@color/justText"
         android:fontFamily="@font/varela_round"
         android:gravity="center"
         android:text="@string/notification_title"
@@ -27,6 +28,7 @@
     <TextView
         android:id="@+id/requestTitleById"
         android:layout_width="250dp"
+        android:textColor="@color/justText"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"

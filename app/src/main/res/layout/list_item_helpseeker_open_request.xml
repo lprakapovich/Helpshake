@@ -24,6 +24,7 @@
 
     <TextView
         android:id="@+id/commentTextOpen"
+        android:textColor="@color/justText"
         android:layout_width="338dp"
         android:layout_height="36dp"
         android:fontFamily="@font/varela_round"
@@ -107,6 +108,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="20dp"
+        android:textColor="@color/justText"
         android:fontFamily="@font/varela_round"
         android:text="Request title"
         android:textSize="16sp"

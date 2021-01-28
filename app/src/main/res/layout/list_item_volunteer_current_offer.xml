@@ -49,6 +49,7 @@
     <TextView
         android:id="@+id/commentText"
         android:layout_width="328dp"
+        android:textColor="@color/justText"
         android:layout_height="43dp"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
@@ -115,6 +116,7 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
+        android:textColor="@color/justText"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
@@ -131,6 +133,7 @@
         android:layout_height="22dp"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
+        android:textColor="@color/justText"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/varela_round"
         android:text="Help seeker:"

@@ -18,6 +18,7 @@
         android:layout_marginTop="20dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/request_title"
+        android:textColor="@color/justText"
         app:layout_constraintStart_toEndOf="@+id/help_seeker_image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,6 +44,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:textColor="@color/justText"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/varela_round"
         android:text="@string/name_and_surname"
@@ -110,6 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:textColor="@color/justText"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/varela_round"
