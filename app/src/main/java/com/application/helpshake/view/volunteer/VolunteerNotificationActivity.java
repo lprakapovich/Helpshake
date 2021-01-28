@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class VolunteerNotificationActivity extends AppCompatActivity
         implements NotificationsVolunteerAdapter.DeclinedOrAcceptedOfferListAdapterListener {
@@ -47,7 +48,7 @@ public class VolunteerNotificationActivity extends AppCompatActivity
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
         mNotificationsCollection = mDb.collection("Notifications");
-
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Notifications");
         mUser = ((UserClient) (getApplicationContext())).getCurrentUser();
         fetchNotificationAboutAcceptedAndDeclinedRequests();
     }

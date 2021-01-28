@@ -42,6 +42,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
 
@@ -76,7 +77,7 @@ public class VolunteerProfilePage extends AppCompatActivity implements DialogSin
         mNotificationsCollection = mDb.collection("Notifications");
         mUsersCollection = mDb.collection("BaseUsers");
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
-
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Profile");
         setBindings();
         setProfilePic();
         setPhoneNumber();

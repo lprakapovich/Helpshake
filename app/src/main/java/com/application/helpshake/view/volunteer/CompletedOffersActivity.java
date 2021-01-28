@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class CompletedOffersActivity extends AppCompatActivity
         implements CompletedHelpOffersAdapter.CompletedHelpOfferListener {
@@ -51,7 +52,7 @@ public class CompletedOffersActivity extends AppCompatActivity
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
 
         mOffers = new ArrayList<>();
-        getSupportActionBar().setTitle("Completed tasks");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Completed requests");
         fetchHelpOffers();
     }
 

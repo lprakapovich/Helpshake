@@ -26,6 +26,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class OfferListHelpSeekerActivity extends AppCompatActivity
         implements WaitingRequestAdapter.OfferListAdapterListener {
@@ -48,7 +49,7 @@ public class OfferListHelpSeekerActivity extends AppCompatActivity
         mDb = FirebaseFirestore.getInstance();
         mPublishedRequestsCollection = mDb.collection("PublishedHelpRequests");
         mNotificationsCollection = mDb.collection("Notifications");
-
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Notifications");
         mUser = ((UserClient) (getApplicationContext())).getCurrentUser();
         fetchVolunteerRequests();
     }

@@ -57,7 +57,7 @@ public class CurrentHelpOffersActivity extends AppCompatActivity
 
         mCurrentUser = ((UserClient) (getApplicationContext())).getCurrentUser();
 
-        getSupportActionBar().setTitle("Currently helping");
+        getSupportActionBar().setTitle("Current requests");
         mGeoFireService = new GeoFireService(this);
         fetchHelpOffers();
     }

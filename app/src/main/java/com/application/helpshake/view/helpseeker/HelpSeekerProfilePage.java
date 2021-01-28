@@ -36,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.application.helpshake.Constants.GALLERY_REQUEST_CODE;
 
@@ -67,7 +68,7 @@ public class HelpSeekerProfilePage extends AppCompatActivity implements DialogSi
         mDb = FirebaseFirestore.getInstance();
         mUsersCollection = mDb.collection("BaseUsers");
         mRequestsCollection = mDb.collection("PublishedHelpRequests");
-
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Profile");
         setBindings();
         setPhoneNumber();
         setProfilePic();

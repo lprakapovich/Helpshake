@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class WaitingHelpOffersActivity extends AppCompatActivity
         implements WaitingHelpOfferListener, GeoFireListener {
@@ -54,7 +55,7 @@ public class WaitingHelpOffersActivity extends AppCompatActivity
 
         mOffers = new ArrayList<>();
         mGeoFireService = new GeoFireService(this);
-        getSupportActionBar().setTitle("Currently waiting");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Pending offers");
         fetchHelpOffers();
     }
 
