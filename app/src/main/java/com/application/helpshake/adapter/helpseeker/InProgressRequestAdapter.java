@@ -36,7 +36,6 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
     }
 
     private InProcessRequestListAdapterListener listener;
-    private PublishedHelpRequest request;
     private ViewHolder viewHolder;
 
 
@@ -63,7 +62,7 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        request = getItem(position);
+        final PublishedHelpRequest request = getItem(position);
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -83,27 +82,28 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             viewHolder.comment = convertView.findViewById(R.id.commentText);
             viewHolder.volunteerPic = convertView.findViewById(R.id.helpSeekerPic);
 
-            viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onContact(position, request);
-                    }
-                }
-            });
-
-            viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onMarkFinished(position, request);
-                    }
-                }
-            });
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
+        viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onContact(position, request);
+                }
+            }
+        });
+
+        viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onMarkFinished(position, request);
+                }
+            }
+        });
 
         //initially:
         viewHolder.grocery.setAlpha((float) 0.5);
@@ -131,11 +131,31 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.volunteerName.setText("Voluneer: " + request.getVolunteer().getFullName());
         viewHolder.comment.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
-        setVolunteerImage();
+
+        viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onContact(position, request);
+                }
+            }
+        });
+
+        viewHolder.finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onMarkFinished(position, request);
+                }
+            }
+        });
+
+        setVolunteerImage(request);
+
         return convertView;
     }
 
-    public void setVolunteerImage() {
+    public void setVolunteerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
         Uri imageData = Uri.parse(ref.getDownloadUrl().toString());

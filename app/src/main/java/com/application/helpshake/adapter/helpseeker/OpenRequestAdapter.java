@@ -39,7 +39,6 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     OpenRequestAdapter.OpenRequestListAdapterListener listener;
 
     private ViewHolder viewHolder;
-    private PublishedHelpRequest request;
 
     private static class ViewHolder {
         TextView title;
@@ -61,7 +60,7 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @androidx.annotation.NonNull ViewGroup parent) {
-        request = getItem(position);
+        final PublishedHelpRequest request = getItem(position);
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -75,19 +74,19 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
             viewHolder.comment = convertView.findViewById(R.id.commentTextOpen);
             viewHolder.deleteRequest = convertView.findViewById(R.id.deleteRequestButton);
 
-            viewHolder.deleteRequest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onRequestDelete(position, request);
-                    }
-                }
-            });
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
+        viewHolder.deleteRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onRequestDelete(position, request);
+                }
+            }
+        });
 
         //initially:
         viewHolder.grocery.setAlpha((float) 0.25);
@@ -132,6 +131,16 @@ public class OpenRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
 
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.comment.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
+
+        viewHolder.deleteRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onRequestDelete(position, request);
+                }
+            }
+        });
+
         return convertView;
     }
 
