@@ -134,7 +134,6 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     public void setVolunteerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
-        imageData = Uri.parse(ref.getDownloadUrl().toString());
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
