@@ -90,10 +90,10 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
 
 
         //initially:
-        viewHolder.grocery.setAlpha((float) 0.5);
-        viewHolder.dogwalking.setAlpha((float) 0.5);
-        viewHolder.drugstore.setAlpha((float) 0.5);
-        viewHolder.other.setAlpha((float) 0.5);
+        viewHolder.grocery.setAlpha((float) 0.25);
+        viewHolder.dogwalking.setAlpha((float) 0.25);
+        viewHolder.drugstore.setAlpha((float) 0.25);
+        viewHolder.other.setAlpha((float) 0.25);
 
         for (HelpCategory category : request.getRequest().getHelpRequest().getCategoryList()) {
             switch (category) {
