@@ -41,7 +41,7 @@ public class CompletedRequestAdapter extends ArrayAdapter<PublishedHelpRequest> 
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final PublishedHelpRequest request = getItem(position);
-        final ViewHolder viewHolder;
+        ViewHolder viewHolder;
 
         if (convertView == null) {
             viewHolder = new ViewHolder();

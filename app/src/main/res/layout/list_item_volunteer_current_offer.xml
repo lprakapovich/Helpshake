@@ -6,7 +6,8 @@
     android:layout_height="320dp"
     android:layout_marginHorizontal="4dp"
     android:background="@drawable/request_list_item"
-    android:maxHeight="400dp">
+    android:maxHeight="400dp"
+    android:descendantFocusability="blocksDescendants">
 
 
     <de.hdodenhof.circleimageview.CircleImageView

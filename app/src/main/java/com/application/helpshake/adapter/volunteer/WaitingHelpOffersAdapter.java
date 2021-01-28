@@ -37,7 +37,6 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
     }
 
     WaitingHelpOfferListener mListener;
-    private WaitingHelpOffersAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
         ImageView helpSeekerPic;
@@ -63,6 +62,7 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final PublishedHelpRequest request = getItem(position);
 
+        WaitingHelpOffersAdapter.ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new WaitingHelpOffersAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -109,19 +109,6 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.helpSeekerName.setText(request.getRequest().getHelpSeeker().getFullName());
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
 
-        setHelpSeekerImage(request);
-
-        viewHolder.mapBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onMapClicked(request);
-            }
-        });
-
-        return convertView;
-    }
-
-    public void setHelpSeekerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getRequest().getHelpSeeker().getUid() + ".jpeg");
         Uri imageData = Uri.parse(ref.getDownloadUrl().toString());
@@ -132,5 +119,14 @@ public class WaitingHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
                         .fitCenter().into(viewHolder.helpSeekerPic);
             }
         });
+
+        viewHolder.mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onMapClicked(request);
+            }
+        });
+
+        return convertView;
     }
 }

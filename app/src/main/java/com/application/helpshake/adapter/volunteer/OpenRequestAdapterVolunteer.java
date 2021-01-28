@@ -81,9 +81,8 @@ public class OpenRequestAdapterVolunteer extends ArrayAdapter<PublishedHelpReque
 
         } else {
             viewHolder = (OpenRequestAdapterVolunteer.ViewHolder) convertView.getTag();
-            viewHolder.photo.setImageResource(R.drawable.empty_profile);
         }
-
+        viewHolder.photo.setImageResource(R.drawable.empty_profile);
         viewHolder.grocery.setAlpha((float) 0.25);
         viewHolder.dogWalking.setAlpha((float) 0.25);
         viewHolder.drugstore.setAlpha((float) 0.25);

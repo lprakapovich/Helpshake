@@ -2,12 +2,14 @@ package com.application.helpshake.adapter.volunteer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,10 @@ import androidx.annotation.RequiresApi;
 
 import com.application.helpshake.R;
 import com.application.helpshake.model.notification.NotificationRequestVolunteer;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -31,6 +37,7 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
         TextView notificationTitle;
         TextView requestTitle;
         Button markAsReadButton;
+        ImageView photo;
     }
 
     public NotificationsVolunteerAdapter(ArrayList<NotificationRequestVolunteer> data, Context context) {
@@ -68,6 +75,17 @@ public class NotificationsVolunteerAdapter extends ArrayAdapter<NotificationRequ
             @Override
             public void onClick(View v) {
                 mListener.onMarkAsRead(position, notification);
+            }
+        });
+
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + notification.getFrom().getUid() + ".jpeg");
+
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(getContext()).load(uri)
+                        .fitCenter().into(viewHolder.photo);
             }
         });
 

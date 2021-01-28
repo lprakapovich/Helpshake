@@ -38,8 +38,6 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
     }
 
     CurrentHelpOfferListener mListener;
-    private ViewHolder viewHolder;
-
 
     private static class ViewHolder {
         ImageButton callBtn;
@@ -65,18 +63,17 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final PublishedHelpRequest request = getItem(position);
-
+        ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_volunteer_current_offer, parent, false);
-
+            viewHolder.helpSeekerPic = convertView.findViewById((R.id.helpSeekerPic));
             viewHolder.callBtn = convertView.findViewById(R.id.callButton);
             viewHolder.helpSeekerName = convertView.findViewById(R.id.helpSeekerName);
             viewHolder.mapBtn = convertView.findViewById(R.id.showOnMapBtn);
             viewHolder.title = convertView.findViewById((R.id.title));
             viewHolder.comment = convertView.findViewById((R.id.commentText));
-            viewHolder.helpSeekerPic = convertView.findViewById((R.id.helpSeekerPic));
             viewHolder.grocery = convertView.findViewById(R.id.grocery);
             viewHolder.dogwalking = convertView.findViewById(R.id.dogwalking);
             viewHolder.drugstore = convertView.findViewById(R.id.drugstore);
@@ -86,6 +83,7 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder.helpSeekerPic.setImageResource(R.drawable.empty_profile);
         }
 
         viewHolder.grocery.setAlpha((float) 0.25);
@@ -114,7 +112,16 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.comment.setText("Comment: " + request.getRequest().getHelpRequest().getDescription());
 
-        setHelpSeekerImage(request);
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + request.getRequest().getHelpSeeker().getUid() + ".jpeg");
+        Uri imageData = Uri.parse(ref.getDownloadUrl().toString());
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(getContext()).load(uri)
+                        .fitCenter().into(viewHolder.helpSeekerPic);
+            }
+        });
 
         viewHolder.callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,15 +141,6 @@ public class CurrentHelpOffersAdapter extends ArrayAdapter<PublishedHelpRequest>
     }
 
     public void setHelpSeekerImage(PublishedHelpRequest request) {
-        StorageReference ref = FirebaseStorage.getInstance()
-                .getReference("profileImages/" + request.getRequest().getHelpSeeker().getUid() + ".jpeg");
-        Uri imageData = Uri.parse(ref.getDownloadUrl().toString());
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(getContext()).load(uri)
-                        .fitCenter().into(viewHolder.helpSeekerPic);
-            }
-        });
+
     }
 }

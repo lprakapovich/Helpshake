@@ -36,7 +36,7 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     }
 
     OfferListAdapterListener mListener;
-    WaitingRequestAdapter.ViewHolder viewHolder;
+
 
     private static class ViewHolder {
         TextView fullName;
@@ -65,6 +65,8 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         final PublishedHelpRequest request = getItem(position);
+        WaitingRequestAdapter.ViewHolder viewHolder;
+
 
         if (convertView == null) {
             viewHolder = new WaitingRequestAdapter.ViewHolder();
@@ -112,7 +114,15 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         viewHolder.title.setText("Title: " + request.getRequest().getHelpRequest().getTitle());
         viewHolder.infoText.setText("Your comment: " + request.getRequest().getHelpRequest().getDescription());
 
-        setVolunteerImage(request);
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(getContext()).load(uri)
+                        .fitCenter().into(viewHolder.volunteerPhoto);
+            }
+        });
 
         viewHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,15 +141,5 @@ public class WaitingRequestAdapter extends ArrayAdapter<PublishedHelpRequest> {
         return convertView;
     }
 
-    public void setVolunteerImage(PublishedHelpRequest request) {
-        StorageReference ref = FirebaseStorage.getInstance()
-                .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(getContext()).load(uri)
-                        .fitCenter().into(viewHolder.volunteerPhoto);
-            }
-        });
-    }
+
 }

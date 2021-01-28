@@ -36,8 +36,6 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
     }
 
     private InProcessRequestListAdapterListener listener;
-    private ViewHolder viewHolder;
-
 
     private static class ViewHolder {
         ImageButton callBtn;
@@ -63,9 +61,10 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final PublishedHelpRequest request = getItem(position);
+        InProgressRequestAdapter.ViewHolder viewHolder;
 
         if (convertView == null) {
-            viewHolder = new ViewHolder();
+            viewHolder = new InProgressRequestAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_helpseeker_in_progress_request, parent, false);
             viewHolder.title = convertView.findViewById(R.id.title);
@@ -134,12 +133,6 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
             }
         });
 
-        setVolunteerImage(request);
-
-        return convertView;
-    }
-
-    public void setVolunteerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getVolunteer().getUid() + ".jpeg");
         Uri imageData = Uri.parse(ref.getDownloadUrl().toString());
@@ -150,5 +143,9 @@ public class InProgressRequestAdapter extends ArrayAdapter<PublishedHelpRequest>
                         .fitCenter().into(viewHolder.volunteerPic);
             }
         });
+
+        return convertView;
     }
+
+
 }

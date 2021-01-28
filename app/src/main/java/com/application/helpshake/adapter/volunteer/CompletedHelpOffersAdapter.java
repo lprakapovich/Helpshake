@@ -33,7 +33,6 @@ public class CompletedHelpOffersAdapter extends ArrayAdapter<PublishedHelpReques
     }
 
     CompletedHelpOfferListener mListener;
-    private CompletedHelpOffersAdapter.ViewHolder viewHolder;
 
     private static class ViewHolder {
         ImageView helpSeekerPic;
@@ -57,7 +56,7 @@ public class CompletedHelpOffersAdapter extends ArrayAdapter<PublishedHelpReques
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
     	   final PublishedHelpRequest request = getItem(position);
-
+    	   CompletedHelpOffersAdapter.ViewHolder viewHolder;
 
         if (convertView == null) {
             viewHolder = new CompletedHelpOffersAdapter.ViewHolder();
@@ -112,12 +111,6 @@ public class CompletedHelpOffersAdapter extends ArrayAdapter<PublishedHelpReques
                 }
             }
         });
-        setHelpSeekerImage(request);
-
-        return convertView;
-    }
-
-    public void setHelpSeekerImage(PublishedHelpRequest request) {
         StorageReference ref = FirebaseStorage.getInstance()
                 .getReference("profileImages/" + request.getRequest().getHelpSeeker().getUid() + ".jpeg");
 
@@ -128,5 +121,8 @@ public class CompletedHelpOffersAdapter extends ArrayAdapter<PublishedHelpReques
                         .fitCenter().into(viewHolder.helpSeekerPic);
             }
         });
+
+        return convertView;
     }
+
 }
